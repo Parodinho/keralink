@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique - KERALINK</title>
+    <link rel="stylesheet" href="{% static 'voyageurs/css/style.css' %}">
+    <style>
+        body { background: #f0f2f5; }
+        .page-header {
+            background: linear-gradient(90deg, #0A1F44, #1E3A8A);
+            color: white; padding: 20px 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .page-header h2 { font-size: 1.3rem; }
+        .btn-retour {
+            background: rgba(255,255,255,0.15); color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 6px 14px; border-radius: 6px;
+            cursor: pointer; text-decoration: none; font-size: 0.85rem;
+        }
+        .historique-wrap { max-width: 900px; margin: 30px auto; padding: 0 16px; }
+        .histo-card {
+            background: white; border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 16px 20px; margin-bottom: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: 0.2s;
+        }
+        .histo-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+        .histo-parties { font-weight: bold; color: #0A1F44; margin-bottom: 4px; }
+        .histo-date { font-size: 0.82rem; color: #888; }
+        .histo-montant { font-size: 1.3rem; font-weight: bold; color: #2e7d32; }
+        .histo-mode { font-size: 0.8rem; color: #666; text-align: right; }
+        .statut-badge {
+            padding: 3px 10px; border-radius: 12px;
+            font-size: 0.78rem; font-weight: bold; margin-top: 4px; display: inline-block;
+        }
+        .statut-bloque { background: #e3f2fd; color: #1E3A8A; }
+        .statut-debloque { background: #e8f5e9; color: #2e7d32; }
+        .statut-rembourse { background: #f5f5f5; color: #888; }
+        .empty { text-align: center; padding: 60px; color: #aaa; }
+        .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <h2>💳 Historique des transactions</h2>
+    <a href="/espace-connecte/" class="btn-retour">← Mon espace</a>
+</div>
+
+<div class="historique-wrap">
+    {% for t in transactions %}
+    <div class="histo-card">
+        <div>
+            <div class="histo-parties">
+                📦 {{ t.expediteur.prenom }} {{ t.expediteur.nom }}
+                {% if t.voyageur %}↔ 🧳 {{ t.voyageur.prenom }} {{ t.voyageur.nom }}{% endif %}
+            </div>
+            <div class="histo-date">📅 {{ t.date_transaction|date:"d/m/Y à H:i" }}</div>
+            <span class="statut-badge statut-{{ t.statut }}">
+                {% if t.statut == 'bloque' %}🔒 Bloqué
+                {% elif t.statut == 'debloque' %}✅ Versé
+                {% elif t.statut == 'rembourse' %}↩️ Remboursé
+                {% elif t.statut == 'remboursement_demande' %}🔴 Remboursement demandé
+                {% else %}{{ t.statut }}{% endif %}
+            </span>
+        </div>
+        <div style="text-align:right;">
+            <div class="histo-montant">{{ t.montant|floatformat:2 }} €</div>
+            <div class="histo-mode">{{ t.get_mode_paiement_display }}</div>
+            <div style="font-size:0.78rem;color:#e65100;margin-top:4px;">
+                Voyageur : {{ t.montant_voyageur|floatformat:2 }} € |
+                Commission : {{ t.montant_commission|floatformat:2 }} €
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty">
+        <div class="empty-icon">💳</div>
+        <p>Aucune transaction pour le moment.</p>
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

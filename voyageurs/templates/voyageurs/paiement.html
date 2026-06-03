@@ -1,0 +1,650 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement Sécurisé - KERALINK</title>
+    <link rel="stylesheet" href="{% static 'voyageurs/css/style.css' %}">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f0f2f5; min-height: 100vh; }
+
+        .pay-navbar {
+            background: linear-gradient(90deg, #0A1F44, #1E3A8A);
+            padding: 0 2rem; height: 60px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .pay-navbar img { height: 40px; }
+        .secure-badge { color: #a0cfff; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+
+        .pay-container { max-width: 520px; margin: 40px auto; padding: 0 16px; }
+
+        .pay-card {
+            background: white; border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.1); overflow: hidden;
+        }
+        .pay-header {
+            background: linear-gradient(120deg, #0A1F44, #1E3A8A);
+            padding: 24px; color: white; text-align: center;
+        }
+        .pay-header h2 { font-size: 1.2rem; margin-bottom: 6px; }
+        .pay-amount { font-size: 2.2rem; font-weight: bold; color: #FF7A00; }
+        .pay-amount small { font-size: 1rem; color: #a0cfff; }
+        .escrow-notice {
+            background: rgba(255,255,255,0.1); border-radius: 8px;
+            padding: 8px 16px; margin-top: 12px; font-size: 0.82rem;
+            color: #a0cfff; display: flex; align-items: center; gap: 6px;
+        }
+
+        .pay-tabs { display: flex; border-bottom: 2px solid #f0f2f5; }
+        .pay-tab {
+            flex: 1; padding: 14px 8px; text-align: center; cursor: pointer;
+            font-size: 0.85rem; color: #888; border-bottom: 3px solid transparent;
+            transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px;
+        }
+        .pay-tab.active { color: #0A1F44; border-bottom-color: #FF7A00; font-weight: bold; }
+        .pay-tab:hover { background: #f9f9f9; }
+        .tab-icon { font-size: 1.3rem; }
+
+        .pay-body { padding: 24px; }
+        .pay-form { display: none; }
+        .pay-form.active { display: block; }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 0.85rem; color: #555; margin-bottom: 6px; font-weight: 500; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px 14px; border: 1.5px solid #e0e0e0;
+            border-radius: 8px; font-size: 0.95rem; transition: 0.2s; outline: none;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #FF7A00; box-shadow: 0 0 0 3px rgba(255,122,0,0.1);
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .card-preview {
+            background: linear-gradient(135deg, #1E3A8A, #0A1F44);
+            border-radius: 12px; padding: 20px; color: white;
+            margin-bottom: 20px; position: relative; overflow: hidden;
+        }
+        .card-chip { width: 36px; height: 28px; background: #FFD700; border-radius: 4px; margin-bottom: 16px; }
+        .card-number-display { font-size: 1.1rem; letter-spacing: 3px; margin-bottom: 16px; font-family: monospace; }
+        .card-info { display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.8; }
+
+        .paypal-logo { text-align: center; padding: 20px 0 10px; font-size: 2rem; font-weight: bold; font-style: italic; }
+        .paypal-logo .pay { color: #003087; }
+        .paypal-logo .pal { color: #009cde; }
+
+        .mobile-display {
+            background: linear-gradient(135deg, #f0f2f5, #e8ecf0);
+            border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center;
+        }
+        .mobile-icon-wrap {
+            width: 64px; height: 64px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 12px; font-size: 1.8rem;
+        }
+
+        .btn-pay {
+            width: 100%; padding: 15px; border: none; border-radius: 10px;
+            font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 8px;
+        }
+        .btn-pay-carte { background: linear-gradient(90deg, #0A1F44, #1E3A8A); color: white; }
+        .btn-pay-paypal { background: linear-gradient(90deg, #003087, #009cde); color: white; }
+        .btn-pay-orange { background: linear-gradient(90deg, #FF7A00, #e66900); color: white; }
+        .btn-pay-wave { background: linear-gradient(90deg, #0068FF, #0052cc); color: white; }
+        .btn-pay:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .security-row {
+            display: flex; gap: 16px; justify-content: center;
+            margin-top: 16px; font-size: 0.78rem; color: #aaa;
+        }
+        .security-row span { display: flex; align-items: center; gap: 4px; }
+
+        .pay-loading {
+            display: none; position: fixed; inset: 0;
+            background: rgba(10,31,68,0.85);
+            justify-content: center; align-items: center;
+            flex-direction: column; z-index: 9999;
+        }
+        .pay-loading.show { display: flex; }
+        .spinner {
+            width: 56px; height: 56px; border: 5px solid rgba(255,255,255,0.2);
+            border-top-color: #FF7A00; border-radius: 50%;
+            animation: spin 0.9s linear infinite; margin-bottom: 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { color: white; font-size: 1rem; }
+        .loading-steps { color: #a0cfff; font-size: 0.85rem; margin-top: 8px; }
+
+        /* ===== SUCCÈS ===== */
+        .pay-success { display: none; text-align: center; padding: 32px 24px; }
+        .pay-success.show { display: block; }
+        .success-icon {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: #e8f5e9; color: #2e7d32; font-size: 2.5rem;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
+        }
+        .success-ref {
+            background: #f0f2f5; border-radius: 8px; padding: 12px;
+            font-family: monospace; font-size: 1rem; color: #0A1F44;
+            margin: 16px 0; letter-spacing: 2px;
+        }
+        .escrow-info {
+            background: #e3f2fd; border-radius: 10px; padding: 16px;
+            font-size: 0.88rem; color: #1565c0; margin: 16px 0; text-align: left;
+        }
+        .escrow-info strong { display: block; margin-bottom: 6px; }
+
+        /* ===== BOUTON FACTURE ===== */
+        .btn-facture {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 13px; border-radius: 10px;
+            background: linear-gradient(90deg, #0A1F44, #1E3A8A);
+            color: white; border: none; font-weight: bold; font-size: 0.95rem;
+            cursor: pointer; margin-bottom: 10px; transition: 0.3s;
+        }
+        .btn-facture:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .btn-espace {
+            background: #FF7A00; color: white; border: none;
+            padding: 14px 32px; border-radius: 10px; font-size: 1rem;
+            font-weight: bold; cursor: pointer; margin-top: 8px; width: 100%;
+            transition: 0.3s;
+        }
+        .btn-espace:hover { opacity: 0.9; }
+        .btn-espace:disabled { background: #ccc; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<nav class="pay-navbar">
+    <img src="{% static 'voyageurs/images/logo3.png' %}">
+    <div class="secure-badge">🔒 Paiement 100% sécurisé</div>
+</nav>
+
+<div class="pay-container">
+    <div class="pay-card">
+
+        <div class="pay-header">
+            <h2>💳 Paiement sécurisé</h2>
+            <div class="pay-amount">{{ montant }} € <small>TTC</small></div>
+            <div class="escrow-notice">🔒 Votre argent est sécurisé jusqu'à livraison du colis</div>
+        </div>
+
+        <!-- ONGLETS -->
+        <div class="pay-tabs" id="pay-tabs">
+            <div class="pay-tab {% if mode_paiement == 'carte' %}active{% endif %}" onclick="switchTab('carte', event)">
+                <span class="tab-icon">💳</span> Carte
+            </div>
+            <div class="pay-tab {% if mode_paiement == 'paypal' %}active{% endif %}" onclick="switchTab('paypal', event)">
+                <span class="tab-icon">🅿️</span> PayPal
+            </div>
+            <div class="pay-tab {% if mode_paiement == 'orange' %}active{% endif %}" onclick="switchTab('orange', event)">
+                <span class="tab-icon">🟠</span> Orange
+            </div>
+            <div class="pay-tab {% if mode_paiement == 'wave' %}active{% endif %}" onclick="switchTab('wave', event)">
+                <span class="tab-icon">🌊</span> Wave
+            </div>
+        </div>
+
+        <div class="pay-body">
+
+            <!-- CARTE -->
+            <div class="pay-form {% if mode_paiement == 'carte' %}active{% endif %}" id="form-carte">
+                <div class="card-preview">
+                    <div class="card-chip"></div>
+                    <div class="card-number-display" id="card-display">•••• •••• •••• ••••</div>
+                    <div class="card-info">
+                        <div>
+                            <div style="font-size:0.7rem;opacity:0.6;">TITULAIRE</div>
+                            <div id="card-name-display">VOTRE NOM</div>
+                        </div>
+                        <div>
+                            <div style="font-size:0.7rem;opacity:0.6;">EXPIRE</div>
+                            <div id="card-exp-display">MM/AA</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Numéro de carte</label>
+                    <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19"
+                           oninput="formatCard(this)" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Nom sur la carte</label>
+                    <input type="text" id="card-name" placeholder="JEAN DUPONT"
+                           oninput="document.getElementById('card-name-display').textContent = this.value.toUpperCase() || 'VOTRE NOM'">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date d'expiration</label>
+                        <input type="text" id="card-exp" placeholder="MM/AA" maxlength="5" oninput="formatExp(this)">
+                    </div>
+                    <div class="form-group">
+                        <label>CVV</label>
+                        <input type="password" id="card-cvv" placeholder="•••" maxlength="3">
+                    </div>
+                </div>
+                <button class="btn-pay btn-pay-carte" onclick="lancerPaiement('carte')">
+                    🔒 Payer {{ montant }} € par carte
+                </button>
+            </div>
+
+            <!-- PAYPAL -->
+            <div class="pay-form {% if mode_paiement == 'paypal' %}active{% endif %}" id="form-paypal">
+                <div class="paypal-logo"><span class="pay">Pay</span><span class="pal">Pal</span></div>
+                <div class="form-group">
+                    <label>Email PayPal</label>
+                    <input type="email" id="paypal-email" placeholder="votre@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe PayPal</label>
+                    <input type="password" id="paypal-password" placeholder="••••••••">
+                </div>
+                <div style="background:#e3f2fd;border-radius:8px;padding:12px;font-size:0.82rem;color:#1565c0;margin-bottom:16px;">
+                    🔵 Vous serez redirigé vers PayPal pour confirmer le paiement sécurisé.
+                </div>
+                <button class="btn-pay btn-pay-paypal" onclick="lancerPaiement('paypal')">
+                    🅿️ Payer {{ montant }} € via PayPal
+                </button>
+            </div>
+
+            <!-- ORANGE MONEY -->
+            <div class="pay-form {% if mode_paiement == 'orange' %}active{% endif %}" id="form-orange">
+                <div class="mobile-display">
+                    <div class="mobile-icon-wrap" style="background:#FF7A00;">🟠</div>
+                    <div style="font-weight:bold;font-size:1rem;color:#e65100;margin-bottom:4px;">Orange Money</div>
+                    <div style="font-size:0.88rem;color:#777;">Paiement mobile sécurisé</div>
+                </div>
+                <div class="form-group">
+                    <label>Numéro Orange Money</label>
+                    <input type="tel" id="orange-phone" placeholder="+33 6 XX XX XX XX">
+                </div>
+                <div class="form-group">
+                    <label>Code PIN Orange Money</label>
+                    <input type="password" id="orange-pin" placeholder="••••" maxlength="4">
+                </div>
+                <div style="background:#fff3e0;border-radius:8px;padding:12px;font-size:0.82rem;color:#e65100;margin-bottom:16px;">
+                    🟠 Un SMS de confirmation sera envoyé sur votre numéro Orange.
+                </div>
+                <button class="btn-pay btn-pay-orange" onclick="lancerPaiement('orange')">
+                    🟠 Payer {{ montant }} € via Orange Money
+                </button>
+            </div>
+
+            <!-- WAVE -->
+            <div class="pay-form {% if mode_paiement == 'wave' %}active{% endif %}" id="form-wave">
+                <div class="mobile-display">
+                    <div class="mobile-icon-wrap" style="background:#0068FF;">🌊</div>
+                    <div style="font-weight:bold;font-size:1rem;color:#0052cc;margin-bottom:4px;">Wave</div>
+                    <div style="font-size:0.88rem;color:#777;">Paiement mobile rapide</div>
+                </div>
+                <div class="form-group">
+                    <label>Numéro Wave</label>
+                    <input type="tel" id="wave-phone" placeholder="+33 7 XX XX XX XX">
+                </div>
+                <div class="form-group">
+                    <label>Code Wave</label>
+                    <input type="password" id="wave-pin" placeholder="••••" maxlength="4">
+                </div>
+                <div style="background:#e3f2fd;border-radius:8px;padding:12px;font-size:0.82rem;color:#0052cc;margin-bottom:16px;">
+                    🌊 Une notification Wave sera envoyée pour valider le paiement.
+                </div>
+                <button class="btn-pay btn-pay-wave" onclick="lancerPaiement('wave')">
+                    🌊 Payer {{ montant }} € via Wave
+                </button>
+            </div>
+
+            <div class="security-row">
+                <span>🔒 SSL 256-bit</span>
+                <span>🛡️ 3D Secure</span>
+                <span>✅ Certifié PCI DSS</span>
+            </div>
+        </div>
+
+        <!-- ===== SUCCÈS ===== -->
+        <div class="pay-success" id="pay-success">
+            <div class="success-icon">✅</div>
+            <h2 style="color:#2e7d32;margin-bottom:8px;">Paiement réussi !</h2>
+            <p style="color:#555;font-size:0.9rem;">Votre paiement a été traité avec succès.</p>
+            <div class="success-ref" id="success-ref">KRL-XXXXXXXXXX</div>
+            <div class="escrow-info">
+                <strong>🔒 Votre argent est sécurisé</strong>
+                Votre paiement est bloqué sur la plateforme KERALINK et sera versé au voyageur
+                uniquement après confirmation de la livraison de votre colis à destination.
+            </div>
+
+            <!-- ✅ BOUTON TÉLÉCHARGER FACTURE -->
+            <button class="btn-facture" id="btn-telecharger-facture" onclick="telechargerFacture()">
+                📄 Télécharger ma facture de paiement
+            </button>
+
+            <button class="btn-espace" id="btn-apres-paiement" disabled>
+                Traitement...
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<div class="pay-loading" id="pay-loading">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loading-text">Traitement en cours...</div>
+    <div class="loading-steps" id="loading-steps">Connexion sécurisée</div>
+</div>
+
+<script>
+const EXPEDITEUR_ID = "{{ expediteur_id }}";
+const MONTANT = "{{ montant }}";
+const CSRF = "{{ csrf_token }}";
+
+// ✅ Données de facture — remplies après paiement réussi
+let factureData = null;
+
+function switchTab(mode, evt) {
+    document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.pay-form').forEach(f => f.classList.remove('active'));
+    if (evt) evt.currentTarget.classList.add('active');
+    document.getElementById('form-' + mode).classList.add('active');
+}
+
+function formatCard(input) {
+    let val = input.value.replace(/\D/g, '').substring(0, 16);
+    let formatted = val.match(/.{1,4}/g)?.join(' ') || val;
+    input.value = formatted;
+    const display = val.padEnd(16, '•').match(/.{1,4}/g).join(' ');
+    document.getElementById('card-display').textContent = display;
+}
+
+function formatExp(input) {
+    let val = input.value.replace(/\D/g, '');
+    if (val.length >= 2) val = val.substring(0, 2) + '/' + val.substring(2, 4);
+    input.value = val;
+    document.getElementById('card-exp-display').textContent = val || 'MM/AA';
+}
+
+function lancerPaiement(mode) {
+    if (mode === 'carte') {
+        const num = document.getElementById('card-number').value.replace(/\s/g, '');
+        const nom = document.getElementById('card-name').value;
+        const exp = document.getElementById('card-exp').value;
+        const cvv = document.getElementById('card-cvv').value;
+        if (num.length < 16 || !nom || exp.length < 5 || cvv.length < 3) {
+            afficherErreur("⚠️ Veuillez remplir tous les champs de la carte."); return;
+        }
+    } else if (mode === 'paypal') {
+        if (!document.getElementById('paypal-email').value || !document.getElementById('paypal-password').value) {
+            afficherErreur("⚠️ Veuillez entrer vos identifiants PayPal."); return;
+        }
+    } else if (mode === 'orange') {
+        if (!document.getElementById('orange-phone').value || !document.getElementById('orange-pin').value) {
+            afficherErreur("⚠️ Veuillez entrer votre numéro et code Orange Money."); return;
+        }
+    } else if (mode === 'wave') {
+        if (!document.getElementById('wave-phone').value || !document.getElementById('wave-pin').value) {
+            afficherErreur("⚠️ Veuillez entrer votre numéro et code Wave."); return;
+        }
+    }
+
+    const loading = document.getElementById('pay-loading');
+    loading.classList.add('show');
+
+    const etapes = [
+        ['Connexion sécurisée...', 'Établissement SSL 256-bit'],
+        ['Vérification des informations...', 'Validation des données'],
+        ['Autorisation bancaire...', 'Confirmation 3D Secure'],
+        ['Sécurisation des fonds...', 'Mise en escrow KERALINK'],
+    ];
+
+    let i = 0;
+    const interval = setInterval(() => {
+        if (i < etapes.length) {
+            document.getElementById('loading-text').textContent = etapes[i][0];
+            document.getElementById('loading-steps').textContent = etapes[i][1];
+            i++;
+        } else {
+            clearInterval(interval);
+            envoyerPaiement(mode);
+        }
+    }, 900);
+}
+
+function envoyerPaiement(mode) {
+    const formData = new FormData();
+    formData.append('expediteur_id', EXPEDITEUR_ID);
+    formData.append('mode_paiement', mode);
+    formData.append('montant', MONTANT);
+
+    fetch('/traiter-paiement/', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-CSRFToken': CSRF }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('pay-loading').classList.remove('show');
+
+        if (data.status === 'ok') {
+            document.getElementById('pay-tabs').style.display = 'none';
+            document.querySelector('.pay-body').style.display = 'none';
+            document.getElementById('success-ref').textContent = data.reference;
+            document.getElementById('pay-success').classList.add('show');
+
+            // ✅ Stocker les données de facture
+            factureData = data.facture || {
+                reference: data.reference,
+                nom: 'Client KERALINK',
+                montant: parseFloat(MONTANT),
+                montant_voyageur: parseFloat(MONTANT) - (parseFloat(MONTANT) * 0.2 / 10.2),
+                montant_commission: parseFloat(MONTANT) * 0.2 / 10.2,
+                mode_paiement: mode,
+                trajet: 'Trajet KERALINK',
+                poids: '—',
+                date: new Date().toLocaleString('fr-FR'),
+                expediteur_id: EXPEDITEUR_ID,
+            };
+
+            setTimeout(() => {
+                const btn = document.getElementById('btn-apres-paiement');
+                btn.disabled = false;
+                const newBtn = btn.cloneNode(true);
+                btn.parentNode.replaceChild(newBtn, btn);
+
+                if (data.has_profil === true) {
+                    newBtn.textContent = '→ Accéder à mon espace';
+                    newBtn.style.background = '#FF7A00';
+                    newBtn.addEventListener('click', () => { window.location.href = '/espace-connecte/'; });
+                } else {
+                    newBtn.textContent = '👤 Créer mon profil pour suivre mon colis →';
+                    newBtn.style.background = 'linear-gradient(90deg,#1E3A8A,#0A1F44)';
+                    newBtn.addEventListener('click', () => {
+                        window.location.href = '/creer-profil-page/?expediteur_id=' + EXPEDITEUR_ID;
+                    });
+                }
+            }, 100);
+
+        } else {
+            afficherErreur("❌ " + (data.message || "Erreur de paiement"));
+        }
+    })
+    .catch(err => {
+        document.getElementById('pay-loading').classList.remove('show');
+        afficherErreur("❌ Erreur de connexion : " + err.message);
+    });
+}
+
+// ================================================================
+// ✅ GÉNÉRATION ET TÉLÉCHARGEMENT DE FACTURE (HTML → PDF via print)
+// ================================================================
+function telechargerFacture() {
+    if (!factureData) {
+        afficherErreur("⚠️ Données de facture non disponibles.");
+        return;
+    }
+
+    const modePaiementLabel = {
+        'carte': '💳 Carte bancaire',
+        'paypal': '🅿️ PayPal',
+        'orange': '🟠 Orange Money',
+        'wave': '🌊 Wave',
+    }[factureData.mode_paiement] || factureData.mode_paiement;
+
+    const htmlFacture = `
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Facture KERALINK — ${factureData.reference}</title>
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: 'Segoe UI', Arial, sans-serif; background: white; color: #333; padding: 40px; }
+            .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 3px solid #FF7A00; }
+            .logo { font-size: 2rem; font-weight: bold; color: #0A1F44; }
+            .logo span { color: #FF7A00; }
+            .ref { text-align: right; }
+            .ref .ref-num { font-size: 1.1rem; font-weight: bold; color: #0A1F44; font-family: monospace; letter-spacing: 2px; }
+            .ref .ref-label { font-size: 0.8rem; color: #888; margin-bottom: 4px; }
+            h2 { color: #0A1F44; font-size: 1.3rem; margin-bottom: 24px; }
+            .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+            .info-box { background: #f9f9f9; border-radius: 10px; padding: 18px; }
+            .info-box h3 { color: #FF7A00; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1px; }
+            .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
+            .info-row .label { color: #777; }
+            .info-row .value { font-weight: 600; color: #0A1F44; }
+            .amount-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+            .amount-table th { background: #0A1F44; color: white; padding: 12px 16px; text-align: left; font-size: 0.88rem; }
+            .amount-table th:last-child { text-align: right; }
+            .amount-table td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; }
+            .amount-table td:last-child { text-align: right; font-weight: 600; }
+            .amount-table tr:last-child td { border: none; background: #fff3e0; font-weight: bold; font-size: 1rem; color: #0A1F44; }
+            .escrow { background: #e3f2fd; border-radius: 10px; padding: 16px; margin-bottom: 24px; font-size: 0.88rem; color: #1565c0; }
+            .escrow strong { display: block; margin-bottom: 6px; }
+            .footer { text-align: center; color: #aaa; font-size: 0.8rem; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+            .badge { display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: bold; }
+            @media print {
+                body { padding: 20px; }
+                .no-print { display: none !important; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div>
+                <div class="logo">KER<span>ALINK</span></div>
+                <div style="font-size:0.82rem;color:#888;margin-top:4px;">Plateforme de transport de colis entre particuliers</div>
+            </div>
+            <div class="ref">
+                <div class="ref-label">N° DE RÉFÉRENCE</div>
+                <div class="ref-num">${factureData.reference}</div>
+                <div style="margin-top:8px;"><span class="badge">✅ Paiement confirmé</span></div>
+            </div>
+        </div>
+
+        <h2>🧾 Facture de paiement</h2>
+
+        <div class="info-grid">
+            <div class="info-box">
+                <h3>👤 Client</h3>
+                <div class="info-row">
+                    <span class="label">Nom complet</span>
+                    <span class="value">${factureData.nom}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Date de paiement</span>
+                    <span class="value">${factureData.date}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Mode de paiement</span>
+                    <span class="value">${modePaiementLabel}</span>
+                </div>
+            </div>
+            <div class="info-box">
+                <h3>📦 Détails du colis</h3>
+                <div class="info-row">
+                    <span class="label">Trajet</span>
+                    <span class="value">${factureData.trajet}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Poids du colis</span>
+                    <span class="value">${factureData.poids} kg</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Statut</span>
+                    <span class="value" style="color:#2e7d32;">✅ Payé — En attente de livraison</span>
+                </div>
+            </div>
+        </div>
+
+        <table class="amount-table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Détail</th>
+                    <th>Montant</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>💼 Transport de colis par voyageur</td>
+                    <td style="color:#666;font-size:0.85rem;">${factureData.poids} kg × 10,00 €/kg</td>
+                    <td style="color:#2e7d32;">${parseFloat(factureData.montant_voyageur).toFixed(2)} €</td>
+                </tr>
+                <tr>
+                    <td>🏢 Commission KERALINK</td>
+                    <td style="color:#666;font-size:0.85rem;">${factureData.poids} kg × 0,20 €/kg</td>
+                    <td style="color:#e65100;">${parseFloat(factureData.montant_commission).toFixed(2)} €</td>
+                </tr>
+                <tr>
+                    <td colspan="2"><strong>💳 TOTAL TTC</strong></td>
+                    <td style="color:#FF7A00;font-size:1.1rem;">${parseFloat(factureData.montant).toFixed(2)} €</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="escrow">
+            <strong>🔒 Fonds sécurisés en séquestre</strong>
+            Votre paiement de <strong>${parseFloat(factureData.montant).toFixed(2)} €</strong> est bloqué en séquestre
+            sur la plateforme KERALINK. Il sera versé au voyageur uniquement après confirmation de la
+            bonne réception de votre colis. En cas de problème, vous pouvez demander un remboursement
+            de <strong>${parseFloat(factureData.montant_voyageur).toFixed(2)} €</strong> (hors commission KERALINK).
+        </div>
+
+        <div style="text-align:center;margin-bottom:20px;" class="no-print">
+            <button onclick="window.print()"
+                    style="background:#0A1F44;color:white;border:none;padding:12px 28px;
+                           border-radius:10px;font-size:1rem;font-weight:bold;cursor:pointer;">
+                🖨️ Sauvegarder en PDF
+            </button>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 KERALINK — Plateforme de transport de colis entre particuliers</p>
+            <p style="margin-top:4px;">Ce document est une facture officielle générée automatiquement. Conservez-le comme preuve de paiement.</p>
+            <p style="margin-top:4px;">Support : support@keralink.com</p>
+        </div>
+    </body>
+    </html>
+    `;
+
+    // Ouvrir la facture dans un nouvel onglet pour impression/sauvegarde PDF
+    const win = window.open('', '_blank');
+    win.document.write(htmlFacture);
+    win.document.close();
+    win.focus();
+    // Déclencher l'impression automatiquement après chargement
+    win.onload = () => {
+        setTimeout(() => win.print(), 500);
+    };
+}
+
+function afficherErreur(msg) {
+    const div = document.createElement('div');
+    div.style.cssText = 'position:fixed;top:20px;right:20px;background:#c62828;color:white;padding:12px 20px;border-radius:8px;z-index:9999;font-size:0.9rem;';
+    div.textContent = msg;
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 4000);
+}
+</script>
+</body>
+</html>

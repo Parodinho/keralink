@@ -1,0 +1,179 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Google - KERALINK</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
+        body {
+            background: linear-gradient(135deg, #0A1F44 0%, #1E3A8A 55%, #0A1F44 100%);
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+        }
+        body::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 70% 30%, rgba(255,122,0,0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        /* Cercles décoratifs */
+        .deco { position: absolute; border-radius: 50%; opacity: 0.06; background: white; }
+        .deco-1 { width: 400px; height: 400px; top: -100px; left: -100px; }
+        .deco-2 { width: 300px; height: 300px; bottom: -80px; right: -80px; }
+        .deco-3 { width: 150px; height: 150px; top: 40%; right: 10%; }
+
+        .card {
+            background: rgba(255,255,255,0.97);
+            border-radius: 24px;
+            padding: 44px 40px;
+            max-width: 420px; width: 92%;
+            box-shadow: 0 32px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1);
+            text-align: center;
+            position: relative; z-index: 1;
+            animation: cardIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+
+        @keyframes cardIn {
+            from { opacity:0; transform:translateY(30px) scale(0.95); }
+            to   { opacity:1; transform:translateY(0) scale(1); }
+        }
+        @keyframes fadeInUp {
+            from { opacity:0; transform:translateY(16px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+        @keyframes pulse {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .brand {
+            font-size: 2.2rem; font-weight: 900;
+            color: #0A1F44; margin-bottom: 4px;
+            animation: fadeInUp 0.5s 0.1s both;
+        }
+        .brand span { color: #FF7A00; }
+
+        .tagline {
+            color: #888; font-size: 0.85rem; margin-bottom: 32px;
+            animation: fadeInUp 0.5s 0.2s both;
+        }
+
+        .google-section {
+            animation: fadeInUp 0.5s 0.3s both;
+        }
+
+        .google-btn {
+            display: flex; align-items: center; justify-content: center; gap: 14px;
+            width: 100%; padding: 17px 20px; border-radius: 14px;
+            background: white; border: 2.5px solid #e8e8e8;
+            color: #333; font-weight: 700; font-size: 1.02rem;
+            text-decoration: none; transition: all 0.3s;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            cursor: pointer; font-family: inherit;
+        }
+        .google-btn:hover {
+            border-color: #4285F4;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(66,133,244,0.3);
+            color: #1a1a1a;
+        }
+        .google-btn:active { transform: translateY(-1px); }
+
+        .google-icon-wrap {
+            width: 26px; height: 26px; flex-shrink: 0;
+        }
+
+        .divider {
+            display: flex; align-items: center; gap: 14px;
+            margin: 22px 0;
+            animation: fadeInUp 0.5s 0.4s both;
+        }
+        .divider div { flex:1; height:1px; background:#ebebeb; }
+        .divider span { color:#bbb; font-size:0.82rem; white-space:nowrap; }
+
+        .info-box {
+            background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+            border-radius: 12px; padding: 14px 16px;
+            font-size: 0.82rem; color: #2e7d32;
+            border-left: 4px solid #4caf50;
+            margin-bottom: 22px; text-align: left;
+            animation: fadeInUp 0.5s 0.45s both;
+        }
+        .info-box strong { display:block; margin-bottom:3px; }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            margin-top: 22px; color: #aaa; font-size: 0.85rem;
+            text-decoration: none; transition: color 0.2s;
+            animation: fadeInUp 0.5s 0.55s both;
+        }
+        .back-link:hover { color: #FF7A00; }
+
+        .security-badges {
+            display: flex; justify-content: center; gap: 16px;
+            margin-top: 20px; font-size: 0.75rem; color: #bbb;
+            animation: fadeInUp 0.5s 0.6s both;
+        }
+        .security-badges span { display:flex; align-items:center; gap:4px; }
+
+        .logo-icon {
+            width: 56px; height: 56px; border-radius: 16px;
+            background: linear-gradient(135deg, #0A1F44, #1E3A8A);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px; font-size: 1.6rem;
+            box-shadow: 0 8px 24px rgba(10,31,68,0.3);
+            animation: pulse 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="deco deco-3"></div>
+
+    <div class="card">
+        <div class="logo-icon">🔗</div>
+        <div class="brand">KERA<span>LINK</span></div>
+        <p class="tagline">Transport de colis simple et sécurisé</p>
+
+        <div class="info-box">
+            <strong>🔒 Connexion sécurisée via Google</strong>
+            Nous accédons uniquement à votre nom et email. Aucun accès à vos données privées.
+        </div>
+
+        <div class="google-section">
+            <form method="post" action="{% url 'google_login' %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+                <button type="submit" class="google-btn">
+                    <span class="google-icon-wrap">
+                        <svg viewBox="0 0 48 48" width="26" height="26">
+                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                        </svg>
+                    </span>
+                    Continuer avec Google
+                </button>
+            </form>
+        </div>
+
+        <div class="divider">
+            <div></div><span>connexion sécurisée OAuth 2.0</span><div></div>
+        </div>
+
+        <div class="security-badges">
+            <span>🔒 SSL 256-bit</span>
+            <span>🛡️ OAuth 2.0</span>
+            <span>✅ Certifié</span>
+        </div>
+
+        <a href="/" class="back-link">← Retour à l'accueil KERALINK</a>
+    </div>
+</body>
+</html>

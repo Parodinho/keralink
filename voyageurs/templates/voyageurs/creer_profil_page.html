@@ -1,0 +1,285 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer mon profil - KERALINK</title>
+    <link rel="stylesheet" href="{% static 'voyageurs/css/style.css' %}">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f0f2f5; min-height: 100vh; }
+
+        .pay-navbar {
+            background: linear-gradient(90deg, #0A1F44, #1E3A8A);
+            padding: 0 2rem; height: 60px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .brand { color: white; font-size: 1.4rem; font-weight: bold; }
+        .brand span { color: #FF7A00; }
+
+        .container { max-width: 520px; margin: 40px auto; padding: 0 16px; }
+
+        .form-card {
+            background: white; border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .card-header {
+            background: linear-gradient(120deg, #0A1F44, #1E3A8A);
+            padding: 24px; color: white; text-align: center;
+        }
+        .card-header h2 { font-size: 1.2rem; margin-bottom: 4px; }
+        .card-header p { font-size: 0.85rem; opacity: 0.8; }
+        .success-badge {
+            background: rgba(255,255,255,0.15); border-radius: 8px;
+            padding: 8px 16px; margin-top: 12px; font-size: 0.82rem;
+            color: #a0cfff; display: inline-block;
+        }
+
+        .card-body { padding: 28px; }
+
+        .type-choice {
+            display: flex; gap: 12px; margin-bottom: 20px;
+        }
+        .choice-btn {
+            flex: 1; padding: 14px; border: 2px solid #e0e0e0;
+            border-radius: 10px; cursor: pointer; text-align: center;
+            transition: 0.2s; font-size: 0.9rem;
+        }
+        .choice-btn.selected {
+            border-color: #FF7A00; background: #fff3e0; color: #e65100; font-weight: bold;
+        }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block; font-size: 0.85rem;
+            color: #555; margin-bottom: 6px; font-weight: 500;
+        }
+        .form-group input {
+            width: 100%; padding: 12px 14px;
+            border: 1.5px solid #e0e0e0; border-radius: 8px;
+            font-size: 0.95rem; transition: 0.2s; outline: none;
+        }
+        .form-group input:focus {
+            border-color: #FF7A00;
+            box-shadow: 0 0 0 3px rgba(255,122,0,0.1);
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .btn-inscrire {
+            width: 100%; padding: 14px; border: none; border-radius: 10px;
+            background: linear-gradient(90deg, #FF7A00, #e66900);
+            color: white; font-size: 1rem; font-weight: bold;
+            cursor: pointer; margin-top: 8px; transition: 0.3s;
+        }
+        .btn-inscrire:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .info-box {
+            background: #e8f5e9; border-radius: 8px; padding: 12px 16px;
+            font-size: 0.82rem; color: #2e7d32; margin-bottom: 20px;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .notif {
+            position: fixed; top: 20px; right: 20px;
+            padding: 12px 20px; border-radius: 8px;
+            color: white; font-size: 0.9rem; z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="pay-navbar">
+    <img src="{% static 'voyageurs/images/logo3.png' %}">
+    <div style="color:#a0cfff;font-size:0.85rem;">✅ Paiement confirmé</div>
+</nav>
+
+<div class="container">
+    <div class="form-card">
+        <div class="card-header">
+            <h2>👤 Créez votre profil</h2>
+            <p>Votre paiement est sécurisé. Créez votre compte pour suivre votre colis.</p>
+            <div class="success-badge">🔒 Paiement enregistré avec succès</div>
+        </div>
+
+        <div class="card-body">
+            <div class="info-box">
+                ✅ Votre demande d'expédition a bien été enregistrée et votre paiement est sécurisé.
+                Créez votre profil pour accéder à votre espace et suivre l'état de votre colis.
+            </div>
+
+            <div class="type-choice">
+                <div class="choice-btn selected" id="btn-expediteur" onclick="choisirType('expediteur')">
+                    📦 Expéditeur
+                </div>
+                <div class="choice-btn" id="btn-voyageur" onclick="choisirType('voyageur')">
+                    🧳 Voyageur
+                </div>
+            </div>
+            <input type="hidden" id="type_profil" value="{{ type_profil }}">
+
+            <div class="form-group">
+                <label>Nom complet *</label>
+                <input type="text" id="nom_complet" value="{{ nom_complet }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Nom d'utilisateur *</label>
+                <input type="text" id="username" placeholder="ex: jean_dupont" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" id="email" placeholder="votre@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Téléphone *</label>
+                <input type="tel" id="telephone" placeholder="+33 6 12 34 56 78" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Mot de passe *</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirmer *</label>
+                    <input type="password" id="password2" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <button class="btn-inscrire" onclick="inscrire()">
+                ✅ Créer mon profil et accéder à mon espace
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+const EXPEDITEUR_ID = "{{ expediteur_id }}";
+const CSRF = "{{ csrf_token }}";
+
+function choisirType(type) {
+    document.getElementById('type_profil').value = type;
+    document.getElementById('btn-expediteur').classList.toggle('selected', type === 'expediteur');
+    document.getElementById('btn-voyageur').classList.toggle('selected', type === 'voyageur');
+}
+
+function inscrire() {
+    const nom = document.getElementById('nom_complet').value.trim();
+    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const tel = document.getElementById('telephone').value.trim();
+    const pwd = document.getElementById('password').value;
+    const pwd2 = document.getElementById('password2').value;
+    const type = document.getElementById('type_profil').value;
+
+    if (!nom || !username || !email || !tel || !pwd) {
+        showNotif('⚠️ Veuillez remplir tous les champs', '#FF7A00');
+        return;
+    }
+    if (pwd !== pwd2) {
+        showNotif('❌ Les mots de passe ne correspondent pas', '#c62828');
+        return;
+    }
+    if (pwd.length < 4) {
+        showNotif('❌ Mot de passe trop court (min 4 caractères)', '#c62828');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('type_profil', type);
+    formData.append('nom_complet', nom);
+    formData.append('username', username);
+    formData.append('email', email);
+    formData.append('telephone', tel);
+    formData.append('password', pwd);
+    // ✅ On lie l'expéditeur déjà payé à ce nouveau profil
+    if (EXPEDITEUR_ID) formData.append('expediteur_id', EXPEDITEUR_ID);
+
+    fetch('/creer-profil/', {
+        method: 'POST',
+        headers: { 'X-CSRFToken': CSRF },
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            showNotif('✅ Profil créé ! Redirection...', '#2e7d32');
+            // Nettoyer localStorage
+            localStorage.removeItem('annonce_data');
+            setTimeout(() => { window.location.href = '/espace-connecte/'; }, 1200);
+        } else {
+            showNotif('❌ ' + (data.message || 'Erreur'), '#c62828');
+        }
+    });
+}
+
+function showNotif(msg, color) {
+    const n = document.createElement('div');
+    n.className = 'notif';
+    n.style.background = color;
+    n.textContent = msg;
+    document.body.appendChild(n);
+    setTimeout(() => n.remove(), 4000);
+}
+
+// ✅ Indicatif téléphonique pour la page creer_profil_page
+document.addEventListener('DOMContentLoaded', function() {
+    // Copier les fonctions depuis script.js via un appel direct
+    if (typeof creerIndicatifTel === 'function') {
+        creerIndicatifTel('telephone', '+33');
+    } else {
+        // Si script.js n'est pas chargé, créer un sélecteur simple
+        const telInput = document.getElementById('telephone');
+        if (telInput) {
+            const wrap = document.createElement('div');
+            wrap.style.cssText = 'display:flex;gap:0;';
+
+            const select = document.createElement('select');
+            select.style.cssText = `
+                padding:0 8px;border:1.5px solid #e0e0e0;border-right:none;
+                border-radius:8px 0 0 8px;background:white;font-size:0.88rem;
+                cursor:pointer;outline:none;height:46px;min-width:90px;
+            `;
+
+            const indicatifs = [
+                {code:'+33',label:'🇫🇷 +33'},{code:'+32',label:'🇧🇪 +32'},
+                {code:'+41',label:'🇨🇭 +41'},{code:'+1',label:'🇺🇸 +1'},
+                {code:'+44',label:'🇬🇧 +44'},{code:'+49',label:'🇩🇪 +49'},
+                {code:'+237',label:'🇨🇲 +237'},{code:'+225',label:'🇨🇮 +225'},
+                {code:'+221',label:'🇸🇳 +221'},{code:'+216',label:'🇹🇳 +216'},
+                {code:'+212',label:'🇲🇦 +212'},{code:'+213',label:'🇩🇿 +213'},
+                {code:'+234',label:'🇳🇬 +234'},{code:'+233',label:'🇬🇭 +233'},
+                {code:'+27',label:'🇿🇦 +27'},{code:'+86',label:'🇨🇳 +86'},
+                {code:'+91',label:'🇮🇳 +91'},{code:'+55',label:'🇧🇷 +55'},
+            ];
+            indicatifs.forEach(i => {
+                const opt = document.createElement('option');
+                opt.value = i.code;
+                opt.textContent = i.label;
+                select.appendChild(opt);
+            });
+
+            telInput.style.borderRadius = '0 8px 8px 0';
+            telInput.style.borderLeft = 'none';
+            telInput.parentNode.insertBefore(wrap, telInput);
+            wrap.appendChild(select);
+            wrap.appendChild(telInput);
+        }
+    }
+});
+</script>
+
+<script>
+// Initialisation spécifique à cette page
+document.addEventListener('DOMContentLoaded', function() {
+    initialiserIndicatifs();
+    // Pas besoin de lier pays/ville ici car il n'y a pas de champs ville dans ce formulaire
+});
+</script>
+
+</body>
+</html>

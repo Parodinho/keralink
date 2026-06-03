@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Facture de Remboursement - KERALINK</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background: white; 
+            color: #333; 
+            padding: 40px; 
+            line-height: 1.5;
+        }
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            margin-bottom: 40px; 
+            padding-bottom: 24px; 
+            border-bottom: 3px solid #FF7A00; 
+        }
+        .logo { 
+            font-size: 2.1rem; 
+            font-weight: bold; 
+            color: #0A1F44; 
+        }
+        .logo span { color: #FF7A00; }
+        .ref { text-align: right; }
+        .ref .ref-label { font-size: 0.8rem; color: #888; margin-bottom: 4px; }
+        .ref .ref-num { 
+            font-size: 1.15rem; 
+            font-weight: bold; 
+            color: #0A1F44; 
+            font-family: monospace; 
+            letter-spacing: 2px; 
+        }
+        h2 { 
+            color: #0A1F44; 
+            font-size: 1.35rem; 
+            margin-bottom: 20px; 
+            text-align: center;
+        }
+        .info-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 24px; 
+            margin-bottom: 32px; 
+        }
+        .info-box { 
+            background: #f9f9f9; 
+            border-radius: 10px; 
+            padding: 20px; 
+        }
+        .info-box h3 { 
+            color: #FF7A00; 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            margin-bottom: 14px; 
+            letter-spacing: 1px; 
+        }
+        .info-row { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 10px; 
+            font-size: 0.92rem; 
+        }
+        .info-row .label { color: #777; }
+        .info-row .value { font-weight: 600; color: #0A1F44; }
+
+        .amount-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 30px 0; 
+        }
+        .amount-table th { 
+            background: #0A1F44; 
+            color: white; 
+            padding: 14px 16px; 
+            text-align: left; 
+        }
+        .amount-table th:last-child { text-align: right; }
+        .amount-table td { 
+            padding: 14px 16px; 
+            border-bottom: 1px solid #f0f0f0; 
+        }
+        .amount-table td:last-child { text-align: right; font-weight: 600; }
+        .amount-table tr.total td { 
+            background: #e8f5e9; 
+            font-size: 1.1rem; 
+            color: #2e7d32; 
+            font-weight: bold; 
+        }
+
+        .badge { 
+            display: inline-block; 
+            background: #e8f5e9; 
+            color: #2e7d32; 
+            padding: 6px 14px; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            font-weight: bold; 
+        }
+        .footer { 
+            text-align: center; 
+            color: #aaa; 
+            font-size: 0.82rem; 
+            margin-top: 50px; 
+            padding-top: 20px; 
+            border-top: 1px solid #eee; 
+        }
+        @media print {
+            body { padding: 20px; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <div class="logo">KER<span>ALINK</span></div>
+            <div style="font-size:0.85rem;color:#666;margin-top:4px;">Transport de colis entre particuliers</div>
+        </div>
+        <div class="ref">
+            <div class="ref-label">N° DE RÉFÉRENCE</div>
+            <div class="ref-num">{{ reference }}</div>
+            <div style="margin-top:10px;">
+                <span class="badge">↩️ Remboursement demandé</span>
+            </div>
+        </div>
+    </div>
+
+    <h2>🧾 Facture de Remboursement</h2>
+
+    <div class="info-grid">
+        <div class="info-box">
+            <h3>👤 Client</h3>
+            <div class="info-row">
+                <span class="label">Nom complet</span>
+                <span class="value">{{ nom }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Date de demande</span>
+                <span class="value">{{ date }}</span>
+            </div>
+        </div>
+        <div class="info-box">
+            <h3>📦 Détails du colis</h3>
+            <div class="info-row">
+                <span class="label">Trajet</span>
+                <span class="value">{{ trajet }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Poids</span>
+                <span class="value">{{ poids }} kg</span>
+            </div>
+        </div>
+    </div>
+
+    <table class="amount-table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Détail</th>
+                <th>Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Paiement initial du colis</td>
+                <td style="color:#666;">{{ poids }} kg × 10,00 €/kg</td>
+                <td>{{ montant_paye|floatformat:2 }} €</td>
+            </tr>
+            <tr>
+                <td>Montant remboursé</td>
+                <td style="color:#666;">Montant net reversé au client</td>
+                <td style="color:#2e7d32;">{{ montant_rembourse|floatformat:2 }} €</td>
+            </tr>
+            <tr>
+                <td>Commission KERALINK (non remboursable)</td>
+                <td style="color:#666;">{{ poids }} kg × 0,20 €/kg</td>
+                <td style="color:#e65100;">{{ montant_commission|floatformat:2 }} €</td>
+            </tr>
+            <tr class="total">
+                <td colspan="2"><strong>TOTAL REMBOURSÉ</strong></td>
+                <td>{{ montant_rembourse|floatformat:2 }} €</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="background:#e3f2fd; border-radius:10px; padding:20px; margin:25px 0; color:#1565c0;">
+        <strong>🔒 Information importante :</strong><br>
+        Votre demande de remboursement a été enregistrée. Le montant de <strong>{{ montant_rembourse|floatformat:2 }} €</strong> 
+        sera traité sous 48 heures.
+    </div>
+
+    <div class="footer">
+        <p>© 2026 KERALINK — Plateforme de transport de colis</p>
+        <p>Ce document est une facture officielle générée automatiquement.</p>
+    </div>
+</body>
+</html>

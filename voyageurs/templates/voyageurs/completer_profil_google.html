@@ -1,0 +1,212 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compléter mon profil - KERALINK</title>
+    <link rel="stylesheet" href="{% static 'voyageurs/css/style.css' %}">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
+        body { background:#f0f2f5; min-height:100vh; }
+        .navbar {
+            background: linear-gradient(90deg, #0A1F44, #1E3A8A);
+            padding: 0 2rem; height: 60px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .brand { color:white; font-size:1.4rem; font-weight:bold; }
+        .brand span { color:#FF7A00; }
+        .container { max-width:520px; margin:40px auto; padding:0 16px; }
+        .form-card {
+            background:white; border-radius:16px;
+            box-shadow:0 4px 24px rgba(0,0,0,0.1); overflow:hidden;
+        }
+        .card-header {
+            background:linear-gradient(120deg,#0A1F44,#1E3A8A);
+            padding:24px; color:white; text-align:center;
+        }
+        .card-header h2 { font-size:1.2rem; margin-bottom:6px; }
+        .google-badge {
+            display:inline-flex; align-items:center; gap:8px;
+            background:rgba(255,255,255,0.15); border-radius:8px;
+            padding:8px 16px; margin-top:12px; font-size:0.85rem; color:#a0cfff;
+        }
+        .google-icon {
+            width:20px; height:20px; background:white; border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            font-size:0.75rem; font-weight:bold; color:#4285F4;
+        }
+        .card-body { padding:28px; }
+        .type-choice { display:flex; gap:12px; margin-bottom:20px; }
+        .choice-btn {
+            flex:1; padding:14px; border:2px solid #e0e0e0;
+            border-radius:10px; cursor:pointer; text-align:center;
+            transition:0.2s; font-size:0.9rem;
+        }
+        .choice-btn.selected { border-color:#FF7A00; background:#fff3e0; color:#e65100; font-weight:bold; }
+        .form-group { margin-bottom:16px; }
+        .form-group label { display:block; font-size:0.85rem; color:#555; margin-bottom:6px; font-weight:500; }
+        .form-group input {
+            width:100%; padding:12px 14px; border:1.5px solid #e0e0e0;
+            border-radius:8px; font-size:0.95rem; outline:none; transition:0.2s;
+        }
+        .form-group input:focus { border-color:#FF7A00; box-shadow:0 0 0 3px rgba(255,122,0,0.1); }
+        .form-group input[readonly] { background:#f9f9f9; color:#888; cursor:not-allowed; }
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+        .btn-creer {
+            width:100%; padding:14px; border:none; border-radius:10px;
+            background:linear-gradient(90deg,#FF7A00,#e66900);
+            color:white; font-size:1rem; font-weight:bold;
+            cursor:pointer; margin-top:8px; transition:0.3s;
+        }
+        .btn-creer:hover { opacity:0.9; transform:translateY(-1px); }
+        .info-box {
+            background:#e8f5e9; border-radius:8px; padding:12px 16px;
+            font-size:0.82rem; color:#2e7d32; margin-bottom:20px;
+            border-left:4px solid #2e7d32;
+        }
+        .notif {
+            position:fixed; top:20px; right:20px;
+            padding:12px 20px; border-radius:8px;
+            color:white; font-size:0.9rem; z-index:9999;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="brand">KERA<span>LINK</span></div>
+    <div style="color:#a0cfff;font-size:0.85rem;">✅ Connecté avec Google</div>
+</nav>
+
+<div class="container">
+    <div class="form-card">
+        <div class="card-header">
+            <h2>👤 Complétez votre profil KERALINK</h2>
+            <p style="font-size:0.85rem;opacity:0.8;">Quelques informations supplémentaires pour démarrer</p>
+            <div class="google-badge">
+                <div class="google-icon">G</div>
+                Connecté via Google — {{ google_name }}
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="info-box">
+                ✅ Votre compte Google a été vérifié. Choisissez votre rôle et complétez votre profil.
+            </div>
+
+            <div class="type-choice">
+                <div class="choice-btn selected" id="btn-expediteur" onclick="choisirType('expediteur')">
+                    📦 Expéditeur
+                </div>
+                <div class="choice-btn" id="btn-voyageur" onclick="choisirType('voyageur')">
+                    🧳 Voyageur
+                </div>
+            </div>
+            <input type="hidden" id="type_profil" value="expediteur">
+
+            <div class="form-group">
+                <label>Nom complet *</label>
+                <input type="text" id="nom_complet" value="{{ google_name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Nom d'utilisateur *</label>
+                <input type="text" id="username" placeholder="ex: jean_dupont" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" value="{{ google_email }}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Téléphone *</label>
+                <input type="tel" id="telephone" placeholder="+33 6 12 34 56 78" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Mot de passe *</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirmer *</label>
+                    <input type="password" id="password2" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <button class="btn-creer" onclick="creerProfil()">
+                ✅ Créer mon profil KERALINK
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+const CSRF = "{{ csrf_token }}";
+
+function choisirType(type) {
+    document.getElementById('type_profil').value = type;
+    document.getElementById('btn-expediteur').classList.toggle('selected', type === 'expediteur');
+    document.getElementById('btn-voyageur').classList.toggle('selected', type === 'voyageur');
+}
+
+function creerProfil() {
+    const nom = document.getElementById('nom_complet').value.trim();
+    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const tel = document.getElementById('telephone').value.trim();
+    const pwd = document.getElementById('password').value;
+    const pwd2 = document.getElementById('password2').value;
+    const type = document.getElementById('type_profil').value;
+
+    if (!nom || !username || !tel || !pwd) {
+        showNotif('⚠️ Veuillez remplir tous les champs', '#FF7A00');
+        return;
+    }
+    if (pwd !== pwd2) {
+        showNotif('❌ Les mots de passe ne correspondent pas', '#c62828');
+        return;
+    }
+    if (pwd.length < 4) {
+        showNotif('❌ Mot de passe trop court', '#c62828');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('type_profil', type);
+    formData.append('nom_complet', nom);
+    formData.append('username', username);
+    formData.append('email', email);
+    formData.append('telephone', tel);
+    formData.append('password', pwd);
+
+    fetch('/creer-profil/', {
+        method: 'POST',
+        headers: { 'X-CSRFToken': CSRF },
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            showNotif('✅ Profil créé ! Redirection...', '#2e7d32');
+            setTimeout(() => { window.location.href = '/espace-connecte/'; }, 1200);
+        } else {
+            showNotif('❌ ' + (data.message || 'Erreur'), '#c62828');
+        }
+    });
+}
+
+function showNotif(msg, color) {
+    const n = document.createElement('div');
+    n.className = 'notif';
+    n.style.background = color;
+    n.textContent = msg;
+    document.body.appendChild(n);
+    setTimeout(() => n.remove(), 4000);
+}
+</script>
+
+</body>
+</html>

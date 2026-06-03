@@ -1,0 +1,1355 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KERALINK - Transport de colis simple et sécurisé</title>
+    <link rel="stylesheet" href="{% static 'voyageurs/css/style.css' %}">
+    <style>
+        /* Tes styles existants + les styles que tu avais déjà */
+        .currency-option { padding: 10px 16px; cursor: pointer; font-size: 0.88rem; color: #333; transition: 0.15s; }
+        .currency-option:hover { background: #f5f5f5; }
+        .indicatif-wrap { display: flex; gap: 0; width: 100%; }
+        .indicatif-wrap input[type="tel"] { border-radius: 0 8px 8px 0 !important; border-left: none !important; flex: 1; }
+        .indicatif-btn { border-radius: 8px 0 0 8px; border-right: none; z-index: 1; }
+    </style>
+</head>
+<body>
+<!-- ===== HEADER STYLE AMAZON ===== -->
+<header style="all:unset;display:block;">
+
+    <!-- BARRE 1 : Logo + Recherche + Compte + Langue/Monnaie -->
+    <div style="background:linear-gradient(90deg,#0A1F44 0%,#1E3A8A 100%);
+                padding:0 16px;display:flex;align-items:center;gap:12px;
+                min-height:64px;position:sticky;top:0;z-index:1000;
+                box-shadow:0 2px 12px rgba(0,0,0,0.35);">
+
+        <!-- Logo -->
+        <a onclick="showPage(event,'home')" style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;">
+            <img src="{% static 'voyageurs/images/logo3.png' %}"
+                 style="height:42px;display:block;filter:brightness(1.1);">
+        </a>
+
+        <!-- Barre de recherche centrale -->
+        <div style="flex:1;max-width:750px;display:flex;border-radius:8px;overflow:hidden;
+                    box-shadow:0 0 0 2px #FF7A00;margin:0 8px;">
+            <select style="padding:0 10px;border:none;background:#f0f0f0;
+                           font-size:0.82rem;outline:none;cursor:pointer;
+                           border-right:1px solid #ccc;color:#333;min-width:130px;">
+                <option>Toutes catégories</option>
+                <option>🧳 Voyageurs</option>
+                <option>📦 Expéditeurs</option>
+                <option>🌍 Europe</option>
+                <option>🌍 Afrique</option>
+                <option>🌍 Amérique</option>
+                <option>🌍 Asie</option>
+            </select>
+            <input type="text" id="search-input"
+                   data-i18n-placeholder="recherche_placeholder"
+                   placeholder="Rechercher un trajet, une ville, un pays..."
+                   style="flex:1;padding:10px 14px;border:none;font-size:0.95rem;
+                          outline:none;background:white;color:#333;">
+            <button onclick="searchHome()"
+                    style="background:#FF7A00;border:none;padding:0 18px;cursor:pointer;
+                           font-size:1.2rem;transition:background 0.2s;color:white;"
+                    onmouseover="this.style.background='#e66900'"
+                    onmouseout="this.style.background='#FF7A00'">🔍</button>
+        </div>
+
+        <!-- Langue -->
+        <div class="lang-selector" style="position:relative;flex-shrink:0;">
+            <button onclick="toggleLangMenu()" id="lang-btn"
+                    style="background:transparent;color:white;border:1.5px solid rgba(255,255,255,0.35);
+                           padding:6px 11px;border-radius:8px;cursor:pointer;font-size:0.82rem;
+                           display:flex;align-items:center;gap:5px;white-space:nowrap;
+                           transition:border-color 0.2s;"
+                    onmouseover="this.style.borderColor='#FF7A00'"
+                    onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'">
+                <span id="lang-flag">🇫🇷</span>
+                <span id="lang-label">FR</span>
+                <span style="font-size:0.65rem;opacity:0.7;">▾</span>
+            </button>
+            <div id="lang-menu" style="display:none;position:absolute;top:calc(100% + 8px);right:0;
+                                        background:white;border-radius:10px;padding:6px 0;
+                                        box-shadow:0 8px 28px rgba(0,0,0,0.22);min-width:160px;z-index:9999;
+                                        border:1px solid #eee;">
+                <div onclick="setLangue('fr')"
+                     style="padding:11px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:0.9rem;color:#333;"
+                     onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='none'">
+                    🇫🇷 <span>Français</span>
+                </div>
+                <div onclick="setLangue('en')"
+                     style="padding:11px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:0.9rem;color:#333;"
+                     onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='none'">
+                    🇬🇧 <span>English</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monnaie -->
+        <div class="currency-selector" style="position:relative;flex-shrink:0;">
+            <button onclick="toggleCurrencyMenu()" id="currency-btn"
+                    style="background:transparent;color:white;border:1.5px solid rgba(255,255,255,0.35);
+                           padding:6px 11px;border-radius:8px;cursor:pointer;font-size:0.82rem;
+                           display:flex;align-items:center;gap:5px;white-space:nowrap;
+                           transition:border-color 0.2s;"
+                    onmouseover="this.style.borderColor='#FF7A00'"
+                    onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'">
+                <span id="currency-symbol">€</span>
+                <span id="currency-label">EUR</span>
+                <span style="font-size:0.65rem;opacity:0.7;">▾</span>
+            </button>
+            <div id="currency-menu" style="display:none;position:absolute;top:calc(100% + 8px);right:0;
+                                            background:white;border-radius:10px;padding:6px 0;
+                                            box-shadow:0 8px 28px rgba(0,0,0,0.22);min-width:195px;z-index:9999;
+                                            max-height:300px;overflow-y:auto;border:1px solid #eee;">
+                <div onclick="setMonnaie('EUR','€','EUR')" class="currency-option">€ Euro (EUR)</div>
+                <div onclick="setMonnaie('USD','$','USD')" class="currency-option">$ Dollar américain (USD)</div>
+                <div onclick="setMonnaie('GBP','£','GBP')" class="currency-option">£ Livre Sterling (GBP)</div>
+                <div onclick="setMonnaie('XOF','FCFA','XOF')" class="currency-option">FCFA Franc CFA (XOF)</div>
+                <div onclick="setMonnaie('JPY','¥','JPY')" class="currency-option">¥ Yen japonais (JPY)</div>
+                <div onclick="setMonnaie('CAD','CA$','CAD')" class="currency-option">CA$ Dollar canadien</div>
+                <div onclick="setMonnaie('CHF','CHF','CHF')" class="currency-option">CHF Franc suisse</div>
+                <div onclick="setMonnaie('MAD','MAD','MAD')" class="currency-option">MAD Dirham marocain</div>
+                <div onclick="setMonnaie('DZD','DZD','DZD')" class="currency-option">DZD Dinar algérien</div>
+                <div onclick="setMonnaie('TND','TND','TND')" class="currency-option">TND Dinar tunisien</div>
+            </div>
+        </div>
+
+        <!-- Compte -->
+        <div style="flex-shrink:0;display:flex;flex-direction:column;cursor:pointer;
+                    padding:4px 8px;border-radius:8px;border:1.5px solid transparent;
+                    transition:border-color 0.2s;"
+             onclick="showPage(null,'profil')"
+             onmouseover="this.style.borderColor='#FF7A00'" onmouseout="this.style.borderColor='transparent'">
+            <span style="color:rgba(255,255,255,0.75);font-size:0.72rem;">Bonjour, identifiez-vous</span>
+            <span style="color:white;font-weight:700;font-size:0.88rem;">Compte & Profil ▾</span>
+        </div>
+
+        <!-- Espace connecté -->
+        <a href="/espace-connecte/"
+           style="flex-shrink:0;display:flex;flex-direction:column;text-decoration:none;
+                  padding:4px 8px;border-radius:8px;border:1.5px solid transparent;
+                  transition:border-color 0.2s;"
+           onmouseover="this.style.borderColor='#FF7A00'" onmouseout="this.style.borderColor='transparent'">
+            <span style="color:rgba(255,255,255,0.75);font-size:0.72rem;">Retours et</span>
+            <span style="color:white;font-weight:700;font-size:0.88rem;">Mon espace</span>
+        </a>
+
+    </div>
+
+    <!-- BARRE 2 : Navigation secondaire style Amazon -->
+    <div style="background:#0d1e3d;padding:0 16px;display:flex;align-items:center;
+                gap:0;overflow-x:auto;scrollbar-width:none;min-height:40px;">
+
+        <!-- Menu Toutes -->
+        <div class="menu-all" style="position:relative;flex-shrink:0;">
+            <button onclick="toggleMenu()"
+                    style="background:transparent;color:white;border:none;
+                           padding:0 14px;height:40px;cursor:pointer;font-size:0.88rem;
+                           display:flex;align-items:center;gap:6px;white-space:nowrap;
+                           border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+                    onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
+                ☰ <span data-i18n="menu_toutes">Toutes</span>
+
+            </button>
+            <div id="menu-dropdown" class="menu-dropdown"
+                 style="display:none;position:absolute;top:100%;left:0;z-index:9999;
+                        background:white;border-radius:8px;padding:8px 0;min-width:220px;
+                        box-shadow:0 8px 28px rgba(0,0,0,0.2);border:1px solid #eee;">
+                <a onclick="scrollToSection('voyageurs-section')"
+                   style="display:flex;align-items:center;gap:10px;padding:11px 18px;
+                          color:#333;cursor:pointer;font-size:0.9rem;text-decoration:none;"
+                   onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='none'">
+                    🧳 <span data-i18n="voyageurs_dispo">Voyageurs disponibles</span>
+                </a>
+                <a onclick="scrollToSection('expediteurs-section')"
+                   style="display:flex;align-items:center;gap:10px;padding:11px 18px;
+                          color:#333;cursor:pointer;font-size:0.9rem;text-decoration:none;"
+                   onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='none'">
+                    📦 <span data-i18n="expediteurs_dispo">Expéditeurs disponibles</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Séparateur -->
+        <div style="width:1px;height:22px;background:rgba(255,255,255,0.15);margin:0 4px;flex-shrink:0;"></div>
+
+        <!-- Liens de navigation secondaires -->
+        <nav class="nav-links" style="display:flex;align-items:center;gap:0;overflow-x:auto;scrollbar-width:none;">
+            <a onclick="showPage(event,'home')"
+               data-i18n="nav_accueil"
+               style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
+                      font-size:0.88rem;white-space:nowrap;cursor:pointer;text-decoration:none;
+                      border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+               onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
+                Accueil
+            </a>
+            <a onclick="showPage(event,'expediteur')"
+               data-i18n="nav_expedier"
+               style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
+                      font-size:0.88rem;white-space:nowrap;cursor:pointer;text-decoration:none;
+                      border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+               onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
+                📦 Expédier
+            </a>
+            <a onclick="showPage(event,'voyageur')"
+               data-i18n="nav_voyager"
+               style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
+                      font-size:0.88rem;white-space:nowrap;cursor:pointer;text-decoration:none;
+                      border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+               onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
+                🧳 Voyager
+            </a>
+            <a onclick="showPage(event,'profil')"
+               data-i18n="nav_profil"
+               style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
+                      font-size:0.88rem;white-space:nowrap;cursor:pointer;text-decoration:none;
+                      border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+               onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
+                👤 Profil
+            </a>
+            <a onclick="ouvrirCommentCaMarche()"
+               style="color:#FF7A00;font-weight:600;padding:0 14px;height:40px;display:flex;align-items:center;
+                      font-size:0.88rem;white-space:nowrap;cursor:pointer;text-decoration:none;
+                      border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+               onmouseover="this.style.borderColor='#FF7A00'" onmouseout="this.style.borderColor='transparent'">
+                🚀 Comment ça marche
+            </a>
+            <a onclick="ouvrirTarifs()"
+               style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
+                      font-size:0.88rem;white-space:nowrap;cursor:pointer;text-decoration:none;
+                      border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+               onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
+                💰 Tarifs
+            </a>
+            <a href="/espace-connecte/"
+               style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
+                      font-size:0.88rem;white-space:nowrap;text-decoration:none;
+                      border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+               onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
+                🔐 Mon espace
+            </a>
+        </nav>
+    </div>
+
+</header>
+
+
+    <!-- Page d'accueil -->
+    <div id="home-page" class="page active">
+        <div class="container">
+            <div class="hero">
+                <h1>Lien sûr entre vos bagages et vos colis</h1>
+                <p>Trouvez un voyageur pour transporter vos colis partout dans le monde à 10,20€/kg TTC</p>
+            </div>
+
+<!-- ===== VOYAGEURS DISPONIBLES ===== -->
+<div class="travelers-list" id="voyageurs-section">
+    <h2><span data-i18n="section_voyageurs">🛄 Voyageurs disponibles</span></h2>
+    <div id="voyageurs-liste">
+        {% for voyageur in voyageurs %}
+        <div class="traveler-card"
+             {% if voyageur.statut == 'complet' or voyageur.is_matched %}
+             style="opacity:0.6;background:#f0f0f0;"
+             {% endif %}>
+            <div class="traveler-info">
+                <div class="traveler-name">
+                    {{ voyageur.prenom }} {{ voyageur.nom }}
+                    <span class="traveler-badge">⭐ {{ voyageur.note|default:"5.0" }}</span>
+                    {% if voyageur.statut == 'complet' or voyageur.is_matched %}
+                    <span style="background:#27ae60;color:white;padding:2px 10px;
+                                 border-radius:12px;font-size:0.8rem;margin-left:6px;
+                                 font-weight:bold;">COMPLET</span>
+                    {% endif %}
+                </div>
+                <div class="route">
+                    <span class="route-icon">📍</span>
+                    {{ voyageur.ville_depart }}, {{ voyageur.pays_depart }}
+                    <span>→</span>
+                    <span class="route-icon">📍</span>
+                    {{ voyageur.ville_destination }}, {{ voyageur.pays_destination }}
+                </div>
+                <div class="date">
+                    📅 Départ: {{ voyageur.date_depart }} à {{ voyageur.heure_depart }} —
+                    Arrivée: {{ voyageur.date_arrivee }} à {{ voyageur.heure_arrivee }}
+                </div>
+                <div style="margin-top:8px;font-size:0.95rem;">
+                    <strong>Poids :</strong>
+                    {% if voyageur.statut == 'complet' or voyageur.is_matched %}
+                    <span style="color:#95a5a6;">0 kg</span>
+                    {% else %}
+                    {{ voyageur.poids_disponible }} kg
+                    {% endif %}
+                    <span style="color:#27ae60;">
+                        • {% if voyageur.type_kg == 'detail' %}En détail{% else %}En entier{% endif %}
+                    </span>
+                </div>
+            </div>
+            <div class="traveler-details">
+                <div>
+                    <span class="weight-available"
+                          {% if voyageur.statut == 'complet' or voyageur.is_matched %}
+                          style="color:#95a5a6;"
+                          {% endif %}>
+                        {% if voyageur.statut == 'complet' or voyageur.is_matched %}0{% else %}{{ voyageur.poids_disponible }}{% endif %} kg
+                    </span>
+                    <span class="weight-label" data-i18n="kg_disponibles">disponibles</span>
+                </div>
+                <div class="price-info">
+                    <div class="price" data-prix-kg>10€/kg pour vous</div>
+                </div>
+                {% if voyageur.statut == 'complet' or voyageur.is_matched %}
+                <button class="select-btn" disabled
+                        style="background:#95a5a6;cursor:not-allowed;">
+                    Complet
+                </button>
+                {% else %}
+                <button class="select-btn"
+                        onclick="selectionnerVoyageur('{{ voyageur.id }}')">
+                    <span data-i18n="btn_selectionner">Sélectionner</span>
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <p data-i18n="aucun_voyageur">Aucun voyageur disponible</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ===== EXPÉDITEURS DISPONIBLES ===== -->
+<div class="travelers-list" id="expediteurs-section" style="margin-top:2rem;">
+    <h2><span data-i18n="section_expediteurs">📦 Expéditeurs disponibles</span></h2>
+
+    {% for exp in expediteurs %}
+    <div class="traveler-card"
+         {% if exp.is_matched %}
+         style="opacity:0.6;background:#f0f0f0;"
+         {% endif %}>
+        <div class="traveler-info">
+            <div class="traveler-name">
+                {{ exp.prenom }} {{ exp.nom }}
+                {% if exp.is_matched %}
+                <span style="background:#27ae60;color:white;padding:2px 10px;
+                             border-radius:12px;font-size:0.8rem;margin-left:6px;
+                             font-weight:bold;">COMPLET</span>
+                {% endif %}
+            </div>
+            <div class="route">
+                <span class="route-icon">📍</span> {{ exp.ville }}
+                <span>→</span>
+                <span class="route-icon">📍</span> {{ exp.ville_destination }}
+            </div>
+            <div class="date">📦 Colis : {{ exp.poids_colis }} kg</div>
+        </div>
+        <div class="traveler-details">
+            <div>
+                <span class="weight-available">{{ exp.poids_colis }} kg</span>
+                <span class="weight-label" data-i18n="a_transporter">à transporter</span>
+            </div>
+            <div class="price-info">
+                <div class="price" data-prix-kg>10€/kg pour vous</div>
+            </div>
+            {% if exp.is_matched %}
+            <button class="select-btn" disabled
+                    style="background:#95a5a6;cursor:not-allowed;">
+                Complet
+            </button>
+            {% else %}
+            <button class="select-btn"
+                    onclick="selectionnerExpediteur('{{ exp.id }}')">
+                <span data-i18n="btn_selectionner">Sélectionner</span>
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <p data-i18n="aucun_expediteur">Aucun expéditeur disponible</p>
+    {% endfor %}
+</div>
+    </div>
+</div>
+
+<!-- Page Expéditeur -->
+<div id="expediteur-page" class="page">
+    <div class="container">
+        <div class="form-card">
+            <h3>
+                <span class="icon">📦</span>
+                Expédier un colis
+            </h3>
+            
+            <form id="expediteur-form">
+                {% csrf_token %}
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nom *</label>
+                        <input type="text" id="exp-nom" name="nom" placeholder="Votre nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Prénom *</label>
+                        <input type="text" id="exp-prenom" name="prenom" placeholder="Votre prénom" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Téléphone *</label>
+                    <input type="tel" id="exp-telephone" name="telephone" placeholder="+33 6 12 34 56 78" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Pays *</label>
+                        <input type="text" id="exp-pays" name="pays" placeholder="France" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ville *</label>
+                        <input type="text" id="exp-ville" name="ville" placeholder="Paris" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Pays de destination *</label>
+                        <input type="text" id="exp-pays-dest" name="pays_destination" placeholder="Cameroun" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ville de destination *</label>
+                        <input type="text" id="exp-ville-dest" name="ville_destination" placeholder="Douala" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Poids du colis (kg) *</label>
+                    <input type="number" id="exp-poids" name="poids" min="0.1" step="0.1" placeholder="Ex: 5" required oninput="calculerPrixExpediteur()">
+                </div>
+                
+                <div class="total-price">
+                    <span>Total à payer:</span>
+                    <span id="exp-total">0.00 €</span>
+                </div>
+                
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="exp-check1" required>
+                        <label for="exp-check1">J'accepte et j'affirme que mon colis ne contient aucun produit illégal...</label>
+                    </div>
+                    
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="exp-check2" required>
+                        <label for="exp-check2">J'accepte toutes les conditions générales d'utilisation...</label>
+                    </div>
+                </div>
+                
+                <div class="payment-methods">
+                    <h4>Choisissez votre moyen de paiement *</h4>
+                    <div class="payment-grid">
+                        <div class="payment-option" onclick="selectPayment(this, 'paypal')">PayPal</div>
+                        <div class="payment-option" onclick="selectPayment(this, 'carte')">Carte Bancaire</div>
+                        <div class="payment-option" onclick="selectPayment(this, 'orange')">Orange Money</div>
+                        <div class="payment-option" onclick="selectPayment(this, 'wave')">Wave</div>
+                    </div>
+
+                    <!-- IMPORTANT -->
+                    <input type="hidden" id="selected-payment" name="mode_paiement" required>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="exp-submit">
+                    Publier ma demande
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Page Voyageur -->
+<div id="voyageur-page" class="page">
+    <div class="container">
+        <div class="form-card">
+            <h3>
+                <span class="icon">🧳</span>
+                Proposer un transport
+            </h3>
+            
+            <form id="voyageur-form">
+                {% csrf_token %}
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nom *</label>
+                        <input type="text" id="voy-nom" name="nom" placeholder="Votre nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Prénom *</label>
+                        <input type="text" id="voy-prenom" name="prenom" placeholder="Votre prénom" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Téléphone *</label>
+                    <input type="tel" id="voy-telephone" name="telephone" placeholder="+33 6 12 34 56 78" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Pays de départ *</label>
+                        <input type="text" id="voy-pays-depart" name="pays_depart" placeholder="France" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ville de départ *</label>
+                        <input type="text" id="voy-ville-depart" name="ville_depart" placeholder="Paris" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Pays de destination *</label>
+                        <input type="text" id="voy-pays-destination" name="pays_destination" placeholder="Cameroun" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ville de destination *</label>
+                        <input type="text" id="voy-ville-destination" name="ville_destination" placeholder="Douala" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date de départ *</label>
+                        <input type="date" id="voy-date-depart" name="date_depart" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Heure de départ *</label>
+                        <input type="time" id="voy-heure-depart" name="heure_depart" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date d'arrivée *</label>
+                        <input type="date" id="voy-date-arrivee" name="date_arrivee" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Heure d'arrivée *</label>
+                        <input type="time" id="voy-heure-arrivee" name="heure_arrivee" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Poids disponible (kg) *</label>
+                    <input type="number" id="voy-poids" name="poids" min="0.1" step="0.1" placeholder="Ex: 23" required>
+                </div>
+
+                <div class="form-group">
+                <label>Type de kg disponible *</label>
+                <div style="display:flex; gap:20px; margin-top:8px;">
+                <label style="cursor:pointer;">
+                <input type="radio" name="type_kg" value="entier" checked> 
+                <span style="margin-left:5px;">Kg en entier (tout ou rien)</span>
+                </label>
+                <label style="cursor:pointer;">
+                <input type="radio" name="type_kg" value="detail"> 
+                <span style="margin-left:5px;">Kg en détail (fractionnable)</span>
+                </label>
+                </div>
+                </div>
+                
+                <div class="total-price" style="background-color: var(--jaune); color: var(--noir);">
+                    <span>Vous recevrez :</span>
+                    <span id="voy-gain">0.00 €</span>
+                </div>
+                
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="voy-check1" required>
+                        <label for="voy-check1">J'accepte et j'affirme avoir vérifié le contenu du/des colis...</label>
+                    </div>
+                    
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="voy-check2" required>
+                        <label for="voy-check2">J'accepte toutes les conditions générales d'utilisation...</label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="voy-submit" disabled>
+                    Publier mon trajet
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Page Profil -->
+<div id="profil-page" class="page">
+
+<!-- DANS #profil-page — REMPLACE le div Google existant -->
+<div class="container">
+    <div class="form-card">
+        <h3>👤 Créer votre profil</h3>
+
+        <!-- ✅ Bouton Google bien placé dans la card -->
+        <div style="margin-bottom:24px;">
+            <a href="/accounts/google/login/?next=/google-callback/"
+               style="display:flex;align-items:center;justify-content:center;gap:12px;
+                      width:100%;padding:15px;border-radius:12px;
+                      background:white;border:2px solid #e0e0e0;
+                      color:#333;font-weight:700;font-size:1rem;
+                      text-decoration:none;transition:all 0.25s;
+                      box-shadow:0 2px 8px rgba(0,0,0,0.08);"
+               onmouseover="this.style.borderColor='#4285F4';this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(66,133,244,0.25)'"
+               onmouseout="this.style.borderColor='#e0e0e0';this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'">
+                <svg width="22" height="22" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
+                Continuer avec Google
+            </a>
+            <div style="display:flex;align-items:center;gap:14px;margin:18px 0;">
+                <div style="flex:1;height:1px;background:#e0e0e0;"></div>
+                <span style="color:#999;font-size:0.9rem;font-weight:500;">ou s'inscrire manuellement</span>
+                <div style="flex:1;height:1px;background:#e0e0e0;"></div>
+            </div>
+        </div>
+            <h4>ÊTES-VOUS ?</h4>
+            <div class="choice-box">
+                <div onclick="choisirType('voyageur')" class="choice-btn">🧳 Voyageur</div>
+                <div onclick="choisirType('expediteur')" class="choice-btn">📦 Expéditeur</div>
+            </div>
+            <input type="hidden" id="type_profil">
+
+            <div class="form-group">
+                <label>Nom complet *</label>
+                <input type="text" id="nom_complet" required>
+            </div>
+
+            <div class="form-group">
+                <label>Nom d'utilisateur *</label>
+                <input type="text" id="username" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Téléphone *</label>
+                <input type="tel" id="telephone" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Mot de passe *</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirmer *</label>
+                    <input type="password" id="profil-password2" required>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button type="button" class="submit-btn" onclick="inscrireProfil()" style="flex:1;">
+                    S'inscrire
+                </button>
+                <button type="button" class="submit-btn" onclick="showLoginForm()" style="flex:1; background:#3498db;">
+                    Se connecter
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NOUVELLE PAGE DE CONNEXION INTÉGRÉE -->
+<div id="login-page" class="page">
+
+    <div class="container">
+        <div class="form-card">
+            <h3>🔑 Connexion</h3>
+
+             <!-- ✅ Bouton Google bien placé dans la card -->
+        <div style="margin-bottom:24px;">
+            <a href="/accounts/google/login/?next=/google-callback/"
+               style="display:flex;align-items:center;justify-content:center;gap:12px;
+                      width:100%;padding:15px;border-radius:12px;
+                      background:white;border:2px solid #e0e0e0;
+                      color:#333;font-weight:700;font-size:1rem;
+                      text-decoration:none;transition:all 0.25s;
+                      box-shadow:0 2px 8px rgba(0,0,0,0.08);"
+               onmouseover="this.style.borderColor='#4285F4';this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(66,133,244,0.25)'"
+               onmouseout="this.style.borderColor='#e0e0e0';this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'">
+                <svg width="22" height="22" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
+                Continuer avec Google
+            </a>
+            <div style="display:flex;align-items:center;gap:14px;margin:18px 0;">
+                <div style="flex:1;height:1px;background:#e0e0e0;"></div>
+                <span style="color:#999;font-size:0.9rem;font-weight:500;">ou s'inscrire manuellement</span>
+                <div style="flex:1;height:1px;background:#e0e0e0;"></div>
+            </div>
+        </div>
+            
+            <div class="form-group">
+                <label>Nom d'utilisateur ou Email</label>
+                <input type="text" id="login-identifiant" placeholder="Username ou email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" id="login-password" required>
+            </div>
+
+            <button onclick="performLogin()" class="submit-btn">Se connecter</button>
+
+            <p style="text-align:center; margin-top:20px;">
+                Pas encore de compte ? 
+                <a onclick="showPage(null, 'profil')" style="color:var(--orange); cursor:pointer;">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+
+            
+
+
+    <!-- Modal de confirmation expéditeur -->
+    <div id="expediteur-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirmer votre demande d'expédition</h2>
+                <button class="close-modal" onclick="closeModal('expediteur')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Veuillez confirmer les informations suivantes :</p>
+                <div class="confirmation-details" id="exp-confirmation-details">
+                    <!-- Rempli par JavaScript -->
+                </div>
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="modal-exp-check1" onchange="verifierModalExpediteur()">
+                        <label for="modal-exp-check1">J'accepte et j'affirme que mon colis ne contient aucun produit illégal ou dangereux</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="modal-exp-check2" onchange="verifierModalExpediteur()">
+                        <label for="modal-exp-check2">J'accepte toutes les conditions générales de KERALINK</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeModal('expediteur')">Annuler</button>
+                <button class="modal-btn confirm" id="modal-exp-confirm" onclick="confirmerEnvoi()" disabled>
+                    Confirmer et payer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmation voyageur -->
+    <div id="voyageur-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirmer la publication de votre trajet</h2>
+                <button class="close-modal" onclick="closeModal('voyageur')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Veuillez confirmer les informations suivantes :</p>
+                <div class="confirmation-details" id="voy-confirmation-details">
+                    <!-- Rempli par JavaScript -->
+                </div>
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="modal-voy-check1" onchange="verifierModalVoyageur()">
+                        <label for="modal-voy-check1">J'accepte de vérifier les colis avant le départ et de les transporter en toute sécurité</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="modal-voy-check2" onchange="verifierModalVoyageur()">
+                        <label for="modal-voy-check2">J'accepte toutes les conditions générales de KERALINK</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeModal('voyageur')">Annuler</button>
+                <button class="modal-btn confirm" id="modal-voy-confirm" onclick="confirmerPublication()" disabled>Publier mon trajet</button>
+            </div>
+        </div>
+    </div>
+
+    <body data-expediteur-id="{{ expediteur.id|default:'' }}"
+      data-voyageur-id="{{ voyageur.id|default:'' }}">
+
+<!-- ================================================================ -->
+<!-- REMPLACEZ tout le bloc "Compteur de visiteurs" actuel            -->
+<!-- ET collez ce bloc JUSTE AVANT <footer ...>                       -->
+<!-- ================================================================ -->
+
+<!-- ✅ Compteur visiteurs — carré compact avant le footer -->
+<div style="display:flex;justify-content:center;padding:40px 16px 0;
+            background:#f0f2f5;">
+    <div style="background:linear-gradient(135deg,#0A1F44 0%,#1E3A8A 100%);
+                border-radius:16px;padding:28px 40px;text-align:center;
+                box-shadow:0 8px 32px rgba(10,31,68,0.25);
+                min-width:260px;max-width:320px;width:100%;">
+
+        <!-- Titre -->
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.55);
+                    letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;
+                    font-weight:600;">
+            Ils nous font confiance
+        </div>
+
+        <!-- Nombre avec points animés -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:14px;
+                    margin-bottom:10px;">
+            <div style="width:9px;height:9px;background:#FF7A00;border-radius:50%;
+                        animation:pulse 1.5s infinite;flex-shrink:0;"></div>
+            <div id="nb-visiteurs-display"
+                 style="font-size:3rem;font-weight:900;color:white;
+                        line-height:1;letter-spacing:3px;">
+                {{ total_visiteurs|default:0 }}
+            </div>
+            <div style="width:9px;height:9px;background:#FF7A00;border-radius:50%;
+                        animation:pulse 1.5s infinite 0.6s;flex-shrink:0;"></div>
+        </div>
+
+        <!-- Label -->
+        <div style="font-size:0.95rem;color:rgba(255,255,255,0.9);
+                    font-weight:600;margin-bottom:6px;">
+            visiteurs sur KERALINK
+        </div>
+
+        <!-- Sous-texte -->
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);
+                    margin-bottom:18px;">
+            Rejoignez la communauté
+        </div>
+
+        <!-- Séparateur -->
+        <div style="width:40px;height:2px;background:#FF7A00;
+                    margin:0 auto 16px;border-radius:2px;"></div>
+
+        <!-- Bouton CTA -->
+        <button onclick="document.getElementById('modal-login') ?
+                         document.getElementById('modal-login').style.display='flex' :
+                         window.location.href='/login/'"
+                style="background:linear-gradient(90deg,#FF7A00,#e66900);
+                       color:white;border:none;padding:10px 24px;
+                       border-radius:8px;font-size:0.85rem;font-weight:700;
+                       cursor:pointer;width:100%;transition:opacity 0.2s;"
+                onmouseover="this.style.opacity='0.9'"
+                onmouseout="this.style.opacity='1'">
+            Rejoindre KERALINK →
+        </button>
+    </div>
+</div>
+
+<style>
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%       { transform: scale(1.5); opacity: 0.5; }
+}
+</style>
+
+<script>
+function rafraichirCompteurVisiteurs() {
+    fetch('/nb-visiteurs/')
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                const el = document.getElementById('nb-visiteurs-display');
+                if (!el) return;
+                const ancien  = parseInt(el.textContent) || 0;
+                const nouveau = data.total;
+                if (nouveau !== ancien) {
+                    el.style.transition = 'transform 0.3s, color 0.3s';
+                    el.style.transform  = 'scale(1.18)';
+                    el.style.color      = '#FF7A00';
+                    el.textContent      = nouveau;
+                    setTimeout(() => {
+                        el.style.transform = 'scale(1)';
+                        el.style.color     = 'white';
+                    }, 350);
+                }
+            }
+        })
+        .catch(() => {});
+}
+setInterval(rafraichirCompteurVisiteurs, 30000);
+</script>
+
+<footer style="all:unset;display:block;margin-top:0;">
+
+
+<footer style="all:unset;display:block;margin-top:60px;">
+
+    <!-- Bouton retour en haut -->
+    <div onclick="window.scrollTo({top:0,behavior:'smooth'})"
+         style="background:#1a2f5a;color:white;text-align:center;padding:14px;
+                cursor:pointer;font-size:0.88rem;transition:background 0.2s;"
+         onmouseover="this.style.background='#223573'" onmouseout="this.style.background='#1a2f5a'">
+        ↑ Retour en haut de page
+    </div>
+
+    <!-- Zone principale footer -->
+    <div style="background:#0A1F44;color:white;padding:40px 24px 20px;">
+        <div style="max-width:1200px;margin:0 auto;display:grid;
+                    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px;">
+
+            <!-- Colonne 1 : À propos -->
+            <div>
+                <img src="{% static 'voyageurs/images/logo3.png' %}" style="height:36px;margin-bottom:16px;display:block;">
+                <p style="font-size:0.85rem;color:#a0cfff;line-height:1.7;margin-bottom:12px;">
+                    KERALINK connecte expéditeurs et voyageurs pour transporter vos colis
+                    partout dans le monde en toute sécurité.
+                </p>
+                <div style="display:flex;gap:10px;margin-top:14px;">
+                    <div style="width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:8px;
+                                display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;"
+                         onmouseover="this.style.background='rgba(255,122,0,0.3)'"
+                         onmouseout="this.style.background='rgba(255,255,255,0.1)'">📘</div>
+                    <div style="width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:8px;
+                                display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;"
+                         onmouseover="this.style.background='rgba(255,122,0,0.3)'"
+                         onmouseout="this.style.background='rgba(255,255,255,0.1)'">📸</div>
+                    <div style="width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:8px;
+                                display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;"
+                         onmouseover="this.style.background='rgba(255,122,0,0.3)'"
+                         onmouseout="this.style.background='rgba(255,255,255,0.1)'">🐦</div>
+                </div>
+            </div>
+
+            <!-- Colonne 2 : Services -->
+            <div>
+                <h4 style="color:white;margin-bottom:16px;font-size:0.95rem;font-weight:700;
+                            border-bottom:2px solid #FF7A00;padding-bottom:8px;display:inline-block;">
+                    Nos services
+                </h4>
+                <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
+                    <li><a onclick="showPage(null,'expediteur')" style="color:#a0cfff;cursor:pointer;font-size:0.88rem;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#FF7A00'" onmouseout="this.style.color='#a0cfff'">📦 Expédier un colis</a></li>
+                    <li><a onclick="showPage(null,'voyageur')" style="color:#a0cfff;cursor:pointer;font-size:0.88rem;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#FF7A00'" onmouseout="this.style.color='#a0cfff'">🧳 Proposer un trajet</a></li>
+                    <li><a href="/espace-connecte/" style="color:#a0cfff;font-size:0.88rem;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#FF7A00'" onmouseout="this.style.color='#a0cfff'">🔐 Mon espace</a></li>
+                    <li><a onclick="scrollToSection('voyageurs-section')" style="color:#a0cfff;cursor:pointer;font-size:0.88rem;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#FF7A00'" onmouseout="this.style.color='#a0cfff'">🛄 Voyageurs disponibles</a></li>
+                    <li><a onclick="scrollToSection('expediteurs-section')" style="color:#a0cfff;cursor:pointer;font-size:0.88rem;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#FF7A00'" onmouseout="this.style.color='#a0cfff'">📦 Expéditeurs disponibles</a></li>
+                </ul>
+            </div>
+
+            <!-- Colonne 3 : Aide -->
+            <div>
+                <h4 style="color:white;margin-bottom:16px;font-size:0.95rem;font-weight:700;
+                            border-bottom:2px solid #FF7A00;padding-bottom:8px;display:inline-block;">
+                    Aide & Info
+                </h4>
+                <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
+                    <li><a onclick="ouvrirCommentCaMarche()" style="color:#a0cfff;cursor:pointer;font-size:0.88rem;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#FF7A00'" onmouseout="this.style.color='#a0cfff'">🚀 Comment ça marche</a></li>
+                    <li><a onclick="ouvrirTarifs()" style="color:#a0cfff;cursor:pointer;font-size:0.88rem;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#FF7A00'" onmouseout="this.style.color='#a0cfff'">💰 Tarifs & Commissions</a></li>
+                    <li><a onclick="ouvrirContact()" style="color:#a0cfff;cursor:pointer;font-size:0.88rem;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#FF7A00'" onmouseout="this.style.color='#a0cfff'">📬 Nous contacter</a></li>
+                    <li><a onclick="ouvrirCGU()" style="color:#a0cfff;cursor:pointer;font-size:0.88rem;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#FF7A00'" onmouseout="this.style.color='#a0cfff'">📄 Conditions générales</a></li>
+                </ul>
+            </div>
+
+            <!-- Colonne 4 : Sécurité & Paiement -->
+            <div>
+                <h4 style="color:white;margin-bottom:16px;font-size:0.95rem;font-weight:700;
+                            border-bottom:2px solid #FF7A00;padding-bottom:8px;display:inline-block;">
+                    Sécurité & Paiement
+                </h4>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;font-size:0.82rem;color:#a0cfff;">
+                        🔒 Paiement 100% sécurisé
+                    </div>
+                    <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;font-size:0.82rem;color:#a0cfff;">
+                        🛡️ Fonds bloqués en séquestre
+                    </div>
+                    <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;font-size:0.82rem;color:#a0cfff;">
+                        ✅ Photo de livraison obligatoire
+                    </div>
+                    <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:8px;">
+                        <span style="background:rgba(255,255,255,0.12);border-radius:6px;padding:6px 10px;font-size:0.78rem;color:white;">💳 Carte</span>
+                        <span style="background:rgba(255,255,255,0.12);border-radius:6px;padding:6px 10px;font-size:0.78rem;color:white;">🅿️ PayPal</span>
+                        <span style="background:rgba(255,255,255,0.12);border-radius:6px;padding:6px 10px;font-size:0.78rem;color:white;">🟠 Orange</span>
+                        <span style="background:rgba(255,255,255,0.12);border-radius:6px;padding:6px 10px;font-size:0.78rem;color:white;">🌊 Wave</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Barre de copyright -->
+    <div style="background:#060f24;padding:14px 24px;display:flex;
+                align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+        <p style="color:#6b8cae;font-size:0.82rem;margin:0;">
+            &copy; 2026 KERALINK — Transport de colis entre particuliers. Tous droits réservés.
+        </p>
+        <div style="display:flex;gap:16px;">
+            <a onclick="ouvrirCGU()" style="color:#6b8cae;font-size:0.8rem;cursor:pointer;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#FF7A00'" onmouseout="this.style.color='#6b8cae'">CGU</a>
+            <a onclick="ouvrirContact()" style="color:#6b8cae;font-size:0.8rem;cursor:pointer;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#FF7A00'" onmouseout="this.style.color='#6b8cae'">Contact</a>
+            <a onclick="ouvrirTarifs()" style="color:#6b8cae;font-size:0.8rem;cursor:pointer;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#FF7A00'" onmouseout="this.style.color='#6b8cae'">Tarifs</a>
+        </div>
+    </div>
+
+</footer>
+
+
+
+<!-- ===== MODAL CONDITIONS GÉNÉRALES ===== -->
+<div id="modal-cgu" style="display:none;position:fixed;inset:0;
+     background:rgba(0,0,0,0.6);z-index:99999;
+     display:none;align-items:center;justify-content:center;
+     backdrop-filter:blur(4px);">
+    <div style="background:white;border-radius:16px;max-width:780px;width:94%;
+                max-height:88vh;overflow-y:auto;
+                box-shadow:0 24px 64px rgba(0,0,0,0.35);position:relative;">
+
+        <!-- En-tête -->
+        <div style="background:linear-gradient(120deg,#0A1F44,#1E3A8A);
+                    padding:24px 28px;border-radius:16px 16px 0 0;
+                    display:flex;justify-content:space-between;align-items:center;
+                    position:sticky;top:0;z-index:1;">
+            <div>
+                <h2 style="color:white;font-size:1.2rem;margin-bottom:4px;">
+                    📄 Conditions Générales d'Utilisation
+                </h2>
+                <p style="color:#a0cfff;font-size:0.82rem;">
+                    KERALINK — Plateforme de transport de colis entre particuliers
+                </p>
+            </div>
+            <button onclick="fermerCGU()"
+                    style="background:rgba(255,255,255,0.2);border:none;color:white;
+                           width:36px;height:36px;border-radius:50%;font-size:1.3rem;
+                           cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                ×
+            </button>
+        </div>
+
+        <!-- Corps -->
+        <div style="padding:28px;font-size:0.92rem;color:#333;line-height:1.7;">
+
+            <div style="background:#e3f2fd;border-radius:10px;padding:14px 18px;
+                        margin-bottom:24px;border-left:4px solid #1E3A8A;">
+                <strong style="color:#1E3A8A;">Date de mise à jour :</strong>
+                <span style="color:#555;"> 05 Mai 2026</span><br>
+                <strong style="color:#1E3A8A;">Version :</strong>
+                <span style="color:#555;"> 1.0</span>
+            </div>
+
+            <!-- Article 1 -->
+            <div style="margin-bottom:22px;">
+                <h3 style="color:#0A1F44;font-size:1rem;margin-bottom:10px;
+                            padding-bottom:6px;border-bottom:2px solid #FF7A00;">
+                    Article 1 — Présentation de KERALINK
+                </h3>
+                <p>KERALINK est une plateforme numérique de mise en relation entre des <strong>expéditeurs</strong>
+                souhaitant envoyer des colis et des <strong>voyageurs</strong> disposant d'espace dans leurs bagages.
+                La plateforme facilite ces échanges en proposant un système de matching, de messagerie sécurisée
+                et de paiement par séquestre (escrow).</p>
+                <p style="margin-top:8px;">KERALINK n'est pas un transporteur. Elle agit uniquement comme
+                intermédiaire technologique entre les parties.</p>
+            </div>
+
+            <!-- Article 2 -->
+            <div style="margin-bottom:22px;">
+                <h3 style="color:#0A1F44;font-size:1rem;margin-bottom:10px;
+                            padding-bottom:6px;border-bottom:2px solid #FF7A00;">
+                    Article 2 — Acceptation des conditions
+                </h3>
+                <p>L'utilisation de la plateforme KERALINK implique l'acceptation pleine et entière des présentes
+                Conditions Générales d'Utilisation (CGU). Tout utilisateur qui s'inscrit ou utilise les services
+                de KERALINK reconnaît avoir lu, compris et accepté ces conditions.</p>
+                <p style="margin-top:8px;">KERALINK se réserve le droit de modifier les présentes CGU à tout moment.
+                Les utilisateurs seront informés de toute modification significative.</p>
+            </div>
+
+            <!-- Article 3 -->
+            <div style="margin-bottom:22px;">
+                <h3 style="color:#0A1F44;font-size:1rem;margin-bottom:10px;
+                            padding-bottom:6px;border-bottom:2px solid #FF7A00;">
+                    Article 3 — Inscription et comptes utilisateurs
+                </h3>
+                <p>Pour accéder aux services de KERALINK, l'utilisateur doit créer un compte en fournissant
+                des informations exactes et à jour. Chaque utilisateur est responsable de la confidentialité
+                de ses identifiants.</p>
+                <ul style="margin:10px 0 0 20px;">
+                    <li style="margin-bottom:6px;">L'utilisateur doit avoir au minimum <strong>18 ans</strong>.</li>
+                    <li style="margin-bottom:6px;">Un seul compte est autorisé par personne.</li>
+                    <li style="margin-bottom:6px;">KERALINK se réserve le droit de suspendre tout compte
+                    en cas de fraude ou de violation des CGU.</li>
+                    <li>Les informations personnelles sont traitées conformément à notre politique de confidentialité.</li>
+                </ul>
+            </div>
+
+            <!-- Article 4 -->
+            <div style="margin-bottom:22px;">
+                <h3 style="color:#0A1F44;font-size:1rem;margin-bottom:10px;
+                            padding-bottom:6px;border-bottom:2px solid #FF7A00;">
+                    Article 4 — Tarification et commissions
+                </h3>
+                <p>Le tarif standard de transport sur KERALINK est de <strong>10 € par kilogramme</strong>.
+                Une commission de <strong>0,20 € par kilogramme</strong> est prélevée par KERALINK sur chaque
+                transaction réussie.</p>
+                <div style="background:#fff3e0;border-radius:8px;padding:12px 16px;margin-top:12px;">
+                    <strong style="color:#e65100;">Récapitulatif des frais :</strong>
+                    <ul style="margin:8px 0 0 16px;">
+                        <li>Prix pour l'expéditeur : <strong>10,20 €/kg TTC</strong></li>
+                        <li>Gain pour le voyageur : <strong>10,00 €/kg</strong></li>
+                        <li>Commission KERALINK : <strong>0,20 €/kg</strong></li>
+                        <li>Commission non remboursable en cas d'annulation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Article 5 -->
+            <div style="margin-bottom:22px;">
+                <h3 style="color:#0A1F44;font-size:1rem;margin-bottom:10px;
+                            padding-bottom:6px;border-bottom:2px solid #FF7A00;">
+                    Article 5 — Système de paiement sécurisé (Escrow)
+                </h3>
+                <p>Tous les paiements effectués sur KERALINK sont <strong>bloqués en séquestre</strong>
+                jusqu'à confirmation de la bonne livraison du colis :</p>
+                <ul style="margin:10px 0 0 20px;">
+                    <li style="margin-bottom:6px;">Le paiement est débité à l'expéditeur dès la confirmation de la demande.</li>
+                    <li style="margin-bottom:6px;">Les fonds sont conservés sur la plateforme jusqu'à livraison.</li>
+                    <li style="margin-bottom:6px;">Le voyageur reçoit ses gains après confirmation de réception par l'expéditeur.</li>
+                    <li style="margin-bottom:6px;">Si l'expéditeur ne confirme pas la réception dans les <strong>48 heures</strong>,
+                    les gains sont automatiquement débloqués vers le voyageur.</li>
+                    <li>En cas de litige, KERALINK intervient comme médiateur.</li>
+                </ul>
+            </div>
+
+            <!-- Article 6 -->
+            <div style="margin-bottom:22px;">
+                <h3 style="color:#0A1F44;font-size:1rem;margin-bottom:10px;
+                            padding-bottom:6px;border-bottom:2px solid #FF7A00;">
+                    Article 6 — Obligations de l'expéditeur
+                </h3>
+                <p>L'expéditeur s'engage à :</p>
+                <ul style="margin:10px 0 0 20px;">
+                    <li style="margin-bottom:6px;">Ne transporter <strong>aucun objet illégal</strong>, dangereux,
+                    contrefait, ou soumis à des restrictions douanières.</li>
+                    <li style="margin-bottom:6px;">Déclarer le contenu exact de son colis au voyageur.</li>
+                    <li style="margin-bottom:6px;">S'assurer que le colis est correctement emballé et étiqueté.</li>
+                    <li style="margin-bottom:6px;">Confirmer la réception du colis dans les 48h suivant la livraison.</li>
+                    <li>Respecter les lois douanières et fiscales du pays de destination.</li>
+                </ul>
+                <div style="background:#ffebee;border-radius:8px;padding:12px 16px;margin-top:12px;
+                            border-left:4px solid #c62828;">
+                    <strong style="color:#c62828;">⚠️ Objets interdits :</strong>
+                    <p style="margin-top:6px;color:#555;">Armes, drogues, médicaments non déclarés,
+                    espèces monétaires en grande quantité, matières dangereuses, produits alimentaires
+                    périssables non déclarés, contrefaçons, et tout objet soumis à restriction légale.</p>
+                </div>
+            </div>
+
+            <!-- Article 7 -->
+            <div style="margin-bottom:22px;">
+                <h3 style="color:#0A1F44;font-size:1rem;margin-bottom:10px;
+                            padding-bottom:6px;border-bottom:2px solid #FF7A00;">
+                    Article 7 — Obligations du voyageur
+                </h3>
+                <p>Le voyageur s'engage à :</p>
+                <ul style="margin:10px 0 0 20px;">
+                    <li style="margin-bottom:6px;"><strong>Vérifier le contenu du colis</strong> avant de l'accepter.</li>
+                    <li style="margin-bottom:6px;">Transporter le colis en toute sécurité jusqu'à sa destination.</li>
+                    <li style="margin-bottom:6px;">Remettre le colis uniquement au destinataire désigné.</li>
+                    <li style="margin-bottom:6px;">Fournir une <strong>photo de confirmation de livraison</strong>
+                    obligatoire lors de la remise du colis.</li>
+                    <li style="margin-bottom:6px;">Ne pas ouvrir, modifier ou endommager le colis.</li>
+                    <li>Déclarer tout problème rencontré (perte, dommage, saisie) dans les meilleurs délais.</li>
+                </ul>
+            </div>
+
+            <!-- Article 8 -->
+            <div style="margin-bottom:22px;">
+                <h3 style="color:#0A1F44;font-size:1rem;margin-bottom:10px;
+                            padding-bottom:6px;border-bottom:2px solid #FF7A00;">
+                    Article 8 — Politique de remboursement
+                </h3>
+                <p>En cas d'annulation ou d'impossibilité de trouver un voyageur :</p>
+                <ul style="margin:10px 0 0 20px;">
+                    <li style="margin-bottom:6px;">L'expéditeur peut demander un remboursement depuis son espace personnel.</li>
+                    <li style="margin-bottom:6px;">Le montant remboursable est de <strong>10 €/kg</strong>.</li>
+                    <li style="margin-bottom:6px;">La commission de 0,20 €/kg est <strong>non remboursable</strong>.</li>
+                    <li style="margin-bottom:6px;">Le traitement du remboursement est effectué sous <strong>48 heures ouvrées</strong>.</li>
+                    <li>Aucun remboursement n'est possible après confirmation de la livraison.</li>
+                </ul>
+            </div>
+
+            <!-- Article 9 -->
+            <div style="margin-bottom:22px;">
+                <h3 style="color:#0A1F44;font-size:1rem;margin-bottom:10px;
+                            padding-bottom:6px;border-bottom:2px solid #FF7A00;">
+                    Article 9 — Responsabilités et limitations
+                </h3>
+                <p>KERALINK agit en tant qu'intermédiaire et ne peut être tenue responsable :</p>
+                <ul style="margin:10px 0 0 20px;">
+                    <li style="margin-bottom:6px;">Du contenu des colis transportés.</li>
+                    <li style="margin-bottom:6px;">Des retards, pertes ou dommages survenus pendant le transport.</li>
+                    <li style="margin-bottom:6px;">Des litiges entre expéditeurs et voyageurs.</li>
+                    <li style="margin-bottom:6px;">Des problèmes douaniers résultant d'une déclaration incorrecte.</li>
+                    <li>De l'utilisation frauduleuse de la plateforme par des tiers.</li>
+                </ul>
+                <p style="margin-top:10px;">En cas de litige, les parties s'engagent à contacter le support
+                KERALINK en premier recours avant toute action judiciaire.</p>
+            </div>
+
+            <!-- Article 10 -->
+            <div style="margin-bottom:22px;">
+                <h3 style="color:#0A1F44;font-size:1rem;margin-bottom:10px;
+                            padding-bottom:6px;border-bottom:2px solid #FF7A00;">
+                    Article 10 — Protection des données personnelles
+                </h3>
+                <p>KERALINK s'engage à protéger les données personnelles de ses utilisateurs conformément
+                au <strong>Règlement Général sur la Protection des Données (RGPD)</strong> et aux lois
+                applicables en matière de protection de la vie privée.</p>
+                <ul style="margin:10px 0 0 20px;">
+                    <li style="margin-bottom:6px;">Les données collectées sont utilisées uniquement pour faire fonctionner la plateforme.</li>
+                    <li style="margin-bottom:6px;">Aucune donnée personnelle n'est vendue à des tiers.</li>
+                    <li style="margin-bottom:6px;">L'utilisateur peut demander la suppression de ses données à tout moment.</li>
+                    <li>Les communications entre utilisateurs sont confidentielles.</li>
+                </ul>
+            </div>
+
+            <!-- Article 11 -->
+            <div style="margin-bottom:22px;">
+                <h3 style="color:#0A1F44;font-size:1rem;margin-bottom:10px;
+                            padding-bottom:6px;border-bottom:2px solid #FF7A00;">
+                    Article 11 — Portefeuille et retraits
+                </h3>
+                <p>Les gains des voyageurs sont crédités sur leur portefeuille KERALINK après
+                déblocage par la plateforme :</p>
+                <ul style="margin:10px 0 0 20px;">
+                    <li style="margin-bottom:6px;">Le voyageur peut retirer ses gains via Orange Money, PayPal,
+                    Carte bancaire ou Wave.</li>
+                    <li style="margin-bottom:6px;">Les retraits sont traités <strong>automatiquement</strong>
+                    vers les coordonnées renseignées.</li>
+                    <li style="margin-bottom:6px;">KERALINK ne garantit pas les délais de traitement des
+                    prestataires de paiement tiers.</li>
+                    <li>Le solde minimum de retrait est de <strong>1 €</strong>.</li>
+                </ul>
+            </div>
+
+            <!-- Article 12 -->
+            <div style="margin-bottom:22px;">
+                <h3 style="color:#0A1F44;font-size:1rem;margin-bottom:10px;
+                            padding-bottom:6px;border-bottom:2px solid #FF7A00;">
+                    Article 12 — Comportements interdits
+                </h3>
+                <p>Il est strictement interdit sur la plateforme KERALINK de :</p>
+                <ul style="margin:10px 0 0 20px;">
+                    <li style="margin-bottom:6px;">Créer de faux profils ou usurper l'identité d'autrui.</li>
+                    <li style="margin-bottom:6px;">Contourner le système de paiement de la plateforme.</li>
+                    <li style="margin-bottom:6px;">Harceler, menacer ou abuser d'autres utilisateurs.</li>
+                    <li style="margin-bottom:6px;">Transporter des marchandises illicites sous couvert de la plateforme.</li>
+                    <li style="margin-bottom:6px;">Publier de fausses annonces ou informations trompeuses.</li>
+                    <li>Tenter de pirater, manipuler ou perturber le fonctionnement de la plateforme.</li>
+                </ul>
+                <p style="margin-top:10px;">Tout manquement peut entraîner la <strong>suspension immédiate
+                du compte</strong> et des poursuites judiciaires.</p>
+            </div>
+
+            <!-- Article 13 -->
+            <div style="margin-bottom:22px;">
+                <h3 style="color:#0A1F44;font-size:1rem;margin-bottom:10px;
+                            padding-bottom:6px;border-bottom:2px solid #FF7A00;">
+                    Article 13 — Droit applicable et juridiction
+                </h3>
+                <p>Les présentes CGU sont soumises au droit français. En cas de litige non résolu
+                à l'amiable, les tribunaux compétents seront ceux du lieu du siège social de KERALINK.</p>
+                <p style="margin-top:8px;">Pour toute question relative aux présentes CGU, contactez-nous
+                via le support intégré à la plateforme.</p>
+            </div>
+
+            <!-- Contact -->
+            <div style="background:#e8f5e9;border-radius:10px;padding:16px;
+                        border-left:4px solid #2e7d32;margin-top:8px;">
+                <strong style="color:#2e7d32;">📧 Contact KERALINK</strong>
+                <p style="margin-top:6px;font-size:0.88rem;color:#555;">
+                    Pour toute question, réclamation ou demande d'information,
+                    utilisez le système de support intégré dans votre espace personnel
+                    ou contactez notre équipe directement via la plateforme.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Pied de modal -->
+        <div style="padding:16px 28px 24px;text-align:center;
+                    border-top:1px solid #f0f0f0;">
+            <button onclick="fermerCGU()"
+                    style="background:linear-gradient(90deg,#FF7A00,#e66900);
+                           color:white;border:none;padding:12px 40px;
+                           border-radius:10px;font-size:0.95rem;font-weight:bold;
+                           cursor:pointer;transition:0.2s;"
+                    onmouseover="this.style.opacity='0.9'"
+                    onmouseout="this.style.opacity='1'">
+                ✅ J'ai lu et j'accepte les conditions
+            </button>
+        </div>
+    </div>
+</div>
+
+    <script>
+    const GUEST_ID = "{{ guest_id }}";
+
+    // ===== CONDITIONS GÉNÉRALES =====
+function ouvrirCGU() {
+    const modal = document.getElementById('modal-cgu');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Bloquer le scroll en arrière-plan
+    }
+}
+
+function fermerCGU() {
+    const modal = document.getElementById('modal-cgu');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+// Fermer en cliquant sur le fond
+document.addEventListener('DOMContentLoaded', () => {
+    const modalCgu = document.getElementById('modal-cgu');
+    if (modalCgu) {
+        modalCgu.addEventListener('click', (e) => {
+            if (e.target === modalCgu) fermerCGU();
+        });
+    }
+});
+
+    </script>
+    
+    <script src="{% static 'voyageurs/js/script.js' %}"></script>
+
+    <script>
+// Initialisation des fonctionnalités sur toutes les pages
+document.addEventListener('DOMContentLoaded', function() {
+    initialiserIndicatifs();
+    initialiserPaysVille();
+    _appliquerTraductions();   // si tu utilises la traduction
+});
+</script>
+
+    <div id="chat-box" class="chat-box">
+    <div id="messages"></div>
+
+    <input type="text" id="message-input" placeholder="Écrire...">
+    <button onclick="envoyerMessage()">Envoyer</button>
+</div>
+
+</body>
+</html>

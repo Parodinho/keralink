@@ -1,0 +1,1951 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Connecté - KERALINK</title>
+    <link rel="stylesheet" href="{% static 'voyageurs/css/style.css' %}">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f0f2f5; }
+
+        .navbar {
+            background: linear-gradient(90deg, #0A1F44, #1E3A8A);
+            padding: 0 2rem; display: flex; align-items: center;
+            justify-content: space-between; height: 60px;
+            position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .navbar-user { display: flex; align-items: center; gap: 12px; }
+        .navbar-avatar {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: #FF7A00; color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 1rem;
+        }
+        .navbar-name { color: white; font-size: 0.95rem; }
+        .navbar-badge {
+            background: #FF7A00; color: white;
+            padding: 3px 10px; border-radius: 12px;
+            font-size: 0.75rem; font-weight: bold;
+        }
+        .btn-logout {
+            background: rgba(255,255,255,0.15); color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 6px 14px; border-radius: 6px;
+            cursor: pointer; font-size: 0.85rem; transition: 0.2s;
+        }
+        .btn-logout:hover { background: rgba(255,255,255,0.25); }
+
+        .app-layout {
+            display: flex; max-width: 1200px;
+            margin: 24px auto; gap: 20px; padding: 0 16px;
+        }
+
+        .sidebar { width: 280px; flex-shrink: 0; }
+        .sidebar-card {
+            background: white; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1); margin-bottom: 16px;
+        }
+        .profile-cover { height: 80px; background: linear-gradient(120deg, #0A1F44, #FF7A00); }
+        .profile-info { padding: 0 16px 16px; text-align: center; }
+        .profile-avatar-wrap { margin-top: -30px; margin-bottom: 8px; }
+        .profile-avatar {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: #1E3A8A; color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; font-weight: bold;
+            border: 3px solid white; margin: 0 auto;
+        }
+        .profile-name { font-weight: bold; font-size: 1.05rem; color: #0A1F44; }
+        .profile-type-badge {
+            display: inline-block; margin-top: 4px;
+            padding: 3px 12px; border-radius: 12px;
+            font-size: 0.78rem; font-weight: bold;
+        }
+        .badge-expediteur { background: #fff3e0; color: #e65100; }
+        .badge-voyageur { background: #e3f2fd; color: #0d47a1; }
+
+        .sidebar-menu { padding: 8px 0; }
+        .menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 20px; cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: 0.2s; color: #444; font-size: 0.95rem;
+        }
+        .menu-item:hover { background: #f0f2f5; color: #0A1F44; }
+        .menu-item.active { background: #e8f0fe; color: #1E3A8A; border-left-color: #FF7A00; font-weight: bold; }
+        .menu-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+        .menu-count {
+            margin-left: auto; background: #FF7A00; color: white;
+            border-radius: 10px; padding: 1px 8px; font-size: 0.75rem;
+        }
+
+        .main-content { flex: 1; min-width: 0; }
+
+        .welcome-banner {
+            background: linear-gradient(120deg, #0A1F44, #1E3A8A);
+            color: white; border-radius: 12px; padding: 20px 24px;
+            margin-bottom: 20px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .welcome-text h2 { font-size: 1.3rem; margin-bottom: 4px; }
+        .welcome-text p { font-size: 0.9rem; opacity: 0.8; }
+        .welcome-icon { font-size: 2.5rem; }
+
+        .section-panel {
+            background: white; border-radius: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px; display: none;
+        }
+        .section-panel.active { display: block; }
+        .panel-header {
+            padding: 16px 20px; border-bottom: 1px solid #f0f2f5;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .panel-header h3 { font-size: 1rem; color: #0A1F44; }
+        .panel-body { padding: 16px 20px; }
+
+        .matching-card {
+            border: 1px solid #e0e0e0; border-radius: 10px;
+            padding: 16px; margin-bottom: 12px; transition: 0.2s;
+        }
+        .matching-card:hover { border-color: #FF7A00; box-shadow: 0 2px 8px rgba(255,122,0,0.1); }
+        .matching-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .matching-parties { font-weight: bold; color: #0A1F44; font-size: 0.95rem; }
+        .status-badge { padding: 4px 12px; border-radius: 12px; font-size: 0.78rem; font-weight: bold; }
+        .status-confirme { background: #e8f5e9; color: #2e7d32; }
+        .status-en_attente { background: #fff8e1; color: #f57f17; }
+        .status-refuse { background: #ffebee; color: #c62828; }
+        .status-accepte { background: #e8f5e9; color: #2e7d32; }
+        .status-livre { background: #e3f2fd; color: #1E3A8A; }
+        .matching-detail { font-size: 0.85rem; color: #666; margin-bottom: 6px; }
+        .matching-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+        .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: 0.2s; }
+        .btn-primary { background: #FF7A00; color: white; }
+        .btn-primary:hover { background: #e66900; }
+        .btn-success { background: #2e7d32; color: white; }
+        .btn-success:hover { background: #1b5e20; }
+        .btn-danger { background: #c62828; color: white; }
+        .btn-danger:hover { background: #8d0000; }
+        .btn-chat { background: #1E3A8A; color: white; }
+        .btn-chat:hover { background: #0A1F44; }
+        .btn:disabled { background: #ccc; cursor: not-allowed; }
+
+        .demande-card { border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+        .demande-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .accept-checks { background: #f9f9f9; padding: 10px 12px; border-radius: 8px; margin: 10px 0; }
+        .check-item { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 6px; font-size: 0.85rem; color: #444; }
+
+        .chat-list-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px; cursor: pointer;
+            border-bottom: 1px solid #f0f2f5; transition: 0.2s;
+        }
+        .chat-list-item:hover { background: #f0f2f5; }
+        .chat-avatar {
+            width: 46px; height: 46px; border-radius: 50%;
+            background: #1E3A8A; color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 1rem; flex-shrink: 0;
+        }
+        .chat-info { flex: 1; min-width: 0; }
+        .chat-name { font-weight: bold; font-size: 0.92rem; color: #0A1F44; }
+        .chat-preview { font-size: 0.8rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .chat-time { font-size: 0.75rem; color: #aaa; }
+
+        .chat-window {
+            display: none; flex-direction: column;
+            height: 460px; border: 1px solid #e0e0e0;
+            border-radius: 10px; overflow: hidden;
+        }
+        .chat-window.open { display: flex; }
+        .chat-topbar {
+            background: #0A1F44; color: white;
+            padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+        }
+        .chat-topbar-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: #FF7A00; color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 0.9rem;
+        }
+        .chat-topbar-name { font-weight: bold; font-size: 0.95rem; }
+        .chat-topbar-status { font-size: 0.75rem; opacity: 0.7; }
+        .btn-back-chat { margin-left: auto; background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
+
+        /* ✅ STYLE WHATSAPP — zone de messages */
+        .chat-messages {
+            flex: 1; overflow-y: auto; padding: 16px;
+            background: #e5ddd5;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        /* ✅ BULLE DE BASE */
+        .bubble {
+            max-width: 68%;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            line-height: 1.45;
+            word-break: break-word;
+            position: relative;
+        }
+
+        /* ✅ MON message → DROITE (vert, comme WhatsApp) */
+        .bubble-sent {
+            background: #dcf8c6;
+            align-self: flex-end;
+            border-bottom-right-radius: 3px;
+            margin-left: auto;
+        }
+
+        /* ✅ Message REÇU → GAUCHE (blanc, comme WhatsApp) */
+        .bubble-received {
+            background: #ffffff;
+            align-self: flex-start;
+            border-bottom-left-radius: 3px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+            margin-right: auto;
+        }
+
+        .bubble-time {
+            font-size: 0.68rem;
+            color: #888;
+            text-align: right;
+            margin-top: 3px;
+        }
+
+        .chat-input-bar {
+            display: flex; gap: 8px; padding: 10px 12px;
+            background: #f0f0f0; border-top: 1px solid #ddd;
+            align-items: center;
+        }
+        .chat-input-bar input {
+            flex: 1; padding: 10px 14px; border-radius: 22px;
+            border: none; background: white; font-size: 0.9rem; outline: none;
+        }
+        .btn-send {
+            background: #25D366; color: white; border: none;
+            width: 40px; height: 40px; border-radius: 50%;
+            cursor: pointer; font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .btn-send:hover { background: #1ebe59; }
+
+        .no-chat-open {
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            height: 300px; color: #aaa;
+        }
+        .no-chat-open .no-chat-icon { font-size: 3rem; margin-bottom: 10px; }
+        .empty-state { text-align: center; padding: 40px 20px; color: #aaa; }
+        .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
+
+        @media (max-width: 768px) {
+            .app-layout { flex-direction: column; }
+            .sidebar { width: 100%; }
+            .welcome-icon { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header style="all:unset;display:block;">
+    <div style="background:linear-gradient(90deg,#0A1F44 0%,#1E3A8A 100%);
+                padding:0 16px;display:flex;align-items:center;gap:12px;
+                min-height:64px;position:sticky;top:0;z-index:1000;
+                box-shadow:0 2px 12px rgba(0,0,0,0.35);">
+        <a href="/" style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;text-decoration:none;">
+            <img src="{% static 'voyageurs/images/logo3.png' %}"
+                 style="height:42px;display:block;filter:brightness(1.1);">
+        </a>
+        <div style="flex:1;max-width:600px;display:flex;border-radius:8px;overflow:hidden;
+                    box-shadow:0 0 0 2px #FF7A00;margin:0 8px;">
+            <input type="text" placeholder="Rechercher..."
+                   style="flex:1;padding:10px 14px;border:none;font-size:0.95rem;
+                          outline:none;background:white;color:#333;">
+            <button style="background:#FF7A00;border:none;padding:0 18px;cursor:pointer;
+                           font-size:1.2rem;color:white;">🔍</button>
+        </div>
+        <div style="flex-shrink:0;display:flex;flex-direction:column;cursor:pointer;
+                    padding:4px 8px;border-radius:8px;border:1.5px solid transparent;transition:border-color 0.2s;"
+             onmouseover="this.style.borderColor='#FF7A00'"
+             onmouseout="this.style.borderColor='transparent'">
+            <span style="color:rgba(255,255,255,0.75);font-size:0.72rem;">Connecté en tant que</span>
+            <span style="color:white;font-weight:700;font-size:0.88rem;">
+                {{ nom_complet }} — {{ type_profil|upper }} ▾
+            </span>
+        </div>
+        <a href="/" style="flex-shrink:0;display:flex;flex-direction:column;text-decoration:none;
+                  padding:4px 8px;border-radius:8px;border:1.5px solid transparent;transition:border-color 0.2s;"
+           onmouseover="this.style.borderColor='#FF7A00'"
+           onmouseout="this.style.borderColor='transparent'">
+            <span style="color:rgba(255,255,255,0.75);font-size:0.72rem;">← Retour</span>
+            <span style="color:white;font-weight:700;font-size:0.88rem;">Accueil</span>
+        </a>
+        <span style="background:#FF7A00;color:white;padding:4px 12px;border-radius:12px;
+                     font-size:0.75rem;font-weight:bold;flex-shrink:0;">
+            {{ type_profil|upper }}
+        </span>
+    </div>
+
+    <div style="background:#0d1e3d;padding:0 16px;display:flex;align-items:center;
+                gap:0;overflow-x:auto;scrollbar-width:none;min-height:40px;">
+        <a href="/" style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
+                  font-size:0.88rem;white-space:nowrap;cursor:pointer;text-decoration:none;
+                  border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+           onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
+            🏠 Accueil
+        </a>
+        <div onclick="showSection('dashboard', document.querySelector('.menu-item'))"
+             style="color:#FF7A00;font-weight:600;padding:0 14px;height:40px;display:flex;align-items:center;
+                    font-size:0.88rem;white-space:nowrap;cursor:pointer;
+                    border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+             onmouseover="this.style.borderColor='#FF7A00'" onmouseout="this.style.borderColor='transparent'">
+            📊 Mon espace
+        </div>
+        <div onclick="showSection('matchings', null)"
+             style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
+                    font-size:0.88rem;white-space:nowrap;cursor:pointer;
+                    border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+             onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
+            🔗 Mes Matchings
+        </div>
+        <div onclick="showSection('chat', null)"
+             style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
+                    font-size:0.88rem;white-space:nowrap;cursor:pointer;
+                    border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+             onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
+            💬 Messagerie
+        </div>
+        <div onclick="showSection('support', null)"
+             style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
+                    font-size:0.88rem;white-space:nowrap;cursor:pointer;
+                    border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+             onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
+            🎧 Support
+        </div>
+        {% if type_profil == 'voyageur' %}
+        <div onclick="showSection('portefeuille', null)"
+             style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
+                    font-size:0.88rem;white-space:nowrap;cursor:pointer;
+                    border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+             onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
+            💼 Portefeuille
+        </div>
+        {% endif %}
+        {% if type_profil == 'expediteur' %}
+        <div onclick="showSection('remboursement', null)"
+             style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
+                    font-size:0.88rem;white-space:nowrap;cursor:pointer;
+                    border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
+             onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
+            ↩️ Remboursement
+        </div>
+        {% endif %}
+    </div>
+</header>
+
+<div class="app-layout">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar">
+        <div class="sidebar-card">
+            <div class="profile-cover"></div>
+            <div class="profile-info">
+                <div class="profile-avatar-wrap">
+                    <div class="profile-avatar">{{ nom_initiale }}</div>
+                </div>
+                <div class="profile-name">{{ nom_complet }}</div>
+                <span class="profile-type-badge {% if type_profil == 'expediteur' %}badge-expediteur{% else %}badge-voyageur{% endif %}">
+                    {% if type_profil == 'expediteur' %}📦 Expéditeur{% else %}🧳 Voyageur{% endif %}
+                </span>
+            </div>
+        </div>
+
+        <div class="sidebar-card sidebar-menu">
+            <div class="menu-item active" onclick="showSection('dashboard', this)">
+                <span class="menu-icon">🏠</span> Tableau de bord
+            </div>
+            <div class="menu-item" onclick="showSection('matchings', this)">
+                <span class="menu-icon">🔗</span> Mes Matchings
+                {% if matchings %}<span class="menu-count">{{ matchings|length }}</span>{% endif %}
+            </div>
+            {% if type_profil == 'voyageur' %}
+            <div class="menu-item" onclick="showSection('demandes', this)">
+                <span class="menu-icon">📥</span> Demandes reçues
+                {% if demandes_en_attente %}<span class="menu-count">{{ demandes_en_attente|length }}</span>{% endif %}
+            </div>
+            {% endif %}
+            <div class="menu-item" onclick="showSection('chat', this)">
+                <span class="menu-icon">💬</span> Messagerie
+            </div>
+            <div class="menu-item" onclick="showSection('support', this)">
+                <span class="menu-icon">🎧</span> Support
+                {% if nb_support_non_lus > 0 %}
+                <span class="menu-count" style="background:#c62828;">{{ nb_support_non_lus }}</span>
+                {% endif %}
+            </div>
+            {% if type_profil == 'voyageur' %}
+            <div class="menu-item" onclick="showSection('portefeuille', this)">
+                <span class="menu-icon">💼</span> Portefeuille
+                {% if portefeuille and portefeuille.solde > 0 %}
+                <span class="menu-count" style="background:#2e7d32;">{{ portefeuille.solde|floatformat:0 }}€</span>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% if type_profil == 'expediteur' %}
+            <div class="menu-item" onclick="showSection('remboursement', this)">
+                <span class="menu-icon">↩️</span> Remboursement
+                {% if transactions_remboursables %}
+                <span class="menu-count" style="background:#c62828;">{{ transactions_remboursables|length }}</span>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+
+        <div class="welcome-banner">
+            <div class="welcome-text">
+                <h2>Bienvenue, {{ nom_complet }} 👋</h2>
+                <p>
+                    {% if type_profil == 'expediteur' %}
+                        Suivez vos demandes d'expédition et vos matchings depuis votre espace.
+                    {% else %}
+                        Gérez vos trajets et les demandes d'expédition reçues.
+                    {% endif %}
+                </p>
+            </div>
+            <div class="welcome-icon">{% if type_profil == 'expediteur' %}📦{% else %}🧳{% endif %}</div>
+        </div>
+
+        <!-- ===== DASHBOARD ===== -->
+        <div id="section-dashboard" class="section-panel active">
+            <div class="panel-header"><span>📊</span><h3>Vue d'ensemble</h3></div>
+            <div class="panel-body">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;">
+                    <div style="background:#f0f2f5;border-radius:10px;padding:16px;text-align:center;">
+                        <div style="font-size:1.8rem;font-weight:bold;color:#0A1F44;">{{ matchings|length }}</div>
+                        <div style="font-size:0.8rem;color:#666;">Matchings</div>
+                    </div>
+                    {% if type_profil == 'voyageur' %}
+                    <div style="background:#fff8e1;border-radius:10px;padding:16px;text-align:center;">
+                        <div style="font-size:1.8rem;font-weight:bold;color:#f57f17;">{{ demandes_en_attente|length }}</div>
+                        <div style="font-size:0.8rem;color:#666;">En attente</div>
+                    </div>
+                    <div style="background:#e8f5e9;border-radius:10px;padding:16px;text-align:center;">
+                        <div style="font-size:1.8rem;font-weight:bold;color:#2e7d32;">{{ matchings_livres|length }}</div>
+                        <div style="font-size:0.8rem;color:#666;">Livrés ✅</div>
+                    </div>
+                    {% if portefeuille %}
+                    <div style="background:#e3f2fd;border-radius:10px;padding:16px;text-align:center;cursor:pointer;"
+                         onclick="showSection('portefeuille', document.querySelector('[onclick*=portefeuille]'))">
+                        <div id="gains-dashboard" style="font-size:1.5rem;font-weight:bold;color:#1E3A8A;">
+                            {{ portefeuille.solde|floatformat:2 }} €
+                        </div>
+                        <div style="font-size:0.8rem;color:#666;">💼 Gains</div>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% if type_profil == 'expediteur' %}
+                    <div style="background:#e8f5e9;border-radius:10px;padding:16px;text-align:center;">
+                        <div style="font-size:1.8rem;font-weight:bold;color:#2e7d32;">{{ matchings_confirmes }}</div>
+                        <div style="font-size:0.8rem;color:#666;">Confirmés</div>
+                    </div>
+                    <div style="background:#f3e5f5;border-radius:10px;padding:16px;text-align:center;">
+                        <div style="font-size:1.8rem;font-weight:bold;color:#7b1fa2;">{{ matchings_livres|length }}</div>
+                        <div style="font-size:0.8rem;color:#666;">📦 Livrés</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+<!-- ===== ZONE LIVRAISONS (dans section-dashboard) ===== -->
+{# Remplacez uniquement le bloc zone-livraisons-dashboard #}
+
+{% if type_profil == 'voyageur' %}
+<div id="zone-livraisons-dashboard">
+    {% for m in matchings %}
+    {% if m.statut == 'accepte' and not m.livraison_confirmee_voyageur %}
+    <div id="livraison-bloc-{{ m.id }}"
+         style="background:#e8f5e9;border-radius:10px;padding:14px;
+                border-left:4px solid #2e7d32;margin-bottom:12px;">
+
+        <strong style="color:#2e7d32;">📦 Confirmer la livraison</strong>
+
+        <!-- ✅ Infos expéditeur concerné -->
+        <div style="background:white;border-radius:8px;padding:10px 14px;
+                    margin:10px 0 14px;border:1px solid #c8e6c9;
+                    display:flex;align-items:center;gap:12px;">
+            <div style="width:40px;height:40px;border-radius:50%;flex-shrink:0;
+                        background:#1E3A8A;color:white;font-weight:bold;
+                        font-size:1rem;display:flex;align-items:center;justify-content:center;">
+                {{ m.expediteur.prenom|slice:":1"|upper }}
+            </div>
+            <div>
+                <div style="font-weight:700;color:#0A1F44;font-size:0.92rem;">
+                    {{ m.expediteur.prenom }} {{ m.expediteur.nom }}
+                </div>
+                <div style="font-size:0.82rem;color:#555;margin-top:2px;">
+                    📍 {{ m.expediteur.ville }} → {{ m.expediteur.ville_destination }}
+                    &nbsp;·&nbsp;
+                    <strong style="color:#2e7d32;">{{ m.expediteur.poids_colis }} kg</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ Aperçu photo après capture (caché jusqu'à prise de photo) -->
+        <div id="preview-zone-{{ m.id }}"
+             style="display:none;margin-bottom:12px;text-align:center;">
+            <img id="preview-img-{{ m.id }}" src="" alt="Aperçu livraison"
+                 style="max-width:100%;max-height:200px;border-radius:8px;
+                        border:2px solid #2e7d32;object-fit:cover;display:block;margin:0 auto;">
+            <div style="font-size:0.8rem;color:#2e7d32;margin-top:6px;font-weight:600;">
+                ✅ Photo capturée — prête à envoyer
+            </div>
+        </div>
+
+        <div style="margin:15px 0;">
+            <button onclick="ouvrirCamera('{{ m.id }}')"
+                    id="btn-camera-{{ m.id }}"
+                    style="background:#1E3A8A;color:white;padding:12px 20px;border:none;
+                           border-radius:8px;font-size:1rem;cursor:pointer;
+                           display:flex;align-items:center;gap:8px;
+                           width:100%;justify-content:center;">
+                📸 Prendre une photo de confirmation
+            </button>
+        </div>
+
+        <button class="btn btn-success"
+                onclick="confirmerLivraison('{{ m.id }}')"
+                id="btn-confirm-{{ m.id }}"
+                disabled>
+            ✅ Confirmer le colis livré au destinataire
+        </button>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
+               {% if type_profil == 'voyageur' %}
+ 
+    {% if transactions_debloquees %}
+    <div style="margin-top:16px;">
+        <h4 style="color:#0A1F44;font-size:0.92rem;margin-bottom:10px;">
+            💰 Historique des gains débloqués
+        </h4>
+        {% for t in transactions_debloquees %}
+        <div style="background:#e8f5e9;border-radius:10px;padding:14px;
+                    border-left:4px solid #2e7d32;margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div style="flex:1;">
+                    <strong style="color:#2e7d32;font-size:0.92rem;">✅ Gain débloqué</strong>
+                    <div style="font-size:0.85rem;color:#555;margin-top:4px;">
+                        💰 <strong style="color:#2e7d32;">+{{ t.montant_voyageur|floatformat:2 }} €</strong>
+                        versés sur votre portefeuille
+                    </div>
+                    <div style="font-size:0.78rem;color:#888;margin-top:3px;">
+                        📅 {{ t.date_transaction|date:"d/m/Y à H:i" }}
+                    </div>
+                    {% if t.debloque_par %}
+                    <div style="font-size:0.82rem;margin-top:5px;">
+                        {% if t.debloque_par == 'Admin KERALINK' %}
+                        <span style="background:#e3f2fd;color:#1E3A8A;padding:3px 10px;border-radius:10px;font-size:0.78rem;">
+                            🛡️ Débloqué par l'équipe KERALINK (délai 48h)
+                        </span>
+                        {% else %}
+                        <span style="background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:10px;font-size:0.78rem;">
+                            ✅ Confirmé par {{ t.debloque_par }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div style="font-size:1.6rem;font-weight:900;color:#2e7d32;margin-left:12px;white-space:nowrap;">
+                    +{{ t.montant_voyageur|floatformat:2 }}€
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+ 
+    {% if retraits_effectues %}
+<div style="margin-top:16px;">
+    <h4 style="color:#0A1F44;font-size:0.92rem;margin-bottom:10px;">
+        💸 Historique des retraits effectués
+    </h4>
+    <div id="historique-retraits-container">
+        {% for r in retraits_effectues %}
+        <div style="background:#fff3e0;border-radius:10px;padding:14px;
+                    border-left:4px solid #FF7A00;margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div style="flex:1;">
+                    <strong style="color:#e65100;font-size:0.92rem;">💸 Retrait effectué</strong>
+                    <div style="font-size:0.85rem;color:#555;margin-top:4px;">
+                        Envoyé via
+                        <strong style="color:#e65100;">
+                            {% if r.mode_retrait == 'orange' %}🟠 Orange Money
+                            {% elif r.mode_retrait == 'paypal' %}🅿️ PayPal
+                            {% elif r.mode_retrait == 'carte' %}💳 Carte bancaire
+                            {% elif r.mode_retrait == 'wave' %}🌊 Wave
+                            {% else %}{{ r.mode_retrait }}{% endif %}
+                        </strong>
+                    </div>
+                    <div style="font-size:0.82rem;color:#777;margin-top:3px;">
+                        📬 {{ r.coordonnees }}
+                    </div>
+                    <div style="font-size:0.78rem;color:#888;margin-top:3px;">
+                        📅 {{ r.date_demande|date:"d/m/Y à H:i" }}
+                    </div>
+                    <div style="margin-top:6px;">
+                        {% if r.statut == 'traite' %}
+                        <span style="background:#e8f5e9;color:#2e7d32;padding:3px 10px;
+                                     border-radius:10px;font-size:0.78rem;">✅ Traité avec succès</span>
+                        {% elif r.statut == 'en_attente' %}
+                        <span style="background:#fff8e1;color:#f57f17;padding:3px 10px;
+                                     border-radius:10px;font-size:0.78rem;">⏳ En cours de traitement</span>
+                        {% elif r.statut == 'refuse' %}
+                        <span style="background:#ffebee;color:#c62828;padding:3px 10px;
+                                     border-radius:10px;font-size:0.78rem;">❌ Refusé — solde recrédité</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div style="font-size:1.6rem;font-weight:900;color:#e65100;
+                            margin-left:12px;white-space:nowrap;">
+                    -{{ r.montant|floatformat:2 }}€
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div id="historique-retraits-wrapper" style="display:none;margin-top:16px;">
+    <h4 style="color:#0A1F44;font-size:0.92rem;margin-bottom:10px;">
+        💸 Historique des retraits effectués
+    </h4>
+    <div id="historique-retraits-container"></div>
+</div>
+{% endif %}
+ 
+{% endif %}{# fin type_profil == 'voyageur' #}
+
+                <div style="background:#e3f2fd;border-radius:10px;padding:14px;border-left:4px solid #1E3A8A;margin-top:12px;">
+                    <strong style="color:#0d47a1;">🧳 Espace Voyageur</strong>
+                    <p style="font-size:0.88rem;color:#555;margin-top:6px;">
+                        Gérez vos livraisons et consultez vos gains dans votre portefeuille.
+                    </p>
+                </div>
+                
+
+                {% if type_profil == 'expediteur' %}
+                {% for m in matchings %}
+                {% if m.livraison_confirmee_voyageur and not m.expediteur.livraison_confirmee_expediteur %}
+                <div style="background:#fff3e0;border-radius:10px;padding:14px;
+                            border-left:4px solid #FF7A00;margin-bottom:12px;">
+                    <strong style="color:#e65100;">📦 Votre colis a été livré — Confirmez la réception</strong>
+                    <p style="font-size:0.85rem;color:#555;margin:6px 0;">
+                        Le voyageur <strong>{{ m.voyageur.prenom }} {{ m.voyageur.nom }}</strong>
+                        a confirmé la livraison de votre colis.
+                    </p>
+                    {% if m.photo_livraison %}
+                    <div style="margin:10px 0;">
+                        <div style="font-size:0.82rem;color:#555;margin-bottom:6px;font-weight:600;">
+                            📷 Photo de preuve fournie par le voyageur :
+                        </div>
+                        <img src="{{ m.photo_livraison.url }}"
+                             style="max-width:200px;border-radius:8px;cursor:pointer;border:2px solid #2e7d32;"
+                             onclick="window.open('{{ m.photo_livraison.url }}','_blank')"
+                             title="Cliquer pour agrandir">
+                    </div>
+                    {% endif %}
+                    <div style="background:#ffebee;border-radius:8px;padding:10px;margin:8px 0;font-size:0.82rem;color:#c62828;">
+                        ⏰ <strong>Important :</strong> Si vous ne confirmez pas dans les <strong>48h</strong>,
+                        la plateforme débloquera automatiquement le paiement au voyageur.
+                    </div>
+                    <button class="btn btn-primary" onclick="confirmerReception('{{ m.id }}')">
+                        ✅ Confirmer la bonne réception de mon colis
+                    </button>
+                </div>
+                {% endif %}
+                {% endfor %}
+
+                <div style="background:#fff3e0;border-radius:10px;padding:14px;border-left:4px solid #FF7A00;">
+                    <strong style="color:#e65100;">📦 Espace Expéditeur</strong>
+                    <p style="font-size:0.88rem;color:#555;margin-top:6px;">
+                        Suivez vos demandes et confirmez la réception de vos colis.
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ===== MATCHINGS ===== -->
+        <div id="section-matchings" class="section-panel">
+            <div class="panel-header"><span>🔗</span><h3>Mes Matchings</h3></div>
+            <div class="panel-body">
+                {% if matchings %}
+                {% for m in matchings %}
+                <div class="matching-card">
+                    <div class="matching-header">
+                        <div class="matching-parties">
+                            📦 {{ m.expediteur.prenom }} {{ m.expediteur.nom }}
+                            &nbsp;↔&nbsp;
+                            🧳 {{ m.voyageur.prenom }} {{ m.voyageur.nom }}
+                        </div>
+                        <span class="status-badge status-{{ m.statut }}">
+                            {% if m.statut == 'en_attente' %}⏳ En attente
+                            {% elif m.statut == 'accepte' %}✅ Accepté
+                            {% elif m.statut == 'refuse' %}❌ Refusé
+                            {% elif m.statut == 'livre' %}📦 Livré
+                            {% else %}{{ m.statut }}{% endif %}
+                        </span>
+                    </div>
+                    <div class="matching-detail">📍 {{ m.expediteur.ville }} → {{ m.expediteur.ville_destination }}</div>
+                    <div class="matching-detail">📦 Colis : {{ m.expediteur.poids_colis }} kg</div>
+                    <div class="matching-detail">📅 Créé le : {{ m.date_creation|date:"d/m/Y à H:i" }}</div>
+
+                    {% if type_profil == 'expediteur' %}
+                        {% if m.statut == 'accepte' or m.statut == 'livre' %}
+                            {% if m.expediteur.paiement_effectue %}
+                            <div class="matching-actions">
+                                <button class="btn btn-chat" onclick="ouvrirChat('{{ m.id }}', '{{ m.voyageur.prenom }} {{ m.voyageur.nom }}')">
+                                    💬 Discuter avec {{ m.voyageur.prenom }}
+                                </button>
+                            </div>
+                            {% else %}
+                            <div style="margin-top:10px;background:#fff3e0;padding:10px;border-radius:8px;font-size:0.85rem;color:#e65100;">
+                                ⚠️ Le chat sera disponible après confirmation du paiement.
+                            </div>
+                            {% endif %}
+                        {% elif m.statut == 'en_attente' %}
+                        <div style="margin-top:10px;background:#fff8e1;padding:10px;border-radius:8px;font-size:0.85rem;color:#f57f17;">
+                            ⏳ En attente d'acceptation par le voyageur.
+                        </div>
+                        {% elif m.statut == 'refuse' %}
+                        <div style="margin-top:10px;background:#ffebee;padding:10px;border-radius:8px;font-size:0.85rem;color:#c62828;">
+                            ❌ Votre demande a été refusée par le voyageur.
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="empty-state"><div class="empty-icon">🔗</div><p>Aucun matching pour le moment.</p></div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ===== DEMANDES REÇUES (voyageur uniquement) ===== -->
+        {% if type_profil == 'voyageur' %}
+        <div id="section-demandes" class="section-panel">
+            <div class="panel-header"><span>📥</span><h3>Demandes d'expédition reçues</h3></div>
+            <div class="panel-body">
+                {% if matchings %}
+                {% for m in matchings %}
+                <div class="demande-card" id="demande-card-{{ m.id }}">
+                    <div class="demande-header">
+                        <div>
+                            <strong style="color:#0A1F44;">{{ m.expediteur.prenom }} {{ m.expediteur.nom }}</strong>
+                            <div style="font-size:0.82rem;color:#666;">📍 {{ m.expediteur.ville }} → {{ m.expediteur.ville_destination }}</div>
+                            <div style="font-size:0.82rem;color:#666;">📦 {{ m.expediteur.poids_colis }} kg — {{ m.expediteur.poids_colis|floatformat:0 }} × 10€</div>
+                        </div>
+                        <span class="status-badge status-{{ m.statut }}" id="statut-badge-{{ m.id }}">
+                            {% if m.statut == 'en_attente' %}⏳ En attente
+                            {% elif m.statut == 'accepte' %}✅ Accepté
+                            {% elif m.statut == 'refuse' %}❌ Refusé
+                            {% elif m.statut == 'livre' %}📦 Livré
+                            {% else %}{{ m.statut }}{% endif %}
+                        </span>
+                    </div>
+
+                    {% if m.statut == 'en_attente' %}
+                    <div class="accept-checks">
+                        <div class="check-item">
+                            <input type="checkbox" id="chk1-{{ m.id }}" onchange="verifierChoix('{{ m.id }}')">
+                            <label for="chk1-{{ m.id }}">J'accepte de transporter ce colis et confirme avoir vérifié son contenu.</label>
+                        </div>
+                        <div class="check-item">
+                            <input type="checkbox" id="chk2-{{ m.id }}" onchange="verifierChoix('{{ m.id }}')">
+                            <label for="chk2-{{ m.id }}">Je confirme ma disponibilité pour ce trajet.</label>
+                        </div>
+                    </div>
+                    <div class="matching-actions">
+                        <button class="btn btn-success" id="btn-accept-{{ m.id }}"
+                                onclick="repondreMatching('{{ m.id }}', 'accepte')" disabled>
+                            ✅ Accepter
+                        </button>
+                        <button class="btn btn-danger"
+                                onclick="repondreMatching('{{ m.id }}', 'refuse')">
+                            ❌ Refuser
+                        </button>
+                    </div>
+                    {% elif m.statut == 'accepte' %}
+                    <div style="margin-top:8px;">
+                        <button class="btn btn-chat"
+                                onclick="ouvrirChat('{{ m.id }}', '{{ m.expediteur.prenom }} {{ m.expediteur.nom }}')">
+                            💬 Discuter avec {{ m.expediteur.prenom }}
+                        </button>
+                    </div>
+                    {% elif m.statut == 'refuse' %}
+                    <div style="background:#ffebee;padding:10px;border-radius:8px;font-size:0.85rem;color:#c62828;margin-top:8px;">
+                        ❌ Vous avez refusé cette demande.
+                    </div>
+                    {% elif m.statut == 'livre' %}
+                    <div style="background:#e3f2fd;padding:10px;border-radius:8px;font-size:0.85rem;color:#1E3A8A;margin-top:8px;">
+                        📦 Colis livré. En attente de confirmation de l'expéditeur.
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="empty-state"><div class="empty-icon">📥</div><p>Aucune demande reçue.</p></div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ===== MESSAGERIE ===== -->
+        <div id="section-chat" class="section-panel">
+            <div class="panel-header"><span>💬</span><h3>Messagerie</h3></div>
+            <div class="panel-body" style="padding:0;">
+                <div id="chat-list">
+                    {% for m in matchings_avec_chat %}
+                    <div class="chat-list-item"
+                         onclick="ouvrirChat('{{ m.id }}', this.dataset.name)"
+                         data-name="{% if type_profil == 'expediteur' %}{{ m.voyageur.prenom }} {{ m.voyageur.nom }}{% else %}{{ m.expediteur.prenom }} {{ m.expediteur.nom }}{% endif %}"
+                         data-matching-id="{{ m.id }}">
+                        <div class="chat-avatar">
+                            {% if type_profil == 'expediteur' %}{{ m.voyageur.prenom|slice:":1" }}{% else %}{{ m.expediteur.prenom|slice:":1" }}{% endif %}
+                        </div>
+                        <div class="chat-info">
+                            <div class="chat-name">
+                                {% if type_profil == 'expediteur' %}{{ m.voyageur.prenom }} {{ m.voyageur.nom }}{% else %}{{ m.expediteur.prenom }} {{ m.expediteur.nom }}{% endif %}
+                            </div>
+                            <div class="chat-preview" id="preview-{{ m.id }}">Cliquez pour discuter</div>
+                        </div>
+                        <div class="chat-time">{{ m.date_creation|date:"d/m" }}</div>
+                    </div>
+                    {% empty %}
+                    <div class="no-chat-open" style="height:200px;">
+                        <div class="no-chat-icon">💬</div>
+                        <p style="font-size:0.9rem;">
+                            {% if type_profil == 'expediteur' %}Le chat est disponible après paiement et acceptation.
+                            {% else %}Acceptez une demande pour démarrer le chat.{% endif %}
+                        </p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- ✅ FENÊTRE DE CHAT STYLE WHATSAPP -->
+                <div id="chat-window" class="chat-window">
+                    <div class="chat-topbar">
+                        <div class="chat-topbar-avatar" id="chat-av">?</div>
+                        <div>
+                            <div class="chat-topbar-name" id="chat-partner-name">Contact</div>
+                            <div class="chat-topbar-status">En ligne</div>
+                        </div>
+                        <button class="btn-back-chat" onclick="fermerChat()">← Retour</button>
+                    </div>
+                    <!-- ✅ Zone messages : flex-direction column = les messages s'empilent de haut en bas -->
+                    <div class="chat-messages" id="chat-messages"></div>
+                    <div class="chat-input-bar">
+                        <input type="text" id="chat-input" placeholder="Tapez un message..."
+                               onkeydown="if(event.key==='Enter') envoyerMsg()">
+                        <label for="photo-chat-input"
+                               style="cursor:pointer;background:#1E3A8A;color:white;
+                                      width:40px;height:40px;border-radius:50%;
+                                      display:flex;align-items:center;justify-content:center;
+                                      font-size:1.1rem;flex-shrink:0;" title="Envoyer une photo">
+                            📷
+                        </label>
+                        <input type="file" id="photo-chat-input" accept="image/*" style="display:none;"
+                               onchange="if(currentMatchingId) envoyerPhoto(currentMatchingId)">
+                        <button class="btn-send" onclick="envoyerMsg()">➤</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SUPPORT ===== -->
+        <div id="section-support" class="section-panel">
+            <div class="panel-header"><span>🎧</span><h3>Discuter avec nous</h3></div>
+            <div class="panel-body" style="padding:0;">
+                <div style="background:#e3f2fd;padding:12px 16px;font-size:0.85rem;color:#1565c0;border-bottom:1px solid #eee;">
+                    💬 Notre équipe répond généralement dans les 24h.
+                </div>
+                <div id="support-messages"
+                     style="height:360px;overflow-y:auto;padding:16px;background:#e5ddd5;display:flex;flex-direction:column;gap:8px;">
+                    {% for m in messages_support %}
+                    <div class="bubble {% if m.sender == 'admin' %}bubble-received{% else %}bubble-sent{% endif %}">
+                        {{ m.contenu }}
+                        <div class="bubble-time">{{ m.date|date:"d/m H:i" }}</div>
+                    </div>
+                    {% empty %}
+                    <div style="text-align:center;color:#aaa;margin-top:60px;">
+                        <div style="font-size:2rem;margin-bottom:8px;">🎧</div>
+                        <p>Aucun message. Posez votre première question !</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div style="display:flex;gap:8px;padding:10px 12px;background:#f0f0f0;border-top:1px solid #ddd;align-items:center;">
+                    <input type="text" id="support-input" placeholder="Votre message..."
+                           style="flex:1;padding:10px 14px;border-radius:22px;border:none;font-size:0.9rem;outline:none;"
+                           onkeydown="if(event.key==='Enter') envoyerSupport()">
+                    <button onclick="envoyerSupport()"
+                            style="background:#25D366;color:white;border:none;width:40px;height:40px;
+                                   border-radius:50%;cursor:pointer;font-size:1.1rem;
+                                   display:flex;align-items:center;justify-content:center;flex-shrink:0;">➤</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PORTEFEUILLE (voyageur uniquement) ===== -->
+        {% if type_profil == 'voyageur' %}
+        <div id="section-portefeuille" class="section-panel">
+            <div class="panel-header"><span>💼</span><h3>Mon Portefeuille</h3></div>
+            <div class="panel-body">
+                <div style="background:linear-gradient(120deg,#0A1F44,#1E3A8A);border-radius:12px;
+                            padding:24px;color:white;text-align:center;margin-bottom:20px;">
+                    <div style="font-size:0.9rem;opacity:0.8;margin-bottom:6px;">Solde disponible</div>
+                    <div id="solde-portefeuille" style="font-size:2.5rem;font-weight:bold;color:#FF7A00;">
+                        {% if portefeuille %}{{ portefeuille.solde|floatformat:2 }}{% else %}0.00{% endif %} €
+                    </div>
+                    <div style="font-size:0.8rem;opacity:0.7;margin-top:8px;">Gains débloqués par la plateforme</div>
+                </div>
+
+                <div style="background:#f9f9f9;border-radius:10px;padding:16px;margin-bottom:16px;">
+                    <h4 style="color:#0A1F44;margin-bottom:14px;">💸 Demander un retrait</h4>
+                    <div style="margin-bottom:12px;">
+                        <label style="font-size:0.85rem;color:#555;display:block;margin-bottom:4px;">Montant (€)</label>
+                        <input type="number" id="retrait-montant" min="1" step="0.01" placeholder="Ex: 50"
+                               style="width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid #e0e0e0;font-size:0.95rem;outline:none;">
+                    </div>
+                    <div style="margin-bottom:12px;">
+                        <label style="font-size:0.85rem;color:#555;display:block;margin-bottom:4px;">Mode de retrait</label>
+                        <select id="retrait-mode"
+                                style="width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid #e0e0e0;font-size:0.95rem;outline:none;background:white;">
+                            <option value="">-- Choisir --</option>
+                            <option value="orange">🟠 Orange Money</option>
+                            <option value="paypal">🅿️ PayPal</option>
+                            <option value="carte">💳 Carte bancaire</option>
+                            <option value="wave">🌊 Wave</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom:16px;">
+                        <label style="font-size:0.85rem;color:#555;display:block;margin-bottom:4px;">Numéro / Email de réception</label>
+                        <input type="text" id="retrait-coordonnees"
+                               placeholder="Ex: +33 6 12 34 56 78 ou email@paypal.com"
+                               style="width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid #e0e0e0;font-size:0.95rem;outline:none;">
+                    </div>
+                    <button onclick="demanderRetrait()"
+                            style="width:100%;padding:12px;border-radius:10px;
+                                   background:linear-gradient(90deg,#FF7A00,#e66900);
+                                   color:white;border:none;font-weight:bold;font-size:0.95rem;cursor:pointer;">
+                        💸 Demander le retrait
+                    </button>
+                </div>
+                <div style="background:#e8f5e9;border-radius:8px;padding:12px;font-size:0.82rem;color:#2e7d32;margin-bottom:12px;">
+                    ✅ Les retraits sont traités <strong>automatiquement</strong> vers les coordonnées indiquées.
+                </div>
+                <div style="background:#fff3e0;border-radius:8px;padding:12px;font-size:0.82rem;color:#e65100;">
+                    ℹ️ Assurez-vous que vos coordonnées sont correctes avant de demander un retrait.
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ===== REMBOURSEMENT (expéditeur uniquement) ===== -->
+        {% if type_profil == 'expediteur' %}
+        <div id="section-remboursement" class="section-panel">
+            <div class="panel-header"><span>↩️</span><h3>Demande de remboursement</h3></div>
+            <div class="panel-body">
+                <div style="background:#fff3e0;border-radius:10px;padding:14px;border-left:4px solid #FF7A00;
+                            margin-bottom:20px;font-size:0.88rem;color:#555;">
+                    <strong style="color:#e65100;">ℹ️ Conditions de remboursement</strong><br><br>
+                    Montant remboursé : <strong>10€/kg</strong>
+                    (la commission de 0.20€/kg est non remboursable). Traitement sous <strong>48h</strong>.
+                </div>
+                {% for t in transactions_remboursables %}
+                <div class="matching-card" id="remb-card-{{ t.id }}">
+                    <div class="matching-header">
+                        <div class="matching-parties">📦 {{ t.expediteur.prenom }} {{ t.expediteur.nom }}</div>
+                        <span class="status-badge status-confirme">🔒 Paiement bloqué</span>
+                    </div>
+                    <div class="matching-detail">💰 Montant payé : <strong>{{ t.montant|floatformat:2 }} €</strong></div>
+                    <div class="matching-detail">↩️ Montant remboursable :
+                        <strong style="color:#2e7d32;">{{ t.montant_voyageur|floatformat:2 }} €</strong>
+                    </div>
+                    <div class="matching-detail" style="color:#c62828;font-size:0.82rem;">
+                        ⚠️ Commission non remboursable : {{ t.montant_commission|floatformat:2 }} €
+                    </div>
+                    <div class="matching-detail">📅 {{ t.date_transaction|date:"d/m/Y à H:i" }}</div>
+                    <div style="margin-top:12px;">
+                        <label style="font-size:0.85rem;color:#555;display:block;margin-bottom:6px;">Motif (optionnel)</label>
+                        <textarea id="motif-{{ t.id }}"
+                                  style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;
+                                         font-size:0.85rem;resize:none;height:60px;outline:none;"
+                                  placeholder="Ex: Aucun voyageur disponible..."></textarea>
+                    </div>
+                    <div class="matching-actions" style="margin-top:10px;">
+                        <button class="btn btn-danger" onclick="demanderRemboursement('{{ t.id }}')">
+                            ↩️ Demander le remboursement de {{ t.montant_voyageur|floatformat:2 }} €
+                        </button>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <div class="empty-icon">✅</div>
+                    <p>Aucun remboursement disponible.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    </main>
+</div>
+
+<script>
+const CSRF_TOKEN = "{{ csrf_token }}";
+const TYPE_PROFIL = "{{ type_profil }}";
+// ✅ MON_ROLE = rôle de l'utilisateur connecté ('expediteur' ou 'voyageur')
+// Utilisé pour déterminer quelle bulle est à droite (envoyée) ou à gauche (reçue)
+const MON_ROLE = "{{ type_profil }}";
+const SOLDE_INITIAL = parseFloat("{{ solde_actuel|default:0 }}") || 0;
+let dernierSoldeConnu = SOLDE_INITIAL;
+
+// ===== NAVIGATION =====
+function showSection(id, el) {
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+    const panel = document.getElementById('section-' + id);
+    if (panel) panel.classList.add('active');
+    if (el) el.classList.add('active');
+
+    if (id === 'support') {
+        setTimeout(() => {
+            const msgs = document.getElementById('support-messages');
+            if (msgs) msgs.scrollTop = msgs.scrollHeight;
+        }, 100);
+        if (!supportPolling) supportPolling = setInterval(chargerMessagesSupport, 4000);
+    } else {
+        if (supportPolling) { clearInterval(supportPolling); supportPolling = null; }
+    }
+}
+
+// ===== MATCHING =====
+function verifierChoix(id) {
+    const c1 = document.getElementById('chk1-' + id).checked;
+    const c2 = document.getElementById('chk2-' + id).checked;
+    document.getElementById('btn-accept-' + id).disabled = !(c1 && c2);
+}
+
+function repondreMatching(matchingId, decision) {
+    if (decision === 'refuse' && !confirm("Confirmer le refus ?")) return;
+    fetch('/repondre-matching/', {
+        method: 'POST',
+        headers: { 'X-CSRFToken': CSRF_TOKEN, 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `matching_id=${matchingId}&decision=${decision}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            const badge = document.getElementById('statut-badge-' + matchingId);
+            const card = document.getElementById('demande-card-' + matchingId);
+            if (decision === 'accepte') {
+                badge.className = 'status-badge status-accepte';
+                badge.textContent = '✅ Accepté';
+                card.querySelector('.accept-checks')?.remove();
+                card.querySelector('.matching-actions')?.remove();
+                showNotif('✅ Demande acceptée ! Un email a été envoyé à l\'expéditeur.', 'success');
+                verifierPaiementEtAfficherChat(matchingId, card);
+                _afficherBoutonLivraison(matchingId, card);
+            } else {
+                badge.className = 'status-badge status-refuse';
+                badge.textContent = '❌ Refusé';
+                card.querySelector('.accept-checks')?.remove();
+                card.querySelector('.matching-actions')?.remove();
+                showNotif('Demande refusée. L\'expéditeur a été notifié.', 'default');
+            }
+        }
+    });
+}
+
+// ================================================================
+// Remplacez uniquement "function _afficherBoutonLivraison"
+// Tout le reste (ouvrirCamera, prendrePhoto, fermerCamera,
+// confirmerLivraison) reste IDENTIQUE à votre code actuel.
+// ================================================================
+
+function _afficherBoutonLivraison(matchingId, card) {
+    if (document.getElementById('livraison-bloc-' + matchingId)) return;
+
+    // ✅ Chercher les infos expéditeur depuis la demande-card
+    // Structure dans #section-demandes :
+    //   <strong style="color:#0A1F44;">Prénom Nom</strong>
+    //   <div style="...">📍 Ville → Ville</div>
+    //   <div style="...">📦 X kg</div>
+
+    let nomExp    = '';
+    let trajetExp = '';
+    let poidsExp  = '';
+
+    // Nom : premier <strong> avec couleur #0A1F44 dans la card
+    const nomEl = card.querySelector('strong[style*="0A1F44"]');
+    if (nomEl) nomExp = nomEl.textContent.trim();
+
+    // Trajet et poids : dans les <div> de la card
+    card.querySelectorAll('div').forEach(d => {
+        const t = d.textContent.trim();
+        if (t.startsWith('📍') && t.includes('→')) {
+            trajetExp = t.replace('📍', '').trim();
+        }
+        if (t.startsWith('📦') && t.includes('kg')) {
+            poidsExp = t.replace('📦', '').trim();
+        }
+    });
+
+    // Fallback : chercher dans .matching-detail
+    if (!trajetExp || !poidsExp) {
+        card.querySelectorAll('.matching-detail').forEach(d => {
+            const t = d.textContent.trim();
+            if (t.includes('→') && !trajetExp) {
+                trajetExp = t.replace('📍','').trim();
+            }
+            if (t.includes('kg') && !t.includes('→') && !poidsExp) {
+                poidsExp = t.replace('📦','').replace('Colis :','').trim();
+            }
+        });
+    }
+
+    const initiale = nomExp
+        ? nomExp.replace(/[^a-zA-ZÀ-ÿ]/g, '').charAt(0).toUpperCase()
+        : '?';
+
+    const bloc = document.createElement('div');
+    bloc.id = 'livraison-bloc-' + matchingId;
+    bloc.style.cssText = 'background:#e8f5e9;border-radius:10px;padding:14px;border-left:4px solid #2e7d32;margin-top:12px;';
+    bloc.innerHTML = `
+        <strong style="color:#2e7d32;">📦 Confirmer la livraison</strong>
+
+        <div style="background:white;border-radius:8px;padding:10px 14px;
+                    margin:10px 0 14px;border:1px solid #c8e6c9;
+                    display:flex;align-items:center;gap:12px;">
+            <div style="width:40px;height:40px;border-radius:50%;flex-shrink:0;
+                        background:#1E3A8A;color:white;font-weight:bold;
+                        font-size:1rem;display:flex;align-items:center;justify-content:center;">
+                ${initiale}
+            </div>
+            <div>
+                <div style="font-weight:700;color:#0A1F44;font-size:0.92rem;">
+                    ${nomExp || 'Expéditeur'}
+                </div>
+                <div style="font-size:0.82rem;color:#555;margin-top:2px;">
+                    📍 ${trajetExp || '—'}
+                    ${poidsExp ? '&nbsp;·&nbsp;<strong style="color:#2e7d32;">' + poidsExp + '</strong>' : ''}
+                </div>
+            </div>
+        </div>
+
+        <div id="preview-zone-${matchingId}"
+             style="display:none;margin-bottom:12px;text-align:center;">
+            <img id="preview-img-${matchingId}" src="" alt="Aperçu"
+                 style="max-width:100%;max-height:200px;border-radius:8px;
+                        border:2px solid #2e7d32;object-fit:cover;display:block;margin:0 auto;">
+            <div style="font-size:0.8rem;color:#2e7d32;margin-top:6px;font-weight:600;">
+                ✅ Photo capturée — prête à envoyer
+            </div>
+        </div>
+
+        <div style="margin:15px 0;">
+            <button onclick="ouvrirCamera('${matchingId}')"
+                    id="btn-camera-${matchingId}"
+                    style="background:#1E3A8A;color:white;padding:12px 20px;border:none;
+                           border-radius:8px;font-size:1rem;cursor:pointer;
+                           display:flex;align-items:center;gap:8px;
+                           width:100%;justify-content:center;">
+                📸 Prendre une photo de confirmation
+            </button>
+        </div>
+
+        <button class="btn btn-success" onclick="confirmerLivraison('${matchingId}')"
+                id="btn-confirm-${matchingId}" disabled>
+            ✅ Confirmer le colis livré au destinataire
+        </button>
+    `;
+
+    const dashZone = document.getElementById('zone-livraisons-dashboard');
+    if (dashZone) {
+        const clone = bloc.cloneNode(true);
+        clone.id = 'livraison-bloc-dash-' + matchingId;
+        dashZone.appendChild(clone);
+    }
+    card.appendChild(bloc);
+}
+
+// Variables globales — identiques à votre code qui fonctionne
+let currentLivraisonId = null;
+let capturedPhotoBase64 = null;
+
+// ================================================================
+// Remplacez uniquement la fonction ouvrirCamera dans votre <script>
+// ================================================================
+
+function ouvrirCamera(matchingId) {
+    currentLivraisonId = matchingId;
+
+    const ancien = document.getElementById('camera-modal');
+    if (ancien) {
+        const oldVideo = document.getElementById('video');
+        if (oldVideo && oldVideo.srcObject) {
+            oldVideo.srcObject.getTracks().forEach(t => t.stop());
+        }
+        ancien.remove();
+    }
+
+    const modal = document.createElement('div');
+    modal.id = 'camera-modal';
+    modal.style.cssText = `
+        position:fixed;inset:0;
+        background:rgba(0,0,0,0.97);
+        z-index:99999;
+        display:flex;flex-direction:column;
+        align-items:center;justify-content:center;
+        padding:20px;
+    `;
+    modal.innerHTML = `
+        <!-- En-tête -->
+        <div style="width:100%;max-width:480px;display:flex;
+                    align-items:center;justify-content:space-between;
+                    margin-bottom:16px;">
+            <div>
+                <div style="color:white;font-weight:700;font-size:1.05rem;
+                            letter-spacing:0.3px;">
+                    📷 Photo de livraison
+                </div>
+                <div style="color:rgba(255,255,255,0.55);font-size:0.78rem;margin-top:3px;">
+                    Cadrez le colis ou la remise au destinataire
+                </div>
+            </div>
+            <button onclick="fermerCamera()"
+                    style="background:rgba(255,255,255,0.08);
+                           border:1px solid rgba(255,255,255,0.18);
+                           color:white;width:38px;height:38px;border-radius:50%;
+                           font-size:1rem;cursor:pointer;
+                           display:flex;align-items:center;justify-content:center;
+                           transition:background 0.2s;"
+                    onmouseover="this.style.background='rgba(255,255,255,0.18)'"
+                    onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+                ✕
+            </button>
+        </div>
+
+        <!-- Viewfinder -->
+        <div style="position:relative;width:100%;max-width:480px;">
+            <video id="video" autoplay playsinline muted
+                   style="width:100%;border-radius:16px;
+                          background:#111;display:block;
+                          max-height:54vh;object-fit:cover;"></video>
+
+            <!-- Coins de cadrage -->
+            <div style="position:absolute;top:12px;left:12px;width:28px;height:28px;
+                        border-top:3px solid #FF7A00;border-left:3px solid #FF7A00;
+                        border-radius:4px 0 0 0;pointer-events:none;"></div>
+            <div style="position:absolute;top:12px;right:12px;width:28px;height:28px;
+                        border-top:3px solid #FF7A00;border-right:3px solid #FF7A00;
+                        border-radius:0 4px 0 0;pointer-events:none;"></div>
+            <div style="position:absolute;bottom:12px;left:12px;width:28px;height:28px;
+                        border-bottom:3px solid #FF7A00;border-left:3px solid #FF7A00;
+                        border-radius:0 0 0 4px;pointer-events:none;"></div>
+            <div style="position:absolute;bottom:12px;right:12px;width:28px;height:28px;
+                        border-bottom:3px solid #FF7A00;border-right:3px solid #FF7A00;
+                        border-radius:0 0 4px 0;pointer-events:none;"></div>
+
+            <!-- Chargement -->
+            <div id="cam-loading"
+                 style="position:absolute;inset:0;border-radius:16px;
+                        background:rgba(0,0,0,0.6);
+                        display:flex;flex-direction:column;
+                        align-items:center;justify-content:center;
+                        color:white;gap:10px;">
+                <div style="width:36px;height:36px;border:3px solid rgba(255,255,255,0.2);
+                            border-top-color:#FF7A00;border-radius:50%;
+                            animation:spin 0.9s linear infinite;"></div>
+                <div style="font-size:0.85rem;opacity:0.8;">Activation de la caméra...</div>
+            </div>
+        </div>
+
+        <!-- Bouton déclencheur -->
+        <div style="margin-top:28px;display:flex;flex-direction:column;
+                    align-items:center;gap:10px;">
+            <button id="btn-declencheur-cam"
+                    onclick="prendrePhoto()"
+                    style="width:76px;height:76px;border-radius:50%;
+                           background:white;
+                           border:5px solid #FF7A00;
+                           font-size:1.8rem;cursor:pointer;
+                           display:flex;align-items:center;justify-content:center;
+                           box-shadow:0 0 0 8px rgba(255,122,0,0.18),
+                                      0 4px 20px rgba(0,0,0,0.4);
+                           transition:transform 0.12s,box-shadow 0.12s;"
+                    onmousedown="this.style.transform='scale(0.91)';this.style.boxShadow='0 0 0 4px rgba(255,122,0,0.18)'"
+                    onmouseup="this.style.transform='scale(1)';this.style.boxShadow='0 0 0 8px rgba(255,122,0,0.18),0 4px 20px rgba(0,0,0,0.4)'"
+                    ontouchstart="this.style.transform='scale(0.91)'"
+                    ontouchend="this.style.transform='scale(1)'">
+                📸
+            </button>
+            <div style="color:rgba(255,255,255,0.45);font-size:0.76rem;
+                        letter-spacing:0.5px;">
+                Appuyez pour capturer
+            </div>
+        </div>
+
+        <!-- Animation spinner -->
+        <style>
+            @keyframes spin { to { transform: rotate(360deg); } }
+        </style>
+    `;
+    document.body.appendChild(modal);
+
+    const video = document.getElementById('video');
+    navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 } }
+    })
+    .then(stream => {
+        video.srcObject = stream;
+        video.onloadedmetadata = () => {
+            const loading = document.getElementById('cam-loading');
+            if (loading) loading.style.display = 'none';
+        };
+    })
+    .catch(err => {
+        alert("Impossible d'accéder à la caméra : " + err.message);
+        fermerCamera();
+    });
+}
+
+function prendrePhoto() {
+    const video = document.getElementById('video');
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+
+    capturedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.85);
+    fermerCamera();
+    showNotif('✅ Photo capturée ! Cliquez sur "Confirmer" pour envoyer.', 'success');
+
+    // ✅ Afficher l'aperçu de la photo dans le bloc
+    const previewZone = document.getElementById('preview-zone-' + currentLivraisonId);
+    const previewImg  = document.getElementById('preview-img-'  + currentLivraisonId);
+    if (previewZone && previewImg) {
+        previewImg.src = capturedPhotoBase64;
+        previewZone.style.display = 'block';
+    }
+
+    // ✅ Changer texte du bouton caméra → "Reprendre"
+    const btnCam = document.getElementById('btn-camera-' + currentLivraisonId);
+    if (btnCam) btnCam.innerHTML = '🔄 Reprendre la photo';
+
+    // ✅ Activer tous les boutons confirmer correspondants
+    document.querySelectorAll('[id^="btn-confirm-"]').forEach(btn => {
+        const btnId = btn.id.replace('btn-confirm-', '').replace('-dash', '');
+        if (btnId === String(currentLivraisonId)) {
+            btn.disabled = false;
+        }
+    });
+}
+
+function fermerCamera() {
+    const modal = document.getElementById('camera-modal');
+    if (modal) {
+        const video = document.getElementById('video');
+        if (video && video.srcObject) {
+            video.srcObject.getTracks().forEach(t => t.stop());
+        }
+        modal.remove();
+    }
+}
+
+function confirmerLivraison(matchingId) {
+    if (!capturedPhotoBase64) {
+        showNotif('📷 Vous devez prendre une photo avec la caméra !', 'default');
+        return;
+    }
+    if (!confirm('Envoyer cette photo et confirmer la livraison ?')) return;
+
+    const realId = String(matchingId).replace('-dash', '');
+
+    const formData = new FormData();
+    formData.append('matching_id', realId);
+    formData.append('photo_base64', capturedPhotoBase64);
+
+    fetch('/confirmer-livraison/', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-CSRFToken': CSRF_TOKEN }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            showNotif('✅ ' + data.message, 'success');
+            ['livraison-bloc-' + realId, 'livraison-bloc-dash-' + realId].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = '<div style="text-align:center;color:#2e7d32;padding:25px;font-size:1.1rem;">✅ Livraison confirmée avec photo</div>';
+            });
+            capturedPhotoBase64 = null;
+        } else {
+            showNotif('❌ ' + data.message, 'default');
+        }
+    })
+    .catch(() => showNotif('❌ Erreur lors de l\'envoi', 'default'));
+}
+
+function verifierPaiementEtAfficherChat(matchingId, card) {
+    fetch(`/verifier-paiement/?matching_id=${matchingId}`)
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok' && data.paiement_effectue) {
+            const div = document.createElement('div');
+            div.style.marginTop = '8px';
+            div.innerHTML = `<button class="btn btn-chat" onclick="ouvrirChat('${matchingId}', '${data.expediteur_nom}')">
+                💬 Discuter avec ${data.expediteur_nom}
+            </button>`;
+            card.appendChild(div);
+            ajouterConversationDansListe(matchingId, data.expediteur_nom, data.expediteur_initiale);
+        }
+    });
+}
+
+function ajouterConversationDansListe(matchingId, partnerName, initiale) {
+    const chatList = document.getElementById('chat-list');
+    const noChat = chatList.querySelector('.no-chat-open');
+    if (noChat) noChat.remove();
+    if (document.querySelector(`[data-matching-id="${matchingId}"]`)) return;
+    const item = document.createElement('div');
+    item.className = 'chat-list-item';
+    item.setAttribute('data-matching-id', matchingId);
+    item.setAttribute('data-name', partnerName);
+    item.onclick = () => ouvrirChat(matchingId, partnerName);
+    item.innerHTML = `
+        <div class="chat-avatar">${initiale || partnerName.charAt(0).toUpperCase()}</div>
+        <div class="chat-info">
+            <div class="chat-name">${partnerName}</div>
+            <div class="chat-preview" id="preview-${matchingId}">Cliquez pour discuter</div>
+        </div>
+        <div class="chat-time">À l'instant</div>`;
+    chatList.appendChild(item);
+}
+
+// ===== CHAT STYLE WHATSAPP =====
+let currentMatchingId = null;
+let lastMessageId = 0;
+let pollingInterval = null;
+let messagesNonLus = {};
+
+function ouvrirChat(matchingId, partnerName) {
+    currentMatchingId = String(matchingId);
+    lastMessageId = 0;
+    document.getElementById('chat-partner-name').textContent = partnerName;
+    document.getElementById('chat-av').textContent = partnerName.charAt(0).toUpperCase();
+    document.getElementById('chat-window').classList.add('open');
+    document.getElementById('chat-list').style.display = 'none';
+    document.getElementById('chat-messages').innerHTML = '';
+    messagesNonLus[matchingId] = 0;
+    mettreAJourBadgeChat();
+    chargerMessages();
+    if (pollingInterval) clearInterval(pollingInterval);
+    pollingInterval = setInterval(chargerMessages, 3000);
+    document.querySelectorAll('.menu-item').forEach(item => {
+        if (item.textContent.includes('Messagerie')) showSection('chat', item);
+    });
+    setTimeout(() => document.getElementById('chat-input').focus(), 100);
+}
+
+function fermerChat() {
+    document.getElementById('chat-window').classList.remove('open');
+    document.getElementById('chat-list').style.display = 'block';
+    currentMatchingId = null;
+    lastMessageId = 0;
+    if (pollingInterval) { clearInterval(pollingInterval); pollingInterval = null; }
+}
+
+function chargerMessages() {
+    if (!currentMatchingId) return;
+    fetch(`/get-messages/?matching_id=${currentMatchingId}&since_id=${lastMessageId}`)
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok' && data.messages.length > 0) {
+            data.messages.forEach(m => {
+                if (m.id <= lastMessageId) return;
+                // ✅ STYLE WHATSAPP :
+                // is_mine = True (calculé côté serveur) → bulle DROITE (bubble-sent, fond vert)
+                // is_mine = False → bulle GAUCHE (bubble-received, fond blanc)
+                const isMine = m.is_mine;
+                if (m.has_photo && m.photo_url) {
+                    afficherBubblePhoto(m.photo_url, isMine, m.date, m.est_photo_livraison);
+                } else if (m.contenu) {
+                    afficherBubble(m.contenu, isMine, m.date);
+                }
+                if (m.id > lastMessageId) lastMessageId = m.id;
+            });
+            const preview = document.getElementById('preview-' + currentMatchingId);
+            const dernierMsg = data.messages[data.messages.length - 1];
+            if (preview && dernierMsg.contenu) {
+                preview.textContent = dernierMsg.contenu.substring(0, 40);
+            }
+        }
+    }).catch(() => {});
+}
+
+function envoyerMsg() {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text || !currentMatchingId) return;
+    input.value = '';
+    input.disabled = true;
+
+    const formData = new FormData();
+    formData.append('matching_id', currentMatchingId);
+    formData.append('contenu', text);
+
+    fetch('/envoyer-message/', {
+        method: 'POST', body: formData,
+        headers: { 'X-CSRFToken': CSRF_TOKEN }
+    })
+    .then(res => res.json())
+    .then(data => {
+        input.disabled = false;
+        input.focus();
+        if (data.status === 'ok') {
+            // ✅ Message que JE viens d'envoyer → toujours à DROITE (isMine = true)
+            afficherBubble(text, true, data.date);
+            lastMessageId = data.message_id;
+            const preview = document.getElementById('preview-' + currentMatchingId);
+            if (preview) preview.textContent = text.substring(0, 40);
+        } else {
+            showNotif('Erreur : ' + data.message, 'default');
+            input.value = text;
+        }
+    }).catch(() => {
+        input.disabled = false;
+        input.value = text;
+    });
+}
+
+/**
+ * ✅ AFFICHER UNE BULLE DE MESSAGE — STYLE WHATSAPP
+ * isMine = true  → align-self: flex-end  → DROITE (fond vert)
+ * isMine = false → align-self: flex-start → GAUCHE (fond blanc)
+ */
+function afficherBubble(text, isMine, time) {
+    const msgs = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = 'bubble ' + (isMine ? 'bubble-sent' : 'bubble-received');
+    div.innerHTML = escapeHtml(text) + `<div class="bubble-time">${time}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+function envoyerPhoto(matchingId) {
+    const input = document.getElementById('photo-chat-input');
+    if (!input || !input.files[0]) return;
+    const formData = new FormData();
+    formData.append('matching_id', matchingId);
+    formData.append('photo', input.files[0]);
+    formData.append('contenu', '📷 Photo');
+    fetch('/envoyer-message/', {
+        method: 'POST', body: formData,
+        headers: { 'X-CSRFToken': CSRF_TOKEN }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok' && data.photo_url) {
+            // ✅ Photo envoyée par MOI → toujours à droite
+            afficherBubblePhoto(data.photo_url, true, data.date, data.est_photo_livraison);
+            lastMessageId = data.message_id;
+            input.value = '';
+        }
+    });
+}
+
+function afficherBubblePhoto(url, isMine, time, estLivraison) {
+    const msgs = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = 'bubble ' + (isMine ? 'bubble-sent' : 'bubble-received');
+    div.innerHTML = `
+        ${estLivraison ? '<div style="font-size:0.75rem;color:#2e7d32;margin-bottom:4px;font-weight:600;">📦 Photo de confirmation de livraison</div>' : ''}
+        <img src="${url}" style="max-width:200px;border-radius:8px;cursor:pointer;display:block;"
+             onclick="window.open('${url}','_blank')">
+        <div class="bubble-time">${time}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ===== SUPPORT CHAT =====
+let lastSupportId = 0;
+let supportPolling = null;
+
+function envoyerSupport() {
+    const input = document.getElementById('support-input');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    input.disabled = true;
+    const formData = new FormData();
+    formData.append('contenu', text);
+    fetch('/envoyer-message-support/', {
+        method: 'POST', body: formData,
+        headers: { 'X-CSRFToken': CSRF_TOKEN }
+    })
+    .then(res => res.json())
+    .then(data => {
+        input.disabled = false;
+        input.focus();
+        if (data.status === 'ok') {
+            afficherBubbleSupport(text, true, data.date);
+            if (data.message_id > lastSupportId) lastSupportId = data.message_id;
+        }
+    }).catch(() => { input.disabled = false; });
+}
+
+function afficherBubbleSupport(text, isMine, time) {
+    const msgs = document.getElementById('support-messages');
+    const empty = msgs.querySelector('div[style*="text-align:center"]');
+    if (empty) empty.remove();
+    const div = document.createElement('div');
+    div.className = 'bubble ' + (isMine ? 'bubble-sent' : 'bubble-received');
+    div.innerHTML = escapeHtml(text) + `<div class="bubble-time">${time}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+function chargerMessagesSupport() {
+    fetch(`/get-messages-support/?since_id=${lastSupportId}`)
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok' && data.messages.length > 0) {
+            data.messages.forEach(m => {
+                afficherBubbleSupport(m.contenu, m.is_mine, m.date);
+                if (m.id > lastSupportId) lastSupportId = m.id;
+            });
+        }
+    }).catch(() => {});
+}
+
+// ===== REMBOURSEMENT + TÉLÉCHARGEMENT AUTOMATIQUE DE FACTURE =====
+// ===== REMBOURSEMENT + TÉLÉCHARGEMENT AUTOMATIQUE =====
+function demanderRemboursement(transactionId) {
+    const motif = document.getElementById('motif-' + transactionId)?.value || '';
+    if (!confirm('Confirmer la demande de remboursement ?')) return;
+
+    const formData = new FormData();
+    formData.append('transaction_id', transactionId);
+    formData.append('motif', motif);
+
+    fetch('/demander-remboursement/', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-CSRFToken': CSRF_TOKEN }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            showNotif('✅ ' + data.message, 'success');
+            
+            const card = document.getElementById('remb-card-' + transactionId);
+            if (card && data.facture_url) {
+                card.innerHTML = `
+                    <div style="text-align:center;padding:30px 20px;color:#2e7d32;">
+                        <div style="font-size:2.5rem;margin-bottom:15px;">✅</div>
+                        <p style="font-size:1.1rem;margin-bottom:20px;">Demande envoyée avec succès !</p>
+                        <a href="${data.facture_url}" 
+                           class="facture-btn" 
+                           style="display:inline-block;padding:12px 24px;font-size:1rem;">
+                            📄 Télécharger la Facture
+                        </a>
+                    </div>`;
+            }
+        } else {
+            showNotif('❌ ' + (data.message || 'Erreur inconnue'), 'default');
+        }
+    })
+    .catch(() => showNotif('❌ Erreur de connexion', 'default'));
+}
+
+// ===== CONFIRMER RÉCEPTION (expéditeur) =====
+function confirmerReception(matchingId) {
+    if (!confirm('Confirmer la bonne réception de votre colis ?')) return;
+    const formData = new FormData();
+    formData.append('matching_id', matchingId);
+    fetch('/confirmer-reception/', {
+        method: 'POST', body: formData,
+        headers: { 'X-CSRFToken': CSRF_TOKEN }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            showNotif('✅ ' + data.message, 'success');
+            setTimeout(() => location.reload(), 1500);
+        } else { showNotif('❌ ' + data.message, 'default'); }
+    });
+}
+
+// ===== PORTEFEUILLE =====
+// ================================================================
+// AJOUTEZ ces deux fonctions dans votre <script>
+// ET ajoutez l'appel dans DOMContentLoaded (voir en bas)
+// ================================================================
+
+// ✅ Afficher un retrait instantanément dans le dashboard sans rechargement
+function _afficherRetraitDansDashboard(retrait) {
+    // Chercher ou créer le conteneur des retraits
+    let container = document.getElementById('historique-retraits-container');
+    if (!container) {
+        // Créer le bloc entier s'il n'existe pas encore
+        const wrapper = document.createElement('div');
+        wrapper.style.marginTop = '16px';
+        wrapper.innerHTML = `
+            <h4 style="color:#0A1F44;font-size:0.92rem;margin-bottom:10px;">
+                💸 Historique des retraits effectués
+            </h4>
+            <div id="historique-retraits-container"></div>
+        `;
+        // Insérer après le bloc gains débloqués dans le dashboard
+        const panelBody = document.querySelector('#section-dashboard .panel-body');
+        if (panelBody) panelBody.appendChild(wrapper);
+        container = document.getElementById('historique-retraits-container');
+    }
+
+    const modeLabel = {
+        'orange': '🟠 Orange Money',
+        'paypal': '🅿️ PayPal',
+        'carte':  '💳 Carte bancaire',
+        'wave':   '🌊 Wave',
+    }[retrait.mode] || retrait.mode;
+
+    const statutHtml = retrait.statut === 'traite'
+        ? '<span style="background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:10px;font-size:0.78rem;">✅ Traité avec succès</span>'
+        : retrait.statut === 'en_attente'
+        ? '<span style="background:#fff8e1;color:#f57f17;padding:3px 10px;border-radius:10px;font-size:0.78rem;">⏳ En cours de traitement</span>'
+        : '<span style="background:#ffebee;color:#c62828;padding:3px 10px;border-radius:10px;font-size:0.78rem;">❌ Refusé — solde recrédité</span>';
+
+    const div = document.createElement('div');
+    div.style.cssText = 'background:#fff3e0;border-radius:10px;padding:14px;border-left:4px solid #FF7A00;margin-bottom:10px;';
+    div.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div style="flex:1;">
+                <strong style="color:#e65100;font-size:0.92rem;">💸 Retrait effectué</strong>
+                <div style="font-size:0.85rem;color:#555;margin-top:4px;">
+                    Envoyé via <strong style="color:#e65100;">${modeLabel}</strong>
+                </div>
+                <div style="font-size:0.82rem;color:#777;margin-top:3px;">📬 ${retrait.coordonnees}</div>
+                <div style="font-size:0.78rem;color:#888;margin-top:3px;">📅 ${retrait.date}</div>
+                <div style="margin-top:6px;">${statutHtml}</div>
+            </div>
+            <div style="font-size:1.6rem;font-weight:900;color:#e65100;margin-left:12px;white-space:nowrap;">
+                -${parseFloat(retrait.montant).toFixed(2)}€
+            </div>
+        </div>
+    `;
+    // Insérer en premier (le plus récent en haut)
+    container.insertBefore(div, container.firstChild);
+}
+
+
+// ================================================================
+// MODIFIEZ la fonction demanderRetrait existante :
+// Remplacez UNIQUEMENT le bloc ".then(data => {" jusqu'au "});"
+// ================================================================
+
+// ✅ Remplacez votre fonction demanderRetrait par celle-ci :
+function demanderRetrait() {
+    const montant    = parseFloat(document.getElementById('retrait-montant').value);
+    const mode       = document.getElementById('retrait-mode').value;
+    const coord      = document.getElementById('retrait-coordonnees').value.trim();
+
+    if (!montant || montant <= 0) { showNotif('⚠️ Montant invalide', 'default'); return; }
+    if (!mode)   { showNotif('⚠️ Choisissez un mode de retrait', 'default'); return; }
+    if (!coord)  { showNotif('⚠️ Entrez vos coordonnées de retrait', 'default'); return; }
+
+    const formData = new FormData();
+    formData.append('montant', montant);
+    formData.append('mode_retrait', mode);
+    formData.append('coordonnees', coord);
+
+    fetch('/demander-retrait/', {
+        method: 'POST', body: formData,
+        headers: { 'X-CSRFToken': CSRF_TOKEN }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            showNotif('✅ ' + data.message, 'success');
+
+            // ✅ Mettre à jour le solde affiché
+            const nouveauSolde = parseFloat(data.nouveau_solde);
+            dernierSoldeConnu = nouveauSolde;
+            _mettreAJourAffichageSolde(nouveauSolde, false);
+
+            // ✅ Afficher le retrait immédiatement dans le dashboard
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('fr-FR') + ' à ' +
+                            now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+            _afficherRetraitDansDashboard({
+                montant:     montant,
+                mode:        mode,
+                coordonnees: coord,
+                date:        dateStr,
+                statut:      'traite'
+            });
+
+            // ✅ Réinitialiser les champs
+            document.getElementById('retrait-montant').value = '';
+            document.getElementById('retrait-coordonnees').value = '';
+            document.getElementById('retrait-mode').value = '';
+
+        } else {
+            showNotif('❌ ' + data.message, 'default');
+        }
+    });
+}
+
+// ===== POLLING SOLDE TEMPS RÉEL =====
+function verifierMiseAJourSolde() {
+    if (TYPE_PROFIL !== 'voyageur') return;
+    fetch('/get-solde/')
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            const nouveauSolde = parseFloat(data.solde);
+            if (Math.abs(nouveauSolde - dernierSoldeConnu) > 0.001) {
+                const ancienSolde = dernierSoldeConnu;
+                dernierSoldeConnu = nouveauSolde;
+                _mettreAJourAffichageSolde(nouveauSolde, true, nouveauSolde - ancienSolde);
+            }
+        }
+    }).catch(() => {});
+}
+
+function _mettreAJourAffichageSolde(solde, avecNotif, gainAjoute) {
+    const soldeEl = document.getElementById('solde-portefeuille');
+    if (soldeEl) soldeEl.textContent = solde.toFixed(2) + ' €';
+    const gainsEl = document.getElementById('gains-dashboard');
+    if (gainsEl) gainsEl.textContent = solde.toFixed(2) + ' €';
+    document.querySelectorAll('.menu-item').forEach(item => {
+        if (item.textContent.includes('Portefeuille')) {
+            let badge = item.querySelector('.menu-count');
+            if (solde > 0) {
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'menu-count';
+                    badge.style.background = '#2e7d32';
+                    item.appendChild(badge);
+                }
+                badge.textContent = Math.floor(solde) + '€';
+            } else {
+                if (badge) badge.remove();
+            }
+        }
+    });
+    if (avecNotif && gainAjoute > 0) {
+        showNotif(`💰 +${gainAjoute.toFixed(2)} € débloqués sur votre portefeuille !`, 'success');
+    }
+}
+
+// ===== BADGES MESSAGERIE (nouveaux messages) =====
+function verifierNouveauxMessages() {
+    document.querySelectorAll('[data-matching-id]').forEach(item => {
+        const mId = String(item.getAttribute('data-matching-id'));
+        if (mId === currentMatchingId) return;
+        const lastSeen = messagesNonLus['lastSeen_' + mId] || 0;
+        fetch(`/get-messages/?matching_id=${mId}&since_id=${lastSeen}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'ok' && data.messages.length > 0) {
+                // ✅ Messages reçus = ceux où is_mine = false (envoyés par l'AUTRE)
+                const recus = data.messages.filter(m => !m.is_mine);
+                if (recus.length > 0) {
+                    messagesNonLus[mId] = (messagesNonLus[mId] || 0) + recus.length;
+                    mettreAJourBadgeChat();
+                    const preview = document.getElementById('preview-' + mId);
+                    if (preview) {
+                        const dernierRecus = recus[recus.length - 1];
+                        preview.textContent = (dernierRecus.contenu || '📷 Photo').substring(0, 40);
+                        preview.style.fontWeight = 'bold';
+                        preview.style.color = '#0A1F44';
+                    }
+                }
+                const dernierMsg = data.messages[data.messages.length - 1];
+                messagesNonLus['lastSeen_' + mId] = dernierMsg.id;
+            }
+        }).catch(() => {});
+    });
+}
+
+function mettreAJourBadgeChat() {
+    const total = Object.keys(messagesNonLus)
+        .filter(k => !k.startsWith('lastSeen_'))
+        .reduce((acc, k) => acc + (messagesNonLus[k] || 0), 0);
+    document.querySelectorAll('.menu-item').forEach(item => {
+        if (item.textContent.includes('Messagerie')) {
+            const ancien = item.querySelector('.menu-count');
+            if (ancien) ancien.remove();
+            if (total > 0) {
+                const badge = document.createElement('span');
+                badge.className = 'menu-count';
+                badge.textContent = total;
+                badge.style.background = '#c62828';
+                item.appendChild(badge);
+            }
+        }
+    });
+}
+
+// ===== UTILITAIRES =====
+function escapeHtml(text) {
+    const d = document.createElement('div');
+    d.appendChild(document.createTextNode(text));
+    return d.innerHTML;
+}
+
+function showNotif(msg, type) {
+    const n = document.createElement('div');
+    n.style.cssText = `
+        position:fixed;top:20px;right:20px;
+        background:${type === 'success' ? '#2e7d32' : '#FF7A00'};
+        color:white;padding:12px 20px;border-radius:8px;
+        z-index:9999;font-size:0.9rem;
+        box-shadow:0 4px 12px rgba(0,0,0,0.2);
+        max-width:350px;line-height:1.4;
+    `;
+    n.textContent = msg;
+    document.body.appendChild(n);
+    setTimeout(() => n.remove(), 3500);
+}
+
+// ===== INITIALISATION =====
+document.addEventListener('DOMContentLoaded', () => {
+    const supportMsgs = document.getElementById('support-messages');
+    if (supportMsgs) supportMsgs.scrollTop = supportMsgs.scrollHeight;
+    // Vérifier les nouveaux messages toutes les 5 secondes (hors chat ouvert)
+    setInterval(verifierNouveauxMessages, 5000);
+    // Vérifier le solde toutes les secondes (voyageur)
+    setInterval(verifierMiseAJourSolde, 1000);
+});
+</script>
+
+</body>
+</html>
