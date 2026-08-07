@@ -1,10 +1,11 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historique - KERALINK</title>
+    <title>{% trans "Historique - KERALINK" %}</title>
     <link rel="stylesheet" href="{% static 'voyageurs/css/style.css' %}">
     <style>
         body { background: #f0f2f5; }
@@ -47,8 +48,8 @@
 <body>
 
 <div class="page-header">
-    <h2>💳 Historique des transactions</h2>
-    <a href="/espace-connecte/" class="btn-retour">← Mon espace</a>
+    <h2>💳 {% trans "Historique des transactions" %}</h2>
+    <a href="/espace-connecte/" class="btn-retour">← {% trans "Mon espace" %}</a>
 </div>
 
 <div class="historique-wrap">
@@ -61,10 +62,10 @@
             </div>
             <div class="histo-date">📅 {{ t.date_transaction|date:"d/m/Y à H:i" }}</div>
             <span class="statut-badge statut-{{ t.statut }}">
-                {% if t.statut == 'bloque' %}🔒 Bloqué
-                {% elif t.statut == 'debloque' %}✅ Versé
-                {% elif t.statut == 'rembourse' %}↩️ Remboursé
-                {% elif t.statut == 'remboursement_demande' %}🔴 Remboursement demandé
+                {% if t.statut == 'bloque' %}🔒 {% trans "Bloqué" %}
+                {% elif t.statut == 'debloque' %}✅ {% trans "Versé" %}
+                {% elif t.statut == 'rembourse' %}↩️ {% trans "Remboursé" %}
+                {% elif t.statut == 'remboursement_demande' %}🔴 {% trans "Remboursement demandé" %}
                 {% else %}{{ t.statut }}{% endif %}
             </span>
         </div>
@@ -72,15 +73,15 @@
             <div class="histo-montant">{{ t.montant|floatformat:2 }} €</div>
             <div class="histo-mode">{{ t.get_mode_paiement_display }}</div>
             <div style="font-size:0.78rem;color:#e65100;margin-top:4px;">
-                Voyageur : {{ t.montant_voyageur|floatformat:2 }} € |
-                Commission : {{ t.montant_commission|floatformat:2 }} €
+                {% trans "Voyageur" %} : {{ t.montant_voyageur|floatformat:2 }} € |
+                {% trans "Commission" %} : {{ t.montant_commission|floatformat:2 }} €
             </div>
         </div>
     </div>
     {% empty %}
     <div class="empty">
         <div class="empty-icon">💳</div>
-        <p>Aucune transaction pour le moment.</p>
+        <p>{% trans "Aucune transaction pour le moment." %}</p>
     </div>
     {% endfor %}
 </div>

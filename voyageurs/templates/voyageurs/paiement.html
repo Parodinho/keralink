@@ -1,10 +1,11 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paiement Sécurisé - KERALINK</title>
+    <title>{% trans "Paiement Sécurisé - KERALINK" %}</title>
     <link rel="stylesheet" href="{% static 'voyageurs/css/style.css' %}">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
@@ -160,31 +161,25 @@
 
 <nav class="pay-navbar">
     <img src="{% static 'voyageurs/images/logo3.png' %}">
-    <div class="secure-badge">🔒 Paiement 100% sécurisé</div>
+    <div class="secure-badge">🔒 {% trans "Paiement 100% sécurisé" %}</div>
 </nav>
 
 <div class="pay-container">
     <div class="pay-card">
 
         <div class="pay-header">
-            <h2>💳 Paiement sécurisé</h2>
-            <div class="pay-amount">{{ montant }} € <small>TTC</small></div>
-            <div class="escrow-notice">🔒 Votre argent est sécurisé jusqu'à livraison du colis</div>
+            <h2>💳 {% trans "Paiement sécurisé" %}</h2>
+            <div class="pay-amount">{{ montant }} € <small>{% trans "TTC" %}</small></div>
+            <div class="escrow-notice">🔒 {% trans "Votre argent est sécurisé jusqu'à livraison du colis" %}</div>
         </div>
 
         <!-- ONGLETS -->
         <div class="pay-tabs" id="pay-tabs">
             <div class="pay-tab {% if mode_paiement == 'carte' %}active{% endif %}" onclick="switchTab('carte', event)">
-                <span class="tab-icon">💳</span> Carte
+                <span class="tab-icon">💳</span> {% trans "Carte" %}
             </div>
             <div class="pay-tab {% if mode_paiement == 'paypal' %}active{% endif %}" onclick="switchTab('paypal', event)">
                 <span class="tab-icon">🅿️</span> PayPal
-            </div>
-            <div class="pay-tab {% if mode_paiement == 'orange' %}active{% endif %}" onclick="switchTab('orange', event)">
-                <span class="tab-icon">🟠</span> Orange
-            </div>
-            <div class="pay-tab {% if mode_paiement == 'wave' %}active{% endif %}" onclick="switchTab('wave', event)">
-                <span class="tab-icon">🌊</span> Wave
             </div>
         </div>
 
@@ -197,28 +192,28 @@
                     <div class="card-number-display" id="card-display">•••• •••• •••• ••••</div>
                     <div class="card-info">
                         <div>
-                            <div style="font-size:0.7rem;opacity:0.6;">TITULAIRE</div>
-                            <div id="card-name-display">VOTRE NOM</div>
+                            <div style="font-size:0.7rem;opacity:0.6;">{% trans "TITULAIRE" %}</div>
+                            <div id="card-name-display">{% trans "VOTRE NOM" %}</div>
                         </div>
                         <div>
-                            <div style="font-size:0.7rem;opacity:0.6;">EXPIRE</div>
+                            <div style="font-size:0.7rem;opacity:0.6;">{% trans "EXPIRE" %}</div>
                             <div id="card-exp-display">MM/AA</div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Numéro de carte</label>
+                    <label>{% trans "Numéro de carte" %}</label>
                     <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19"
                            oninput="formatCard(this)" autocomplete="off">
                 </div>
                 <div class="form-group">
-                    <label>Nom sur la carte</label>
+                    <label>{% trans "Nom sur la carte" %}</label>
                     <input type="text" id="card-name" placeholder="JEAN DUPONT"
                            oninput="document.getElementById('card-name-display').textContent = this.value.toUpperCase() || 'VOTRE NOM'">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Date d'expiration</label>
+                        <label>{% trans "Date d'expiration" %}</label>
                         <input type="text" id="card-exp" placeholder="MM/AA" maxlength="5" oninput="formatExp(this)">
                     </div>
                     <div class="form-group">
@@ -227,7 +222,7 @@
                     </div>
                 </div>
                 <button class="btn-pay btn-pay-carte" onclick="lancerPaiement('carte')">
-                    🔒 Payer {{ montant }} € par carte
+                    🔒 {% trans "Payer" %} {{ montant }} € {% trans "par carte" %}
                 </button>
             </div>
 
@@ -235,93 +230,46 @@
             <div class="pay-form {% if mode_paiement == 'paypal' %}active{% endif %}" id="form-paypal">
                 <div class="paypal-logo"><span class="pay">Pay</span><span class="pal">Pal</span></div>
                 <div class="form-group">
-                    <label>Email PayPal</label>
-                    <input type="email" id="paypal-email" placeholder="votre@email.com">
+                    <label>{% trans "Email PayPal" %}</label>
+                    <input type="email" id="paypal-email" placeholder="{% trans 'votre@email.com' %}">
                 </div>
                 <div class="form-group">
-                    <label>Mot de passe PayPal</label>
+                    <label>{% trans "Mot de passe PayPal" %}</label>
                     <input type="password" id="paypal-password" placeholder="••••••••">
                 </div>
                 <div style="background:#e3f2fd;border-radius:8px;padding:12px;font-size:0.82rem;color:#1565c0;margin-bottom:16px;">
-                    🔵 Vous serez redirigé vers PayPal pour confirmer le paiement sécurisé.
+                    🔵 {% trans "Vous serez redirigé vers PayPal pour confirmer le paiement sécurisé." %}
                 </div>
                 <button class="btn-pay btn-pay-paypal" onclick="lancerPaiement('paypal')">
-                    🅿️ Payer {{ montant }} € via PayPal
-                </button>
-            </div>
-
-            <!-- ORANGE MONEY -->
-            <div class="pay-form {% if mode_paiement == 'orange' %}active{% endif %}" id="form-orange">
-                <div class="mobile-display">
-                    <div class="mobile-icon-wrap" style="background:#FF7A00;">🟠</div>
-                    <div style="font-weight:bold;font-size:1rem;color:#e65100;margin-bottom:4px;">Orange Money</div>
-                    <div style="font-size:0.88rem;color:#777;">Paiement mobile sécurisé</div>
-                </div>
-                <div class="form-group">
-                    <label>Numéro Orange Money</label>
-                    <input type="tel" id="orange-phone" placeholder="+33 6 XX XX XX XX">
-                </div>
-                <div class="form-group">
-                    <label>Code PIN Orange Money</label>
-                    <input type="password" id="orange-pin" placeholder="••••" maxlength="4">
-                </div>
-                <div style="background:#fff3e0;border-radius:8px;padding:12px;font-size:0.82rem;color:#e65100;margin-bottom:16px;">
-                    🟠 Un SMS de confirmation sera envoyé sur votre numéro Orange.
-                </div>
-                <button class="btn-pay btn-pay-orange" onclick="lancerPaiement('orange')">
-                    🟠 Payer {{ montant }} € via Orange Money
-                </button>
-            </div>
-
-            <!-- WAVE -->
-            <div class="pay-form {% if mode_paiement == 'wave' %}active{% endif %}" id="form-wave">
-                <div class="mobile-display">
-                    <div class="mobile-icon-wrap" style="background:#0068FF;">🌊</div>
-                    <div style="font-weight:bold;font-size:1rem;color:#0052cc;margin-bottom:4px;">Wave</div>
-                    <div style="font-size:0.88rem;color:#777;">Paiement mobile rapide</div>
-                </div>
-                <div class="form-group">
-                    <label>Numéro Wave</label>
-                    <input type="tel" id="wave-phone" placeholder="+33 7 XX XX XX XX">
-                </div>
-                <div class="form-group">
-                    <label>Code Wave</label>
-                    <input type="password" id="wave-pin" placeholder="••••" maxlength="4">
-                </div>
-                <div style="background:#e3f2fd;border-radius:8px;padding:12px;font-size:0.82rem;color:#0052cc;margin-bottom:16px;">
-                    🌊 Une notification Wave sera envoyée pour valider le paiement.
-                </div>
-                <button class="btn-pay btn-pay-wave" onclick="lancerPaiement('wave')">
-                    🌊 Payer {{ montant }} € via Wave
+                    🅿️ {% trans "Payer" %} {{ montant }} € {% trans "via PayPal" %}
                 </button>
             </div>
 
             <div class="security-row">
                 <span>🔒 SSL 256-bit</span>
                 <span>🛡️ 3D Secure</span>
-                <span>✅ Certifié PCI DSS</span>
+                <span>✅ {% trans "Certifié PCI DSS" %}</span>
             </div>
         </div>
 
         <!-- ===== SUCCÈS ===== -->
         <div class="pay-success" id="pay-success">
             <div class="success-icon">✅</div>
-            <h2 style="color:#2e7d32;margin-bottom:8px;">Paiement réussi !</h2>
-            <p style="color:#555;font-size:0.9rem;">Votre paiement a été traité avec succès.</p>
+            <h2 style="color:#2e7d32;margin-bottom:8px;">{% trans "Paiement réussi !" %}</h2>
+            <p style="color:#555;font-size:0.9rem;">{% trans "Votre paiement a été traité avec succès." %}</p>
             <div class="success-ref" id="success-ref">KRL-XXXXXXXXXX</div>
             <div class="escrow-info">
-                <strong>🔒 Votre argent est sécurisé</strong>
-                Votre paiement est bloqué sur la plateforme KERALINK et sera versé au voyageur
-                uniquement après confirmation de la livraison de votre colis à destination.
+                <strong>🔒 {% trans "Votre argent est sécurisé" %}</strong>
+                {% trans "Votre paiement est bloqué sur la plateforme KERALINK et sera versé au voyageur uniquement après confirmation de la livraison de votre colis à destination." %}
             </div>
 
             <!-- ✅ BOUTON TÉLÉCHARGER FACTURE -->
             <button class="btn-facture" id="btn-telecharger-facture" onclick="telechargerFacture()">
-                📄 Télécharger ma facture de paiement
+                📄 {% trans "Télécharger ma facture de paiement" %}
             </button>
 
             <button class="btn-espace" id="btn-apres-paiement" disabled>
-                Traitement...
+                {% trans "Traitement..." %}
             </button>
         </div>
 
@@ -330,8 +278,8 @@
 
 <div class="pay-loading" id="pay-loading">
     <div class="spinner"></div>
-    <div class="loading-text" id="loading-text">Traitement en cours...</div>
-    <div class="loading-steps" id="loading-steps">Connexion sécurisée</div>
+    <div class="loading-text" id="loading-text">{% trans "Traitement en cours..." %}</div>
+    <div class="loading-steps" id="loading-steps">{% trans "Connexion sécurisée" %}</div>
 </div>
 
 <script>
@@ -486,8 +434,6 @@ function telechargerFacture() {
     const modePaiementLabel = {
         'carte': '💳 Carte bancaire',
         'paypal': '🅿️ PayPal',
-        'orange': '🟠 Orange Money',
-        'wave': '🌊 Wave',
     }[factureData.mode_paiement] || factureData.mode_paiement;
 
     const htmlFacture = `

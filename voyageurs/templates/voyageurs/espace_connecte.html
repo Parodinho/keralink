@@ -1,10 +1,11 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espace Connecté - KERALINK</title>
+    <title>{% trans "Espace Connecté - KERALINK" %}</title>
     <link rel="stylesheet" href="{% static 'voyageurs/css/style.css' %}">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -268,7 +269,7 @@
         </a>
         <div style="flex:1;max-width:600px;display:flex;border-radius:8px;overflow:hidden;
                     box-shadow:0 0 0 2px #FF7A00;margin:0 8px;">
-            <input type="text" placeholder="Rechercher..."
+            <input type="text" placeholder="{% trans 'Rechercher...' %}"
                    style="flex:1;padding:10px 14px;border:none;font-size:0.95rem;
                           outline:none;background:white;color:#333;">
             <button style="background:#FF7A00;border:none;padding:0 18px;cursor:pointer;
@@ -278,7 +279,7 @@
                     padding:4px 8px;border-radius:8px;border:1.5px solid transparent;transition:border-color 0.2s;"
              onmouseover="this.style.borderColor='#FF7A00'"
              onmouseout="this.style.borderColor='transparent'">
-            <span style="color:rgba(255,255,255,0.75);font-size:0.72rem;">Connecté en tant que</span>
+            <span style="color:rgba(255,255,255,0.75);font-size:0.72rem;">{% trans "Connecté en tant que" %}</span>
             <span style="color:white;font-weight:700;font-size:0.88rem;">
                 {{ nom_complet }} — {{ type_profil|upper }} ▾
             </span>
@@ -287,8 +288,8 @@
                   padding:4px 8px;border-radius:8px;border:1.5px solid transparent;transition:border-color 0.2s;"
            onmouseover="this.style.borderColor='#FF7A00'"
            onmouseout="this.style.borderColor='transparent'">
-            <span style="color:rgba(255,255,255,0.75);font-size:0.72rem;">← Retour</span>
-            <span style="color:white;font-weight:700;font-size:0.88rem;">Accueil</span>
+            <span style="color:rgba(255,255,255,0.75);font-size:0.72rem;">← {% trans "Retour" %}</span>
+            <span style="color:white;font-weight:700;font-size:0.88rem;">{% trans "Accueil" %}</span>
         </a>
         <span style="background:#FF7A00;color:white;padding:4px 12px;border-radius:12px;
                      font-size:0.75rem;font-weight:bold;flex-shrink:0;">
@@ -302,35 +303,35 @@
                   font-size:0.88rem;white-space:nowrap;cursor:pointer;text-decoration:none;
                   border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
            onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
-            🏠 Accueil
+            🏠 {% trans "Accueil" %}
         </a>
         <div onclick="showSection('dashboard', document.querySelector('.menu-item'))"
              style="color:#FF7A00;font-weight:600;padding:0 14px;height:40px;display:flex;align-items:center;
                     font-size:0.88rem;white-space:nowrap;cursor:pointer;
                     border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
              onmouseover="this.style.borderColor='#FF7A00'" onmouseout="this.style.borderColor='transparent'">
-            📊 Mon espace
+            📊 {% trans "Mon espace" %}
         </div>
         <div onclick="showSection('matchings', null)"
              style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
                     font-size:0.88rem;white-space:nowrap;cursor:pointer;
                     border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
              onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
-            🔗 Mes Matchings
+            🔗 {% trans "Mes Matchings" %}
         </div>
         <div onclick="showSection('chat', null)"
              style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
                     font-size:0.88rem;white-space:nowrap;cursor:pointer;
                     border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
              onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
-            💬 Messagerie
+            💬 {% trans "Messagerie" %}
         </div>
         <div onclick="showSection('support', null)"
              style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
                     font-size:0.88rem;white-space:nowrap;cursor:pointer;
                     border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
              onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
-            🎧 Support
+            🎧 {% trans "Support" %}
         </div>
         {% if type_profil == 'voyageur' %}
         <div onclick="showSection('portefeuille', null)"
@@ -338,7 +339,7 @@
                     font-size:0.88rem;white-space:nowrap;cursor:pointer;
                     border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
              onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
-            💼 Portefeuille
+            💼 {% trans "Portefeuille" %}
         </div>
         {% endif %}
         {% if type_profil == 'expediteur' %}
@@ -347,7 +348,7 @@
                     font-size:0.88rem;white-space:nowrap;cursor:pointer;
                     border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
              onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
-            ↩️ Remboursement
+            ↩️ {% trans "Remboursement" %}
         </div>
         {% endif %}
     </div>
@@ -365,37 +366,37 @@
                 </div>
                 <div class="profile-name">{{ nom_complet }}</div>
                 <span class="profile-type-badge {% if type_profil == 'expediteur' %}badge-expediteur{% else %}badge-voyageur{% endif %}">
-                    {% if type_profil == 'expediteur' %}📦 Expéditeur{% else %}🧳 Voyageur{% endif %}
+                    {% if type_profil == 'expediteur' %}📦 {% trans "Expéditeur" %}{% else %}🧳 {% trans "Voyageur" %}{% endif %}
                 </span>
             </div>
         </div>
 
         <div class="sidebar-card sidebar-menu">
             <div class="menu-item active" onclick="showSection('dashboard', this)">
-                <span class="menu-icon">🏠</span> Tableau de bord
+                <span class="menu-icon">🏠</span> {% trans "Tableau de bord" %}
             </div>
             <div class="menu-item" onclick="showSection('matchings', this)">
-                <span class="menu-icon">🔗</span> Mes Matchings
+                <span class="menu-icon">🔗</span> {% trans "Mes Matchings" %}
                 {% if matchings %}<span class="menu-count">{{ matchings|length }}</span>{% endif %}
             </div>
             {% if type_profil == 'voyageur' %}
             <div class="menu-item" onclick="showSection('demandes', this)">
-                <span class="menu-icon">📥</span> Demandes reçues
+                <span class="menu-icon">📥</span> {% trans "Demandes reçues" %}
                 {% if demandes_en_attente %}<span class="menu-count">{{ demandes_en_attente|length }}</span>{% endif %}
             </div>
             {% endif %}
             <div class="menu-item" onclick="showSection('chat', this)">
-                <span class="menu-icon">💬</span> Messagerie
+                <span class="menu-icon">💬</span> {% trans "Messagerie" %}
             </div>
             <div class="menu-item" onclick="showSection('support', this)">
-                <span class="menu-icon">🎧</span> Support
+                <span class="menu-icon">🎧</span> {% trans "Support" %}
                 {% if nb_support_non_lus > 0 %}
                 <span class="menu-count" style="background:#c62828;">{{ nb_support_non_lus }}</span>
                 {% endif %}
             </div>
             {% if type_profil == 'voyageur' %}
             <div class="menu-item" onclick="showSection('portefeuille', this)">
-                <span class="menu-icon">💼</span> Portefeuille
+                <span class="menu-icon">💼</span> {% trans "Portefeuille" %}
                 {% if portefeuille and portefeuille.solde > 0 %}
                 <span class="menu-count" style="background:#2e7d32;">{{ portefeuille.solde|floatformat:0 }}€</span>
                 {% endif %}
@@ -403,7 +404,7 @@
             {% endif %}
             {% if type_profil == 'expediteur' %}
             <div class="menu-item" onclick="showSection('remboursement', this)">
-                <span class="menu-icon">↩️</span> Remboursement
+                <span class="menu-icon">↩️</span> {% trans "Remboursement" %}
                 {% if transactions_remboursables %}
                 <span class="menu-count" style="background:#c62828;">{{ transactions_remboursables|length }}</span>
                 {% endif %}
@@ -417,12 +418,12 @@
 
         <div class="welcome-banner">
             <div class="welcome-text">
-                <h2>Bienvenue, {{ nom_complet }} 👋</h2>
+                <h2>{% trans "Bienvenue" %}, {{ nom_complet }} 👋</h2>
                 <p>
                     {% if type_profil == 'expediteur' %}
-                        Suivez vos demandes d'expédition et vos matchings depuis votre espace.
+                        {% trans "Suivez vos demandes d'expédition et vos matchings depuis votre espace." %}
                     {% else %}
-                        Gérez vos trajets et les demandes d'expédition reçues.
+                        {% trans "Gérez vos trajets et les demandes d'expédition reçues." %}
                     {% endif %}
                 </p>
             </div>
@@ -431,21 +432,21 @@
 
         <!-- ===== DASHBOARD ===== -->
         <div id="section-dashboard" class="section-panel active">
-            <div class="panel-header"><span>📊</span><h3>Vue d'ensemble</h3></div>
+            <div class="panel-header"><span>📊</span><h3>{% trans "Vue d'ensemble" %}</h3></div>
             <div class="panel-body">
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;">
                     <div style="background:#f0f2f5;border-radius:10px;padding:16px;text-align:center;">
                         <div style="font-size:1.8rem;font-weight:bold;color:#0A1F44;">{{ matchings|length }}</div>
-                        <div style="font-size:0.8rem;color:#666;">Matchings</div>
+                        <div style="font-size:0.8rem;color:#666;">{% trans "Matchings" %}</div>
                     </div>
                     {% if type_profil == 'voyageur' %}
                     <div style="background:#fff8e1;border-radius:10px;padding:16px;text-align:center;">
                         <div style="font-size:1.8rem;font-weight:bold;color:#f57f17;">{{ demandes_en_attente|length }}</div>
-                        <div style="font-size:0.8rem;color:#666;">En attente</div>
+                        <div style="font-size:0.8rem;color:#666;">{% trans "En attente" %}</div>
                     </div>
                     <div style="background:#e8f5e9;border-radius:10px;padding:16px;text-align:center;">
                         <div style="font-size:1.8rem;font-weight:bold;color:#2e7d32;">{{ matchings_livres|length }}</div>
-                        <div style="font-size:0.8rem;color:#666;">Livrés ✅</div>
+                        <div style="font-size:0.8rem;color:#666;">{% trans "Livrés" %} ✅</div>
                     </div>
                     {% if portefeuille %}
                     <div style="background:#e3f2fd;border-radius:10px;padding:16px;text-align:center;cursor:pointer;"
@@ -453,18 +454,18 @@
                         <div id="gains-dashboard" style="font-size:1.5rem;font-weight:bold;color:#1E3A8A;">
                             {{ portefeuille.solde|floatformat:2 }} €
                         </div>
-                        <div style="font-size:0.8rem;color:#666;">💼 Gains</div>
+                        <div style="font-size:0.8rem;color:#666;">💼 {% trans "Gains" %}</div>
                     </div>
                     {% endif %}
                     {% endif %}
                     {% if type_profil == 'expediteur' %}
                     <div style="background:#e8f5e9;border-radius:10px;padding:16px;text-align:center;">
                         <div style="font-size:1.8rem;font-weight:bold;color:#2e7d32;">{{ matchings_confirmes }}</div>
-                        <div style="font-size:0.8rem;color:#666;">Confirmés</div>
+                        <div style="font-size:0.8rem;color:#666;">{% trans "Confirmés" %}</div>
                     </div>
                     <div style="background:#f3e5f5;border-radius:10px;padding:16px;text-align:center;">
                         <div style="font-size:1.8rem;font-weight:bold;color:#7b1fa2;">{{ matchings_livres|length }}</div>
-                        <div style="font-size:0.8rem;color:#666;">📦 Livrés</div>
+                        <div style="font-size:0.8rem;color:#666;">📦 {% trans "Livrés" %}</div>
                     </div>
                     {% endif %}
                 </div>
@@ -480,7 +481,7 @@
          style="background:#e8f5e9;border-radius:10px;padding:14px;
                 border-left:4px solid #2e7d32;margin-bottom:12px;">
 
-        <strong style="color:#2e7d32;">📦 Confirmer la livraison</strong>
+        <strong style="color:#2e7d32;">📦 {% trans "Confirmer la livraison" %}</strong>
 
         <!-- ✅ Infos expéditeur concerné -->
         <div style="background:white;border-radius:8px;padding:10px 14px;
@@ -510,7 +511,7 @@
                  style="max-width:100%;max-height:200px;border-radius:8px;
                         border:2px solid #2e7d32;object-fit:cover;display:block;margin:0 auto;">
             <div style="font-size:0.8rem;color:#2e7d32;margin-top:6px;font-weight:600;">
-                ✅ Photo capturée — prête à envoyer
+                ✅ {% trans "Photo capturée — prête à envoyer" %}
             </div>
         </div>
 
@@ -521,7 +522,7 @@
                            border-radius:8px;font-size:1rem;cursor:pointer;
                            display:flex;align-items:center;gap:8px;
                            width:100%;justify-content:center;">
-                📸 Prendre une photo de confirmation
+                📸 {% trans "Prendre une photo de confirmation" %}
             </button>
         </div>
 
@@ -529,7 +530,7 @@
                 onclick="confirmerLivraison('{{ m.id }}')"
                 id="btn-confirm-{{ m.id }}"
                 disabled>
-            ✅ Confirmer le colis livré au destinataire
+            ✅ {% trans "Confirmer le colis livré au destinataire" %}
         </button>
     </div>
     {% endif %}
@@ -549,7 +550,7 @@
                     border-left:4px solid #2e7d32;margin-bottom:10px;">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;">
                 <div style="flex:1;">
-                    <strong style="color:#2e7d32;font-size:0.92rem;">✅ Gain débloqué</strong>
+                    <strong style="color:#2e7d32;font-size:0.92rem;">✅ {% trans "Gain débloqué" %}</strong>
                     <div style="font-size:0.85rem;color:#555;margin-top:4px;">
                         💰 <strong style="color:#2e7d32;">+{{ t.montant_voyageur|floatformat:2 }} €</strong>
                         versés sur votre portefeuille
@@ -565,7 +566,7 @@
                         </span>
                         {% else %}
                         <span style="background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:10px;font-size:0.78rem;">
-                            ✅ Confirmé par {{ t.debloque_par }}
+                            ✅ {% trans "Confirmé" %} par {{ t.debloque_par }}
                         </span>
                         {% endif %}
                     </div>
@@ -591,14 +592,12 @@
                     border-left:4px solid #FF7A00;margin-bottom:10px;">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;">
                 <div style="flex:1;">
-                    <strong style="color:#e65100;font-size:0.92rem;">💸 Retrait effectué</strong>
+                    <strong style="color:#e65100;font-size:0.92rem;">💸 {% trans "Retrait effectué" %}</strong>
                     <div style="font-size:0.85rem;color:#555;margin-top:4px;">
                         Envoyé via
                         <strong style="color:#e65100;">
-                            {% if r.mode_retrait == 'orange' %}🟠 Orange Money
-                            {% elif r.mode_retrait == 'paypal' %}🅿️ PayPal
+                            {% if r.mode_retrait == 'paypal' %}🅿️ PayPal
                             {% elif r.mode_retrait == 'carte' %}💳 Carte bancaire
-                            {% elif r.mode_retrait == 'wave' %}🌊 Wave
                             {% else %}{{ r.mode_retrait }}{% endif %}
                         </strong>
                     </div>
@@ -611,13 +610,13 @@
                     <div style="margin-top:6px;">
                         {% if r.statut == 'traite' %}
                         <span style="background:#e8f5e9;color:#2e7d32;padding:3px 10px;
-                                     border-radius:10px;font-size:0.78rem;">✅ Traité avec succès</span>
+                                     border-radius:10px;font-size:0.78rem;">✅ {% trans "Traité avec succès" %}</span>
                         {% elif r.statut == 'en_attente' %}
                         <span style="background:#fff8e1;color:#f57f17;padding:3px 10px;
-                                     border-radius:10px;font-size:0.78rem;">⏳ En cours de traitement</span>
+                                     border-radius:10px;font-size:0.78rem;">⏳ {% trans "En cours de traitement" %}</span>
                         {% elif r.statut == 'refuse' %}
                         <span style="background:#ffebee;color:#c62828;padding:3px 10px;
-                                     border-radius:10px;font-size:0.78rem;">❌ Refusé — solde recrédité</span>
+                                     border-radius:10px;font-size:0.78rem;">❌ {% trans "Refusé — solde recrédité" %}</span>
                         {% endif %}
                     </div>
                 </div>
@@ -642,7 +641,7 @@
 {% endif %}{# fin type_profil == 'voyageur' #}
 
                 <div style="background:#e3f2fd;border-radius:10px;padding:14px;border-left:4px solid #1E3A8A;margin-top:12px;">
-                    <strong style="color:#0d47a1;">🧳 Espace Voyageur</strong>
+                    <strong style="color:#0d47a1;">🧳 {% trans "Espace Voyageur" %}</strong>
                     <p style="font-size:0.88rem;color:#555;margin-top:6px;">
                         Gérez vos livraisons et consultez vos gains dans votre portefeuille.
                     </p>
@@ -654,9 +653,9 @@
                 {% if m.livraison_confirmee_voyageur and not m.expediteur.livraison_confirmee_expediteur %}
                 <div style="background:#fff3e0;border-radius:10px;padding:14px;
                             border-left:4px solid #FF7A00;margin-bottom:12px;">
-                    <strong style="color:#e65100;">📦 Votre colis a été livré — Confirmez la réception</strong>
+                    <strong style="color:#e65100;">📦 {% trans "Votre colis a été livré — Confirmez la réception" %}</strong>
                     <p style="font-size:0.85rem;color:#555;margin:6px 0;">
-                        Le voyageur <strong>{{ m.voyageur.prenom }} {{ m.voyageur.nom }}</strong>
+                        {% trans "Le voyageur" %} <strong>{{ m.voyageur.prenom }} {{ m.voyageur.nom }}</strong>
                         a confirmé la livraison de votre colis.
                     </p>
                     {% if m.photo_livraison %}
@@ -671,18 +670,18 @@
                     </div>
                     {% endif %}
                     <div style="background:#ffebee;border-radius:8px;padding:10px;margin:8px 0;font-size:0.82rem;color:#c62828;">
-                        ⏰ <strong>Important :</strong> Si vous ne confirmez pas dans les <strong>48h</strong>,
+                        ⏰ <strong>{% trans "Important" %} :</strong> {% trans "Si vous ne confirmez pas dans les" %} <strong>48h</strong>,
                         la plateforme débloquera automatiquement le paiement au voyageur.
                     </div>
                     <button class="btn btn-primary" onclick="confirmerReception('{{ m.id }}')">
-                        ✅ Confirmer la bonne réception de mon colis
+                        ✅ {% trans "Confirmer la bonne réception de mon colis" %}
                     </button>
                 </div>
                 {% endif %}
                 {% endfor %}
 
                 <div style="background:#fff3e0;border-radius:10px;padding:14px;border-left:4px solid #FF7A00;">
-                    <strong style="color:#e65100;">📦 Espace Expéditeur</strong>
+                    <strong style="color:#e65100;">📦 {% trans "Espace Expéditeur" %}</strong>
                     <p style="font-size:0.88rem;color:#555;margin-top:6px;">
                         Suivez vos demandes et confirmez la réception de vos colis.
                     </p>
@@ -693,7 +692,7 @@
 
         <!-- ===== MATCHINGS ===== -->
         <div id="section-matchings" class="section-panel">
-            <div class="panel-header"><span>🔗</span><h3>Mes Matchings</h3></div>
+            <div class="panel-header"><span>🔗</span><h3>{% trans "Mes Matchings" %}</h3></div>
             <div class="panel-body">
                 {% if matchings %}
                 {% for m in matchings %}
@@ -705,10 +704,10 @@
                             🧳 {{ m.voyageur.prenom }} {{ m.voyageur.nom }}
                         </div>
                         <span class="status-badge status-{{ m.statut }}">
-                            {% if m.statut == 'en_attente' %}⏳ En attente
-                            {% elif m.statut == 'accepte' %}✅ Accepté
-                            {% elif m.statut == 'refuse' %}❌ Refusé
-                            {% elif m.statut == 'livre' %}📦 Livré
+                            {% if m.statut == 'en_attente' %}⏳ {% trans "En attente" %}
+                            {% elif m.statut == 'accepte' %}✅ {% trans "Accepté" %}
+                            {% elif m.statut == 'refuse' %}❌ {% trans "Refusé" %}
+                            {% elif m.statut == 'livre' %}📦 {% trans "Livré" %}
                             {% else %}{{ m.statut }}{% endif %}
                         </span>
                     </div>
@@ -731,7 +730,7 @@
                             {% endif %}
                         {% elif m.statut == 'en_attente' %}
                         <div style="margin-top:10px;background:#fff8e1;padding:10px;border-radius:8px;font-size:0.85rem;color:#f57f17;">
-                            ⏳ En attente d'acceptation par le voyageur.
+                            ⏳ {% trans "En attente" %} d'acceptation par le voyageur.
                         </div>
                         {% elif m.statut == 'refuse' %}
                         <div style="margin-top:10px;background:#ffebee;padding:10px;border-radius:8px;font-size:0.85rem;color:#c62828;">
@@ -742,7 +741,7 @@
                 </div>
                 {% endfor %}
                 {% else %}
-                <div class="empty-state"><div class="empty-icon">🔗</div><p>Aucun matching pour le moment.</p></div>
+                <div class="empty-state"><div class="empty-icon">🔗</div><p>{% trans "Aucun matching pour le moment." %}</p></div>
                 {% endif %}
             </div>
         </div>
@@ -750,7 +749,7 @@
         <!-- ===== DEMANDES REÇUES (voyageur uniquement) ===== -->
         {% if type_profil == 'voyageur' %}
         <div id="section-demandes" class="section-panel">
-            <div class="panel-header"><span>📥</span><h3>Demandes d'expédition reçues</h3></div>
+            <div class="panel-header"><span>📥</span><h3>{% trans "Demandes d'expédition reçues" %}</h3></div>
             <div class="panel-body">
                 {% if matchings %}
                 {% for m in matchings %}
@@ -762,10 +761,10 @@
                             <div style="font-size:0.82rem;color:#666;">📦 {{ m.expediteur.poids_colis }} kg — {{ m.expediteur.poids_colis|floatformat:0 }} × 10€</div>
                         </div>
                         <span class="status-badge status-{{ m.statut }}" id="statut-badge-{{ m.id }}">
-                            {% if m.statut == 'en_attente' %}⏳ En attente
-                            {% elif m.statut == 'accepte' %}✅ Accepté
-                            {% elif m.statut == 'refuse' %}❌ Refusé
-                            {% elif m.statut == 'livre' %}📦 Livré
+                            {% if m.statut == 'en_attente' %}⏳ {% trans "En attente" %}
+                            {% elif m.statut == 'accepte' %}✅ {% trans "Accepté" %}
+                            {% elif m.statut == 'refuse' %}❌ {% trans "Refusé" %}
+                            {% elif m.statut == 'livre' %}📦 {% trans "Livré" %}
                             {% else %}{{ m.statut }}{% endif %}
                         </span>
                     </div>
@@ -774,11 +773,11 @@
                     <div class="accept-checks">
                         <div class="check-item">
                             <input type="checkbox" id="chk1-{{ m.id }}" onchange="verifierChoix('{{ m.id }}')">
-                            <label for="chk1-{{ m.id }}">J'accepte de transporter ce colis et confirme avoir vérifié son contenu.</label>
+                            <label for="chk1-{{ m.id }}">{% trans "J'accepte de transporter ce colis et confirme avoir vérifié son contenu." %}</label>
                         </div>
                         <div class="check-item">
                             <input type="checkbox" id="chk2-{{ m.id }}" onchange="verifierChoix('{{ m.id }}')">
-                            <label for="chk2-{{ m.id }}">Je confirme ma disponibilité pour ce trajet.</label>
+                            <label for="chk2-{{ m.id }}">{% trans "Je confirme ma disponibilité pour ce trajet." %}</label>
                         </div>
                     </div>
                     <div class="matching-actions">
@@ -804,13 +803,13 @@
                     </div>
                     {% elif m.statut == 'livre' %}
                     <div style="background:#e3f2fd;padding:10px;border-radius:8px;font-size:0.85rem;color:#1E3A8A;margin-top:8px;">
-                        📦 Colis livré. En attente de confirmation de l'expéditeur.
+                        📦 Colis livré. {% trans "En attente" %} de confirmation de l'expéditeur.
                     </div>
                     {% endif %}
                 </div>
                 {% endfor %}
                 {% else %}
-                <div class="empty-state"><div class="empty-icon">📥</div><p>Aucune demande reçue.</p></div>
+                <div class="empty-state"><div class="empty-icon">📥</div><p>{% trans "Aucune demande reçue." %}</p></div>
                 {% endif %}
             </div>
         </div>
@@ -818,7 +817,7 @@
 
         <!-- ===== MESSAGERIE ===== -->
         <div id="section-chat" class="section-panel">
-            <div class="panel-header"><span>💬</span><h3>Messagerie</h3></div>
+            <div class="panel-header"><span>💬</span><h3>{% trans "Messagerie" %}</h3></div>
             <div class="panel-body" style="padding:0;">
                 <div id="chat-list">
                     {% for m in matchings_avec_chat %}
@@ -833,7 +832,7 @@
                             <div class="chat-name">
                                 {% if type_profil == 'expediteur' %}{{ m.voyageur.prenom }} {{ m.voyageur.nom }}{% else %}{{ m.expediteur.prenom }} {{ m.expediteur.nom }}{% endif %}
                             </div>
-                            <div class="chat-preview" id="preview-{{ m.id }}">Cliquez pour discuter</div>
+                            <div class="chat-preview" id="preview-{{ m.id }}">{% trans "Cliquez pour discuter" %}</div>
                         </div>
                         <div class="chat-time">{{ m.date_creation|date:"d/m" }}</div>
                     </div>
@@ -856,12 +855,12 @@
                             <div class="chat-topbar-name" id="chat-partner-name">Contact</div>
                             <div class="chat-topbar-status">En ligne</div>
                         </div>
-                        <button class="btn-back-chat" onclick="fermerChat()">← Retour</button>
+                        <button class="btn-back-chat" onclick="fermerChat()">← {% trans "Retour" %}</button>
                     </div>
                     <!-- ✅ Zone messages : flex-direction column = les messages s'empilent de haut en bas -->
                     <div class="chat-messages" id="chat-messages"></div>
                     <div class="chat-input-bar">
-                        <input type="text" id="chat-input" placeholder="Tapez un message..."
+                        <input type="text" id="chat-input" placeholder="{% trans 'Tapez un message...' %}"
                                onkeydown="if(event.key==='Enter') envoyerMsg()">
                         <label for="photo-chat-input"
                                style="cursor:pointer;background:#1E3A8A;color:white;
@@ -880,7 +879,7 @@
 
         <!-- ===== SUPPORT ===== -->
         <div id="section-support" class="section-panel">
-            <div class="panel-header"><span>🎧</span><h3>Discuter avec nous</h3></div>
+            <div class="panel-header"><span>🎧</span><h3>{% trans "Discuter avec nous" %}</h3></div>
             <div class="panel-body" style="padding:0;">
                 <div style="background:#e3f2fd;padding:12px 16px;font-size:0.85rem;color:#1565c0;border-bottom:1px solid #eee;">
                     💬 Notre équipe répond généralement dans les 24h.
@@ -895,12 +894,12 @@
                     {% empty %}
                     <div style="text-align:center;color:#aaa;margin-top:60px;">
                         <div style="font-size:2rem;margin-bottom:8px;">🎧</div>
-                        <p>Aucun message. Posez votre première question !</p>
+                        <p>{% trans "Aucun message. Posez votre première question !" %}</p>
                     </div>
                     {% endfor %}
                 </div>
                 <div style="display:flex;gap:8px;padding:10px 12px;background:#f0f0f0;border-top:1px solid #ddd;align-items:center;">
-                    <input type="text" id="support-input" placeholder="Votre message..."
+                    <input type="text" id="support-input" placeholder="{% trans 'Votre message...' %}"
                            style="flex:1;padding:10px 14px;border-radius:22px;border:none;font-size:0.9rem;outline:none;"
                            onkeydown="if(event.key==='Enter') envoyerSupport()">
                     <button onclick="envoyerSupport()"
@@ -914,39 +913,37 @@
         <!-- ===== PORTEFEUILLE (voyageur uniquement) ===== -->
         {% if type_profil == 'voyageur' %}
         <div id="section-portefeuille" class="section-panel">
-            <div class="panel-header"><span>💼</span><h3>Mon Portefeuille</h3></div>
+            <div class="panel-header"><span>💼</span><h3>{% trans "Mon Portefeuille" %}</h3></div>
             <div class="panel-body">
                 <div style="background:linear-gradient(120deg,#0A1F44,#1E3A8A);border-radius:12px;
                             padding:24px;color:white;text-align:center;margin-bottom:20px;">
-                    <div style="font-size:0.9rem;opacity:0.8;margin-bottom:6px;">Solde disponible</div>
+                    <div style="font-size:0.9rem;opacity:0.8;margin-bottom:6px;">{% trans "Solde disponible" %}</div>
                     <div id="solde-portefeuille" style="font-size:2.5rem;font-weight:bold;color:#FF7A00;">
                         {% if portefeuille %}{{ portefeuille.solde|floatformat:2 }}{% else %}0.00{% endif %} €
                     </div>
-                    <div style="font-size:0.8rem;opacity:0.7;margin-top:8px;">Gains débloqués par la plateforme</div>
+                    <div style="font-size:0.8rem;opacity:0.7;margin-top:8px;">{% trans "Gains débloqués par la plateforme" %}</div>
                 </div>
 
                 <div style="background:#f9f9f9;border-radius:10px;padding:16px;margin-bottom:16px;">
-                    <h4 style="color:#0A1F44;margin-bottom:14px;">💸 Demander un retrait</h4>
+                    <h4 style="color:#0A1F44;margin-bottom:14px;">💸 {% trans "Demander un retrait" %}</h4>
                     <div style="margin-bottom:12px;">
-                        <label style="font-size:0.85rem;color:#555;display:block;margin-bottom:4px;">Montant (€)</label>
-                        <input type="number" id="retrait-montant" min="1" step="0.01" placeholder="Ex: 50"
+                        <label style="font-size:0.85rem;color:#555;display:block;margin-bottom:4px;">{% trans "Montant (€)" %}</label>
+                        <input type="number" id="retrait-montant" min="1" step="0.01" placeholder="{% trans 'Ex: 50' %}"
                                style="width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid #e0e0e0;font-size:0.95rem;outline:none;">
                     </div>
                     <div style="margin-bottom:12px;">
-                        <label style="font-size:0.85rem;color:#555;display:block;margin-bottom:4px;">Mode de retrait</label>
+                        <label style="font-size:0.85rem;color:#555;display:block;margin-bottom:4px;">{% trans "Mode de retrait" %}</label>
                         <select id="retrait-mode"
                                 style="width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid #e0e0e0;font-size:0.95rem;outline:none;background:white;">
                             <option value="">-- Choisir --</option>
-                            <option value="orange">🟠 Orange Money</option>
                             <option value="paypal">🅿️ PayPal</option>
                             <option value="carte">💳 Carte bancaire</option>
-                            <option value="wave">🌊 Wave</option>
                         </select>
                     </div>
                     <div style="margin-bottom:16px;">
-                        <label style="font-size:0.85rem;color:#555;display:block;margin-bottom:4px;">Numéro / Email de réception</label>
+                        <label style="font-size:0.85rem;color:#555;display:block;margin-bottom:4px;">{% trans "Numéro / Email de réception" %}</label>
                         <input type="text" id="retrait-coordonnees"
-                               placeholder="Ex: +33 6 12 34 56 78 ou email@paypal.com"
+                               placeholder="{% trans 'Ex: +33 6 12 34 56 78 ou email@paypal.com' %}"
                                style="width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid #e0e0e0;font-size:0.95rem;outline:none;">
                     </div>
                     <button onclick="demanderRetrait()"
@@ -969,21 +966,21 @@
         <!-- ===== REMBOURSEMENT (expéditeur uniquement) ===== -->
         {% if type_profil == 'expediteur' %}
         <div id="section-remboursement" class="section-panel">
-            <div class="panel-header"><span>↩️</span><h3>Demande de remboursement</h3></div>
+            <div class="panel-header"><span>↩️</span><h3>{% trans "Demande de remboursement" %}</h3></div>
             <div class="panel-body">
                 <div style="background:#fff3e0;border-radius:10px;padding:14px;border-left:4px solid #FF7A00;
                             margin-bottom:20px;font-size:0.88rem;color:#555;">
-                    <strong style="color:#e65100;">ℹ️ Conditions de remboursement</strong><br><br>
-                    Montant remboursé : <strong>10€/kg</strong>
-                    (la commission de 0.20€/kg est non remboursable). Traitement sous <strong>48h</strong>.
+                    <strong style="color:#e65100;">ℹ️ {% trans "Conditions de remboursement" %}</strong><br><br>
+                    Montant remboursé : <strong>{% trans "selon le prix de kg" %}</strong>
+                    (la commission de 2.99€ est non remboursable). Traitement sous <strong>48h</strong>.
                 </div>
                 {% for t in transactions_remboursables %}
                 <div class="matching-card" id="remb-card-{{ t.id }}">
                     <div class="matching-header">
                         <div class="matching-parties">📦 {{ t.expediteur.prenom }} {{ t.expediteur.nom }}</div>
-                        <span class="status-badge status-confirme">🔒 Paiement bloqué</span>
+                        <span class="status-badge status-confirme">🔒 {% trans "Paiement bloqué" %}</span>
                     </div>
-                    <div class="matching-detail">💰 Montant payé : <strong>{{ t.montant|floatformat:2 }} €</strong></div>
+                    <div class="matching-detail">💰 {% trans "Montant payé" %} : <strong>{{ t.montant|floatformat:2 }} €</strong></div>
                     <div class="matching-detail">↩️ Montant remboursable :
                         <strong style="color:#2e7d32;">{{ t.montant_voyageur|floatformat:2 }} €</strong>
                     </div>
@@ -992,22 +989,22 @@
                     </div>
                     <div class="matching-detail">📅 {{ t.date_transaction|date:"d/m/Y à H:i" }}</div>
                     <div style="margin-top:12px;">
-                        <label style="font-size:0.85rem;color:#555;display:block;margin-bottom:6px;">Motif (optionnel)</label>
+                        <label style="font-size:0.85rem;color:#555;display:block;margin-bottom:6px;">{% trans "Motif (optionnel)" %}</label>
                         <textarea id="motif-{{ t.id }}"
                                   style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;
                                          font-size:0.85rem;resize:none;height:60px;outline:none;"
-                                  placeholder="Ex: Aucun voyageur disponible..."></textarea>
+                                  placeholder="{% trans 'Ex: Aucun voyageur disponible...' %}"></textarea>
                     </div>
                     <div class="matching-actions" style="margin-top:10px;">
                         <button class="btn btn-danger" onclick="demanderRemboursement('{{ t.id }}')">
-                            ↩️ Demander le remboursement de {{ t.montant_voyageur|floatformat:2 }} €
+                            ↩️ {% trans "Demander le remboursement" %} de {{ t.montant_voyageur|floatformat:2 }} €
                         </button>
                     </div>
                 </div>
                 {% empty %}
                 <div class="empty-state">
                     <div class="empty-icon">✅</div>
-                    <p>Aucun remboursement disponible.</p>
+                    <p>{% trans "Aucun remboursement disponible." %}</p>
                 </div>
                 {% endfor %}
             </div>
@@ -1066,7 +1063,7 @@ function repondreMatching(matchingId, decision) {
             const card = document.getElementById('demande-card-' + matchingId);
             if (decision === 'accepte') {
                 badge.className = 'status-badge status-accepte';
-                badge.textContent = '✅ Accepté';
+                badge.textContent = '✅ {% trans "Accepté" %}';
                 card.querySelector('.accept-checks')?.remove();
                 card.querySelector('.matching-actions')?.remove();
                 showNotif('✅ Demande acceptée ! Un email a été envoyé à l\'expéditeur.', 'success');
@@ -1074,7 +1071,7 @@ function repondreMatching(matchingId, decision) {
                 _afficherBoutonLivraison(matchingId, card);
             } else {
                 badge.className = 'status-badge status-refuse';
-                badge.textContent = '❌ Refusé';
+                badge.textContent = '❌ {% trans "Refusé" %}';
                 card.querySelector('.accept-checks')?.remove();
                 card.querySelector('.matching-actions')?.remove();
                 showNotif('Demande refusée. L\'expéditeur a été notifié.', 'default');
@@ -1138,7 +1135,7 @@ function _afficherBoutonLivraison(matchingId, card) {
     bloc.id = 'livraison-bloc-' + matchingId;
     bloc.style.cssText = 'background:#e8f5e9;border-radius:10px;padding:14px;border-left:4px solid #2e7d32;margin-top:12px;';
     bloc.innerHTML = `
-        <strong style="color:#2e7d32;">📦 Confirmer la livraison</strong>
+        <strong style="color:#2e7d32;">📦 {% trans "Confirmer la livraison" %}</strong>
 
         <div style="background:white;border-radius:8px;padding:10px 14px;
                     margin:10px 0 14px;border:1px solid #c8e6c9;
@@ -1165,7 +1162,7 @@ function _afficherBoutonLivraison(matchingId, card) {
                  style="max-width:100%;max-height:200px;border-radius:8px;
                         border:2px solid #2e7d32;object-fit:cover;display:block;margin:0 auto;">
             <div style="font-size:0.8rem;color:#2e7d32;margin-top:6px;font-weight:600;">
-                ✅ Photo capturée — prête à envoyer
+                ✅ {% trans "Photo capturée — prête à envoyer" %}
             </div>
         </div>
 
@@ -1176,13 +1173,13 @@ function _afficherBoutonLivraison(matchingId, card) {
                            border-radius:8px;font-size:1rem;cursor:pointer;
                            display:flex;align-items:center;gap:8px;
                            width:100%;justify-content:center;">
-                📸 Prendre une photo de confirmation
+                📸 {% trans "Prendre une photo de confirmation" %}
             </button>
         </div>
 
         <button class="btn btn-success" onclick="confirmerLivraison('${matchingId}')"
                 id="btn-confirm-${matchingId}" disabled>
-            ✅ Confirmer le colis livré au destinataire
+            ✅ {% trans "Confirmer le colis livré au destinataire" %}
         </button>
     `;
 
@@ -1283,7 +1280,7 @@ function ouvrirCamera(matchingId) {
                 <div style="width:36px;height:36px;border:3px solid rgba(255,255,255,0.2);
                             border-top-color:#FF7A00;border-radius:50%;
                             animation:spin 0.9s linear infinite;"></div>
-                <div style="font-size:0.85rem;opacity:0.8;">Activation de la caméra...</div>
+                <div style="font-size:0.85rem;opacity:0.8;">{% trans "Activation de la caméra..." %}</div>
             </div>
         </div>
 
@@ -1403,7 +1400,7 @@ function confirmerLivraison(matchingId) {
             showNotif('✅ ' + data.message, 'success');
             ['livraison-bloc-' + realId, 'livraison-bloc-dash-' + realId].forEach(id => {
                 const el = document.getElementById(id);
-                if (el) el.innerHTML = '<div style="text-align:center;color:#2e7d32;padding:25px;font-size:1.1rem;">✅ Livraison confirmée avec photo</div>';
+                if (el) el.innerHTML = '<div style="text-align:center;color:#2e7d32;padding:25px;font-size:1.1rem;">✅ {% trans "Livraison confirmée avec photo" %}</div>';
             });
             capturedPhotoBase64 = null;
         } else {
@@ -1443,7 +1440,7 @@ function ajouterConversationDansListe(matchingId, partnerName, initiale) {
         <div class="chat-avatar">${initiale || partnerName.charAt(0).toUpperCase()}</div>
         <div class="chat-info">
             <div class="chat-name">${partnerName}</div>
-            <div class="chat-preview" id="preview-${matchingId}">Cliquez pour discuter</div>
+            <div class="chat-preview" id="preview-${matchingId}">{% trans "Cliquez pour discuter" %}</div>
         </div>
         <div class="chat-time">À l'instant</div>`;
     chatList.appendChild(item);
@@ -1586,7 +1583,7 @@ function afficherBubblePhoto(url, isMine, time, estLivraison) {
     const div = document.createElement('div');
     div.className = 'bubble ' + (isMine ? 'bubble-sent' : 'bubble-received');
     div.innerHTML = `
-        ${estLivraison ? '<div style="font-size:0.75rem;color:#2e7d32;margin-bottom:4px;font-weight:600;">📦 Photo de confirmation de livraison</div>' : ''}
+        ${estLivraison ? '<div style="font-size:0.75rem;color:#2e7d32;margin-bottom:4px;font-weight:600;">📦 {% trans "Photo de confirmation de livraison" %}</div>' : ''}
         <img src="${url}" style="max-width:200px;border-radius:8px;cursor:pointer;display:block;"
              onclick="window.open('${url}','_blank')">
         <div class="bubble-time">${time}</div>`;
@@ -1670,11 +1667,11 @@ function demanderRemboursement(transactionId) {
                 card.innerHTML = `
                     <div style="text-align:center;padding:30px 20px;color:#2e7d32;">
                         <div style="font-size:2.5rem;margin-bottom:15px;">✅</div>
-                        <p style="font-size:1.1rem;margin-bottom:20px;">Demande envoyée avec succès !</p>
+                        <p style="font-size:1.1rem;margin-bottom:20px;">{% trans "Demande envoyée avec succès !" %}</p>
                         <a href="${data.facture_url}" 
                            class="facture-btn" 
                            style="display:inline-block;padding:12px 24px;font-size:1rem;">
-                            📄 Télécharger la Facture
+                            📄 {% trans "Télécharger la Facture" %}
                         </a>
                     </div>`;
             }
@@ -1730,24 +1727,22 @@ function _afficherRetraitDansDashboard(retrait) {
     }
 
     const modeLabel = {
-        'orange': '🟠 Orange Money',
         'paypal': '🅿️ PayPal',
         'carte':  '💳 Carte bancaire',
-        'wave':   '🌊 Wave',
     }[retrait.mode] || retrait.mode;
 
     const statutHtml = retrait.statut === 'traite'
-        ? '<span style="background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:10px;font-size:0.78rem;">✅ Traité avec succès</span>'
+        ? '<span style="background:#e8f5e9;color:#2e7d32;padding:3px 10px;border-radius:10px;font-size:0.78rem;">✅ {% trans "Traité avec succès" %}</span>'
         : retrait.statut === 'en_attente'
-        ? '<span style="background:#fff8e1;color:#f57f17;padding:3px 10px;border-radius:10px;font-size:0.78rem;">⏳ En cours de traitement</span>'
-        : '<span style="background:#ffebee;color:#c62828;padding:3px 10px;border-radius:10px;font-size:0.78rem;">❌ Refusé — solde recrédité</span>';
+        ? '<span style="background:#fff8e1;color:#f57f17;padding:3px 10px;border-radius:10px;font-size:0.78rem;">⏳ {% trans "En cours de traitement" %}</span>'
+        : '<span style="background:#ffebee;color:#c62828;padding:3px 10px;border-radius:10px;font-size:0.78rem;">❌ {% trans "Refusé — solde recrédité" %}</span>';
 
     const div = document.createElement('div');
     div.style.cssText = 'background:#fff3e0;border-radius:10px;padding:14px;border-left:4px solid #FF7A00;margin-bottom:10px;';
     div.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
             <div style="flex:1;">
-                <strong style="color:#e65100;font-size:0.92rem;">💸 Retrait effectué</strong>
+                <strong style="color:#e65100;font-size:0.92rem;">💸 {% trans "Retrait effectué" %}</strong>
                 <div style="font-size:0.85rem;color:#555;margin-top:4px;">
                     Envoyé via <strong style="color:#e65100;">${modeLabel}</strong>
                 </div>

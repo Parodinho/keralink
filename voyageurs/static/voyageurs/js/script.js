@@ -81,7 +81,7 @@ function afficherModalConnexion(type) {
                 <span style="color:#bbb;font-size:0.82rem;">ou</span>
                 <div style="flex:1;height:1px;background:#eee;"></div>
             </div>
-            <button onclick="fermerModalGoogle(); showPage(null, 'profil'); setTimeout(activerModeMatching, 300);"
+            <button onclick="_fermerModalSansReset(); showPage(null, 'profil'); setTimeout(activerModeMatching, 300);"
                     style="width:100%;padding:13px;border-radius:12px;
                            background:linear-gradient(90deg,#0A1F44,#1E3A8A);color:white;
                            border:none;font-weight:700;font-size:0.95rem;cursor:pointer;
@@ -90,7 +90,7 @@ function afficherModalConnexion(type) {
                     onmouseout="this.style.opacity='1'">
                 ✍️ S'inscrire manuellement
             </button>
-            <button onclick="fermerModalGoogle(); showPage(null, 'login');"
+            <button onclick="_fermerModalSansReset(); showPage(null, 'login');"
                     style="width:100%;padding:11px;border-radius:12px;background:transparent;
                            border:1.5px solid #ddd;color:#555;font-size:0.9rem;font-weight:600;
                            cursor:pointer;transition:all 0.2s;"
@@ -105,9 +105,94 @@ function afficherModalConnexion(type) {
     document.body.appendChild(modal);
 }
 
+// ✅ Fermeture SANS reset — utilisée quand l'utilisateur continue le process (S'inscrire / Se connecter)
+function _fermerModalSansReset() {
+    const modal = document.getElementById('modal-connexion-google');
+    if (modal) modal.remove();
+}
+
+// ✅ Fermeture AVEC reset — utilisée quand l'utilisateur annule (bouton × ou clic dehors)
 function fermerModalGoogle() {
     const modal = document.getElementById('modal-connexion-google');
     if (modal) modal.remove();
+
+    // ✅ Réinitialiser tout — comme si l'utilisateur n'avait jamais cliqué sur Sélectionner
+
+    // 1. Vider le localStorage de matching
+    localStorage.removeItem('match_data');
+    localStorage.removeItem('expediteur_a_preremplir');
+    localStorage.removeItem('voyageur_prix_kg');
+
+    // 2. Réinitialiser le formulaire expéditeur
+    const formExp = document.getElementById('expediteur-form');
+    if (formExp) formExp.reset();
+
+    // Retirer les styles orange/jaune des champs préremplis
+    ['exp-pays','exp-ville','exp-pays-dest','exp-ville-dest','exp-poids','exp-prix-kg'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.background = '';
+            el.style.borderColor = '';
+            el.removeAttribute('readonly');
+            el.removeAttribute('max');
+            el.placeholder = el.getAttribute('data-placeholder') || '';
+        }
+    });
+
+    // Remettre le bouton expéditeur à son texte original
+    const btnExp = document.getElementById('exp-submit');
+    if (btnExp) {
+        btnExp.textContent = 'Publier ma demande';
+        btnExp.disabled = true;
+    }
+
+    // Réinitialiser le titre de la modal expéditeur
+    const titleExp = document.querySelector('#expediteur-modal .modal-title');
+    if (titleExp) titleExp.textContent = "Confirmer votre demande d'expédition";
+
+    // Réinitialiser le total
+    const totalEl = document.getElementById('exp-total');
+    if (totalEl) totalEl.textContent = '0.00 €';
+
+    // 3. Réinitialiser le formulaire voyageur
+    const formVoy = document.getElementById('voyageur-form');
+    if (formVoy) formVoy.reset();
+
+    // Retirer les styles orange/jaune des champs préremplis voyageur
+    ['voy-pays-depart','voy-ville-depart','voy-pays-destination','voy-ville-destination','voy-poids','voy-prix-kg'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.background = '';
+            el.style.borderColor = '';
+            el.removeAttribute('readonly');
+        }
+    });
+
+    // Remettre le bouton voyageur à son texte original
+    const btnVoy = document.getElementById('voy-submit');
+    if (btnVoy) {
+        btnVoy.textContent = 'Publier mon trajet';
+        btnVoy.disabled = true;
+    }
+
+    // Réinitialiser le titre de la modal voyageur
+    const titleVoy = document.querySelector('#voyageur-modal .modal-title');
+    if (titleVoy) titleVoy.textContent = "Confirmer la publication de votre trajet";
+
+    // Réinitialiser le gain
+    const gainEl = document.getElementById('voy-gain');
+    if (gainEl) gainEl.textContent = '0.00 €';
+
+    // 4. Décocher les checkboxes
+    ['exp-check1','exp-check2','voy-check1','voy-check2'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.checked = false;
+    });
+
+    // 5. Réinitialiser le moyen de paiement sélectionné
+    const paymentHidden = document.getElementById('selected-payment');
+    if (paymentHidden) paymentHidden.value = '';
+    document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
 }
 
 // ================= ACTIVER MODE MATCHING =================
@@ -233,26 +318,23 @@ function preremplirDepuisProfil() {
 function confirmerEnvoi() {
     const formData = new FormData();
     const poids = parseFloat(document.getElementById('exp-poids').value) || 0;
-    const prix_reel = poids * 10.20;
+    const prixKg = parseFloat(document.getElementById('exp-prix-kg')?.value) || 0;
+    const prixVoyageur = poids * prixKg;
+    const montant = (prixVoyageur + 2.99).toFixed(2);   // total payé
 
-    const nom = document.getElementById('exp-nom').value;
-    const prenom = document.getElementById('exp-prenom').value;
-    const modePaiement = document.getElementById('selected-payment').value;
-    const montant = (poids * 10.20).toFixed(2);
-
-    formData.append('nom', nom);
-    formData.append('prenom', prenom);
+    formData.append('nom', document.getElementById('exp-nom').value);
+    formData.append('prenom', document.getElementById('exp-prenom').value);
     formData.append('telephone', document.getElementById('exp-telephone').value);
     formData.append('pays', document.getElementById('exp-pays').value);
     formData.append('ville', document.getElementById('exp-ville').value);
     formData.append('pays_destination', document.getElementById('exp-pays-dest').value);
     formData.append('ville_destination', document.getElementById('exp-ville-dest').value);
     formData.append('poids', poids);
-    formData.append('prix', prix_reel);
-    formData.append('mode_paiement', modePaiement);
+    formData.append('prix_par_kg', prixKg);
+    formData.append('prix', prixVoyageur);          // prix_total = ce que reçoit le voyageur
+    formData.append('mode_paiement', document.getElementById('selected-payment').value);
 
     const match = JSON.parse(localStorage.getItem('match_data') || '{}');
-
     if (match.type === 'expediteur' && match.voyageur_id) {
         formData.append('mode', 'matching');
         formData.append('voyageur_id', match.voyageur_id);
@@ -269,15 +351,11 @@ function confirmerEnvoi() {
     .then(data => {
         if (data.status === 'ok') {
             closeModal('expediteur');
-
             localStorage.setItem('annonce_data', JSON.stringify({
                 type: 'expediteur',
                 id: data.expediteur_id
             }));
-
-            if (match.type === 'expediteur') {
-                localStorage.removeItem('match_data');
-            }
+            if (match.type === 'expediteur') localStorage.removeItem('match_data');
 
             document.getElementById('expediteur-form').reset();
             document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
@@ -286,7 +364,7 @@ function confirmerEnvoi() {
 
             showAlert("💳 Redirection vers le paiement...", "success");
             setTimeout(() => {
-                window.location.href = `/paiement/?expediteur_id=${data.expediteur_id}&mode_paiement=${modePaiement}&montant=${montant}`;
+                window.location.href = `/paiement/?expediteur_id=${data.expediteur_id}&mode_paiement=${document.getElementById('selected-payment')?.value || 'carte'}&montant=${montant}`;
             }, 1000);
         } else {
             showAlert("Erreur : " + (data.message || "Inconnue"));
@@ -295,14 +373,11 @@ function confirmerEnvoi() {
     .catch(() => showAlert("Erreur de connexion"));
 }
 
-// ================= CONFIRMER PUBLICATION VOYAGEUR =================
+// ================= CONFIRMER PUBLICATION VOYAGEUR (version mise à jour) =================
 function confirmerPublication() {
     const formData = new FormData();
-    const nom = document.getElementById('voy-nom').value;
-    const prenom = document.getElementById('voy-prenom').value;
-
-    formData.append('nom', nom);
-    formData.append('prenom', prenom);
+    formData.append('nom', document.getElementById('voy-nom').value);
+    formData.append('prenom', document.getElementById('voy-prenom').value);
     formData.append('telephone', document.getElementById('voy-telephone').value);
     formData.append('pays_depart', document.getElementById('voy-pays-depart').value);
     formData.append('ville_depart', document.getElementById('voy-ville-depart').value);
@@ -313,10 +388,10 @@ function confirmerPublication() {
     formData.append('date_arrivee', document.getElementById('voy-date-arrivee').value);
     formData.append('heure_arrivee', document.getElementById('voy-heure-arrivee').value);
     formData.append('poids', document.getElementById('voy-poids').value);
+    formData.append('prix_par_kg', document.getElementById('voy-prix-kg')?.value || 10);
     formData.append('type_kg', document.querySelector('input[name="type_kg"]:checked').value);
 
     const match = JSON.parse(localStorage.getItem('match_data') || '{}');
-
     if (match.type === 'voyageur' && match.expediteur_id) {
         formData.append('mode', 'matching');
         formData.append('expediteur_id', match.expediteur_id);
@@ -333,7 +408,6 @@ function confirmerPublication() {
     .then(data => {
         if (data.status === 'ok') {
             closeModal('voyageur');
-
             localStorage.setItem('annonce_data', JSON.stringify({
                 type: 'voyageur',
                 id: data.voyageur_id
@@ -341,18 +415,21 @@ function confirmerPublication() {
             localStorage.removeItem('expediteur_a_preremplir');
 
             if (match.type === 'voyageur') {
-                // ✅ MODE MATCHING → espace connecté directement
                 localStorage.removeItem('match_data');
                 showAlert("✅ Matching créé avec succès !", "success");
                 document.getElementById('voyageur-form').reset();
                 document.getElementById('voy-gain').textContent = '0.00 €';
                 setTimeout(() => { window.location.href = '/espace-connecte/'; }, 1200);
             } else {
-                // MODE NORMAL → page profil
                 showAlert("🧳 Trajet publié ! Créez votre profil.", "success");
                 document.getElementById('voyageur-form').reset();
                 document.getElementById('voy-gain').textContent = '0.00 €';
-                setTimeout(() => { preremplirProfil(prenom + ' ' + nom, 'voyageur'); }, 1500);
+                setTimeout(() => {
+                    preremplirProfil(
+                        document.getElementById('voy-prenom').value + ' ' + document.getElementById('voy-nom').value,
+                        'voyageur'
+                    );
+                }, 1500);
             }
         } else {
             showAlert("Erreur : " + (data.message || "Inconnue"));
@@ -530,12 +607,17 @@ function _proposerPaiementDirectExpéditeur(voyageurId, profilData) {
     .then(data => {
         if (data.status === 'ok') {
             const poids = data.poids_disponible;
-            const prix = poids * 10;
-            const commission = poids * 0.20;
-            const total = (poids * 10.20).toFixed(2);
+            // ✅ Prix libre fixé par le voyageur
+            const prixKg = data.prix_par_kg || 0;
+            const prixVoyageur = poids * prixKg;
+            const commission = 2.99; // commission fixe KERALINK
+            const total = (prixVoyageur + commission).toFixed(2);
+
+            // ✅ Stocker le prix_par_kg pour validerPaiementDirect
+            localStorage.setItem('voyageur_prix_kg', prixKg);
 
             // Afficher modal de paiement direct
-            afficherModalPaiementDirect(voyageurId, data, total, prix, commission, profilData);
+            afficherModalPaiementDirect(voyageurId, data, total, prixVoyageur, commission, profilData);
         } else {
             // Fallback : aller à la page expéditeur
             showPage(null, 'expediteur');
@@ -573,7 +655,7 @@ function afficherModalPaiementDirect(voyageurId, voyageurData, total, prix, comm
                 </div>
                 <div style="font-size:2rem;font-weight:900;color:#FF7A00;margin-top:8px;">${total} €</div>
                 <div style="font-size:0.78rem;opacity:0.7;margin-top:2px;">
-                    ${voyageurData.poids_disponible} kg × 10€/kg + commission
+                    ${voyageurData.poids_disponible} kg × ${voyageurData.prix_par_kg || 0}€/kg + 2,99€ frais KERALINK
                 </div>
             </div>
 
@@ -636,19 +718,6 @@ function afficherModalPaiementDirect(voyageurId, voyageurData, total, prix, comm
                                     border:2px solid #e0e0e0;cursor:pointer;font-size:0.85rem;transition:0.2s;">
                             🅿️ PayPal
                         </div>
-                        <div onclick="selectDP(this,'orange')"
-                             style="padding:10px;text-align:center;border-radius:8px;
-                                    border:2px solid #e0e0e0;cursor:pointer;font-size:0.85rem;transition:0.2s;">
-                            🟠 Orange
-                        </div>
-                        <div onclick="selectDP(this,'wave')"
-                             style="padding:10px;text-align:center;border-radius:8px;
-                                    border:2px solid #e0e0e0;cursor:pointer;font-size:0.85rem;transition:0.2s;">
-                            🌊 Wave
-                        </div>
-                    </div>
-                    <input type="hidden" id="dp-payment-method">
-                </div>
 
                 <div style="display:flex;gap:10px;">
                     <button onclick="fermerModalPaiementDirect()"
@@ -706,7 +775,10 @@ function validerPaiementDirect(voyageurId, maxPoids) {
         showAlert("⚠️ Choisissez un mode de paiement"); return;
     }
 
-    const montant = (poids * 10.20).toFixed(2);
+    // ✅ Prix par kg du voyageur (récupéré depuis data-prix-kg ou localStorage)
+    const prixKgVoyageur = parseFloat(localStorage.getItem('voyageur_prix_kg') || '0') || 0;
+    const prixVoyageur = poids * prixKgVoyageur;
+    const montant = (prixVoyageur + 2.99).toFixed(2); // total = prix + commission 2.99€
 
     // ✅ Créer l'expéditeur en mode matching puis rediriger vers paiement
     const profilData = JSON.parse(localStorage.getItem('profil_connecte') || '{}');
@@ -723,7 +795,8 @@ function validerPaiementDirect(voyageurId, maxPoids) {
     formData.append('pays_destination', paysDest);
     formData.append('ville_destination', villeDest);
     formData.append('poids', poids);
-    formData.append('prix', poids * 10.20);
+    formData.append('prix_par_kg', prixKgVoyageur);
+    formData.append('prix', prixVoyageur);
     formData.append('mode_paiement', modePaiement);
     formData.append('mode', 'matching');
     formData.append('voyageur_id', voyageurId);
@@ -824,17 +897,31 @@ function searchHome() {
     });
 }
 
+// ================= CALCUL PRIX EXPÉDITEUR =================
+// Affiche UNIQUEMENT le montant voyageur (sans les 2.99€)
 function calculerPrixExpediteur() {
-    const poids = parseFloat(document.getElementById('exp-poids').value);
-    if (!isNaN(poids) && poids > 0)
-        document.getElementById('exp-total').textContent = (poids * 10).toFixed(2) + ' €';
-    verifierFormulaireExpediteur();
+    const poids = parseFloat(document.getElementById('exp-poids')?.value) || 0;
+    const prixKg = parseFloat(document.getElementById('exp-prix-kg')?.value) || 0;
+
+    const prixVoyageur = poids * prixKg;
+
+    const elTotal = document.getElementById('exp-total');
+    if (elTotal) {
+        elTotal.textContent = prixVoyageur.toFixed(2) + ' €';
+    }
 }
 
+// ================= CALCUL GAIN VOYAGEUR =================
 function calculerGainVoyageur() {
-    const poids = parseFloat(document.getElementById('voy-poids').value);
-    document.getElementById('voy-gain').textContent =
-        (!isNaN(poids) && poids > 0) ? (poids * 10).toFixed(2) + ' €' : '0.00 €';
+    const poids = parseFloat(document.getElementById('voy-poids')?.value) || 0;
+    const prixKg = parseFloat(document.getElementById('voy-prix-kg')?.value) || 0;
+
+    const gain = poids * prixKg;
+
+    const elGain = document.getElementById('voy-gain');
+    if (elGain) {
+        elGain.textContent = gain.toFixed(2) + ' €';
+    }
 }
 
 function selectPayment(element, method) {
@@ -846,7 +933,7 @@ function selectPayment(element, method) {
 
 function verifierFormulaireExpediteur() {
     const required = ['exp-nom','exp-prenom','exp-telephone','exp-pays','exp-ville',
-                      'exp-pays-dest','exp-ville-dest','exp-poids'];
+                      'exp-pays-dest','exp-ville-dest','exp-poids','exp-prix-kg'];
     const valid = required.every(id => document.getElementById(id)?.value?.trim());
     const check1 = document.getElementById('exp-check1')?.checked;
     const check2 = document.getElementById('exp-check2')?.checked;
@@ -858,7 +945,7 @@ function verifierFormulaireExpediteur() {
 function verifierFormulaireVoyageur() {
     const required = ['voy-nom','voy-prenom','voy-telephone','voy-pays-depart','voy-ville-depart',
                       'voy-pays-destination','voy-ville-destination','voy-date-depart',
-                      'voy-heure-depart','voy-date-arrivee','voy-heure-arrivee','voy-poids'];
+                      'voy-heure-depart','voy-date-arrivee','voy-heure-arrivee','voy-poids','voy-prix-kg'];
     const valid = required.every(id => document.getElementById(id)?.value?.trim());
     const check1 = document.getElementById('voy-check1')?.checked;
     const check2 = document.getElementById('voy-check2')?.checked;
@@ -870,18 +957,21 @@ function verifierFormulaireVoyageur() {
 function ouvrirModalExpediteur() {
     const nom = document.getElementById('exp-nom').value;
     const prenom = document.getElementById('exp-prenom').value;
-    const poids = parseFloat(document.getElementById('exp-poids').value);
-    const prix = poids * 10;
-    const commission = poids * 0.2;
-    const total = prix + commission;
+    const poids = parseFloat(document.getElementById('exp-poids').value) || 0;
+    // ✅ Prix libre saisi par l'expéditeur
+    const prixKg = parseFloat(document.getElementById('exp-prix-kg')?.value) || 0;
+    const prixVoyageur = poids * prixKg;
+    const commission = 2.99;
+    const total = prixVoyageur + commission;
 
     document.getElementById('exp-confirmation-details').innerHTML = `
         <p><strong>Nom :</strong> ${nom} ${prenom}</p>
         <p><strong>Trajet :</strong> ${document.getElementById('exp-ville').value} → ${document.getElementById('exp-ville-dest').value}</p>
         <p><strong>Poids :</strong> ${poids} kg</p>
-        <p><strong>Prix :</strong> ${prix.toFixed(2)} €</p>
-        <p><strong>Commission :</strong> ${commission.toFixed(2)} €</p>
-        <p><strong>Total :</strong> ${total.toFixed(2)} €</p>
+        <p><strong>Prix/kg :</strong> ${prixKg.toFixed(2)} €/kg</p>
+        <p><strong>Montant voyageur :</strong> ${prixVoyageur.toFixed(2)} €</p>
+        <p><strong>Frais KERALINK :</strong> ${commission.toFixed(2)} €</p>
+        <p><strong>Total à payer :</strong> <strong style="color:#FF7A00">${total.toFixed(2)} €</strong></p>
     `;
     document.getElementById('expediteur-modal').style.display = 'flex';
 }
@@ -900,11 +990,16 @@ function ouvrirModalVoyageur() {
     if (btnConfirm) btnConfirm.textContent = match.type === 'voyageur'
         ? 'Confirmer le matching' : 'Publier mon trajet';
 
+    // ✅ Prix libre saisi par le voyageur
+    const prixKg = parseFloat(document.getElementById('voy-prix-kg')?.value) || 0;
+    const gainEstime = (poids * prixKg).toFixed(2);
+
     document.getElementById('voy-confirmation-details').innerHTML = `
         <p><strong>Nom :</strong> ${nom} ${prenom}</p>
         <p><strong>Trajet :</strong> ${document.getElementById('voy-ville-depart').value} → ${document.getElementById('voy-ville-destination').value}</p>
-        <p><strong>Poids :</strong> ${poids} kg</p>
-        <p><strong>Gain estimé :</strong> ${(poids * 10).toFixed(2)} €</p>
+        <p><strong>Poids disponible :</strong> ${poids} kg</p>
+        <p><strong>Votre prix :</strong> ${prixKg.toFixed(2)} €/kg</p>
+        <p><strong>Gain estimé (si complet) :</strong> <strong style="color:#2e7d32">${gainEstime} €</strong></p>
     `;
     document.getElementById('voyageur-modal').style.display = 'flex';
 }
@@ -959,184 +1054,41 @@ function choisirType(type) {
 }
 
 // ================================================================
-// ✅ SYSTÈME LANGUE — Traduction complète sans rechargement
+// REMPLACEZ la fonction setLangue dans votre script.js
+// Cette version utilise Django i18n côté serveur + rechargement
 // ================================================================
 
-const TRADUCTIONS = {
-    fr: {
-        // Navigation
-        menu_toutes: 'Toutes',
-        voyageurs_dispo: 'Voyageurs disponibles',
-        expediteurs_dispo: 'Expéditeurs disponibles',
-        recherche_placeholder: 'Rechercher un trajet, une ville...',
-        nav_accueil: 'Accueil',
-        nav_expedier: 'Expédier',
-        nav_voyager: 'Voyager',
-        nav_profil: 'Profil',
-        // Page accueil
-        hero_titre: 'Lien sûr entre vos bagages et vos colis',
-        hero_sous_titre: 'Trouvez un voyageur pour transporter vos colis partout dans le monde',
-        section_voyageurs: '🛄 Voyageurs disponibles',
-        section_expediteurs: '📦 Expéditeurs disponibles',
-        btn_selectionner: 'Sélectionner',
-        btn_complet: 'Complet',
-        kg_disponibles: 'disponibles',
-        a_transporter: 'à transporter',
-        prix_pour_vous: '10€/kg pour vous',
-        aucun_voyageur: 'Aucun voyageur disponible',
-        aucun_expediteur: 'Aucun expéditeur disponible',
-        // Formulaires
-        form_nom: 'Nom *',
-        form_prenom: 'Prénom *',
-        form_telephone: 'Téléphone *',
-        form_pays: 'Pays *',
-        form_ville: 'Ville *',
-        form_pays_dest: 'Pays de destination *',
-        form_ville_dest: 'Ville de destination *',
-        form_poids: 'Poids du colis (kg) *',
-        form_total: 'Total à payer:',
-        btn_publier_demande: 'Publier ma demande',
-        btn_publier_trajet: 'Publier mon trajet',
-        btn_accepter_trajet: 'Accepter le trajet',
-        btn_accepter_demande: 'Accepter sa demande',
-        paiement_titre: 'Choisissez votre moyen de paiement *',
-        // Profil
-        profil_titre: 'Créer votre profil',
-        profil_etes_vous: 'ÊTES-VOUS ?',
-        profil_voyageur: '🧳 Voyageur',
-        profil_expediteur: '📦 Expéditeur',
-        profil_nom_complet: 'Nom complet *',
-        profil_username: "Nom d'utilisateur *",
-        profil_email: 'Email *',
-        profil_password: 'Mot de passe *',
-        profil_confirmer: 'Confirmer *',
-        btn_inscrire: "S'inscrire",
-        btn_connecter: 'Se connecter',
-        ou_inscrire_manuellement: 'ou s\'inscrire manuellement',
-        // Connexion
-        connexion_titre: '🔑 Connexion',
-        connexion_identifiant: "Nom d'utilisateur ou Email",
-        connexion_mdp: 'Mot de passe',
-        pas_de_compte: 'Pas encore de compte ?',
-        // Modal connexion Google
-        modal_rejoindre: 'Rejoignez KERALINK en tant que',
-        modal_continuer: 'Continuer avec Google',
-        modal_inscrire_manuellement: '✍️ S\'inscrire manuellement',
-        modal_deja_compte: '🔑 J\'ai déjà un compte',
-        modal_connecter_google: 'Se connecter avec Google',
-        // Gain type
-        kg_entier: 'En entier',
-        kg_detail: 'En détail',
-        depart: 'Départ',
-        arrivee: 'Arrivée',
-        colis: 'Colis',
-        poids_disponible: 'Poids disponible',
-        vous_recevrez: 'Vous recevrez :',
-        date_depart: 'Date de départ *',
-        heure_depart: 'Heure de départ *',
-        date_arrivee: "Date d'arrivée *",
-        heure_arrivee: "Heure d'arrivée *",
-        type_kg: 'Type de kg disponible *',
-        kg_entier_desc: 'Kg en entier (tout ou rien)',
-        kg_detail_desc: 'Kg en détail (fractionnable)',
-    },
-    en: {
-        // Navigation
-        menu_toutes: 'All',
-        voyageurs_dispo: 'Available Travelers',
-        expediteurs_dispo: 'Available Senders',
-        recherche_placeholder: 'Search a route, a city...',
-        nav_accueil: 'Home',
-        nav_expedier: 'Send',
-        nav_voyager: 'Travel',
-        nav_profil: 'Profile',
-        // Page accueil
-        hero_titre: 'Safe link between your luggage and your parcels',
-        hero_sous_titre: 'Find a traveler to transport your parcels anywhere in the world',
-        section_voyageurs: '🛄 Available Travelers',
-        section_expediteurs: '📦 Available Senders',
-        btn_selectionner: 'Select',
-        btn_complet: 'Full',
-        kg_disponibles: 'available',
-        a_transporter: 'to transport',
-        prix_pour_vous: '10€/kg for you',
-        aucun_voyageur: 'No travelers available',
-        aucun_expediteur: 'No senders available',
-        // Formulaires
-        form_nom: 'Last Name *',
-        form_prenom: 'First Name *',
-        form_telephone: 'Phone *',
-        form_pays: 'Country *',
-        form_ville: 'City *',
-        form_pays_dest: 'Destination Country *',
-        form_ville_dest: 'Destination City *',
-        form_poids: 'Package Weight (kg) *',
-        form_total: 'Total to pay:',
-        btn_publier_demande: 'Publish my request',
-        btn_publier_trajet: 'Publish my route',
-        btn_accepter_trajet: 'Accept the route',
-        btn_accepter_demande: 'Accept the request',
-        paiement_titre: 'Choose your payment method *',
-        // Profil
-        profil_titre: 'Create your profile',
-        profil_etes_vous: 'ARE YOU A ?',
-        profil_voyageur: '🧳 Traveler',
-        profil_expediteur: '📦 Sender',
-        profil_nom_complet: 'Full name *',
-        profil_username: 'Username *',
-        profil_email: 'Email *',
-        profil_password: 'Password *',
-        profil_confirmer: 'Confirm *',
-        btn_inscrire: 'Sign Up',
-        btn_connecter: 'Log In',
-        ou_inscrire_manuellement: 'or sign up manually',
-        // Connexion
-        connexion_titre: '🔑 Login',
-        connexion_identifiant: 'Username or Email',
-        connexion_mdp: 'Password',
-        pas_de_compte: 'No account yet?',
-        // Modal connexion Google
-        modal_rejoindre: 'Join KERALINK as a',
-        modal_continuer: 'Continue with Google',
-        modal_inscrire_manuellement: '✍️ Sign up manually',
-        modal_deja_compte: '🔑 I already have an account',
-        modal_connecter_google: 'Sign in with Google',
-        // Gain type
-        kg_entier: 'Whole',
-        kg_detail: 'Detailed',
-        depart: 'Departure',
-        arrivee: 'Arrival',
-        colis: 'Package',
-        poids_disponible: 'Available weight',
-        vous_recevrez: 'You will receive:',
-        date_depart: 'Departure date *',
-        heure_depart: 'Departure time *',
-        date_arrivee: 'Arrival date *',
-        heure_arrivee: 'Arrival time *',
-        type_kg: 'Available kg type *',
-        kg_entier_desc: 'Whole kg (all or nothing)',
-        kg_detail_desc: 'Detailed kg (fractional)',
-    }
-};
-
-let langueActuelle = localStorage.getItem('keralink_langue') || 'fr';
-
 function setLangue(code) {
-    langueActuelle = code;
-    localStorage.setItem('keralink_langue', code);
-
-    // Mettre à jour le bouton
     const flags = { fr: '🇫🇷', en: '🇬🇧' };
     const labels = { fr: 'FR', en: 'EN' };
-    const flagEl = document.getElementById('lang-flag');
+
+    // Mettre à jour le bouton dans le header
+    const flagEl  = document.getElementById('lang-flag');
     const labelEl = document.getElementById('lang-label');
-    if (flagEl) flagEl.textContent = flags[code] || '🇫🇷';
+    if (flagEl)  flagEl.textContent  = flags[code]  || '🇫🇷';
     if (labelEl) labelEl.textContent = labels[code] || 'FR';
 
-    // Traduire tous les éléments data-i18n
-    _appliquerTraductions();
     // Fermer le menu
-    document.getElementById('lang-menu').style.display = 'none';
+    const menu = document.getElementById('lang-menu');
+    if (menu) menu.style.display = 'none';
+
+    // ✅ Envoyer la langue au serveur Django puis recharger la page
+    const formData = new FormData();
+    formData.append('langue', code);
+
+    fetch('/changer-langue/', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-CSRFToken': getCookie('csrftoken') }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            // ✅ Recharger la page pour appliquer les traductions Django
+            location.reload();
+        }
+    })
+    .catch(() => {});
 }
 
 function _appliquerTraductions() {
@@ -1190,12 +1142,8 @@ let monnaieActuelle = localStorage.getItem('keralink_monnaie') || 'EUR';
 let tauxActuel = TAUX_CHANGE[monnaieActuelle] || 1;
 let symboleActuel = SYMBOLES[monnaieActuelle] || '€';
 
-// Prix de base en EUR (toujours conservés)
-const PRIX_BASE_EUR = {
-    par_kg: 10,
-    commission_par_kg: 0.20,
-    total_par_kg: 10.20,
-};
+// Commission fixe KERALINK
+const COMMISSION_KERALINK = 2.99;
 
 function setMonnaie(code, symbole, label) {
     monnaieActuelle = code;
@@ -1236,31 +1184,18 @@ function _mettreAJourPrix() {
         if (!isNaN(eur)) el.textContent = formatPrix(eur);
     });
 
-    // ✅ Mettre à jour le total du formulaire expéditeur si rempli
+    // ✅ Mettre à jour le total du formulaire expéditeur si rempli (prix libre)
     const poidsExpEl = document.getElementById('exp-poids');
-    if (poidsExpEl && poidsExpEl.value) {
-        const poids = parseFloat(poidsExpEl.value);
-        if (!isNaN(poids) && poids > 0) {
-            const totalEl = document.getElementById('exp-total');
-            if (totalEl) totalEl.textContent = formatPrix(poids * PRIX_BASE_EUR.par_kg);
-        }
+    const prixKgExpEl = document.getElementById('exp-prix-kg');
+    if (poidsExpEl && poidsExpEl.value && prixKgExpEl && prixKgExpEl.value) {
+        calculerPrixExpediteur();
     }
 
-    // ✅ Mettre à jour le gain du formulaire voyageur si rempli
+    // ✅ Mettre à jour le gain du formulaire voyageur si rempli (prix libre)
     const poidsVoyEl = document.getElementById('voy-poids');
     if (poidsVoyEl && poidsVoyEl.value) {
-        const poids = parseFloat(poidsVoyEl.value);
-        if (!isNaN(poids) && poids > 0) {
-            const gainEl = document.getElementById('voy-gain');
-            if (gainEl) gainEl.textContent = formatPrix(poids * PRIX_BASE_EUR.par_kg);
-        }
+        calculerGainVoyageur();
     }
-
-    // ✅ Mettre à jour les textes "10€/kg pour vous" sur les cartes
-    document.querySelectorAll('[data-prix-kg]').forEach(el => {
-        const texteBase = langueActuelle === 'en' ? 'for you' : 'pour vous';
-        el.textContent = formatPrix(PRIX_BASE_EUR.par_kg) + '/kg ' + texteBase;
-    });
 }
 
 function toggleCurrencyMenu() {
@@ -1281,26 +1216,6 @@ document.addEventListener('click', (e) => {
         if (m) m.style.display = 'none';
     }
 });
-
-// ✅ Remplacer calculerPrixExpediteur pour prendre en compte la monnaie
-function calculerPrixExpediteur() {
-    const poids = parseFloat(document.getElementById('exp-poids').value);
-    if (!isNaN(poids) && poids > 0) {
-        document.getElementById('exp-total').textContent = formatPrix(poids * PRIX_BASE_EUR.par_kg);
-    } else {
-        document.getElementById('exp-total').textContent = formatPrix(0);
-    }
-    verifierFormulaireExpediteur();
-}
-
-// ✅ Remplacer calculerGainVoyageur pour prendre en compte la monnaie
-function calculerGainVoyageur() {
-    const poids = parseFloat(document.getElementById('voy-poids').value);
-    const gainEl = document.getElementById('voy-gain');
-    if (gainEl) {
-        gainEl.textContent = (!isNaN(poids) && poids > 0) ? formatPrix(poids * PRIX_BASE_EUR.par_kg) : formatPrix(0);
-    }
-}
 
 // ✅ Initialisation au chargement
 document.addEventListener('DOMContentLoaded', function () {
@@ -1778,24 +1693,32 @@ function ouvrirTarifs() {
                 <!-- Tableau tarifs -->
                 <div style="background:#f9f9f9;border-radius:12px;overflow:hidden;margin-bottom:20px;">
                     <div style="background:#0A1F44;color:white;padding:12px 20px;font-weight:bold;">
-                        📋 Grille tarifaire standard
+                        📋 Grille tarifaire KERALINK
                     </div>
                     <table style="width:100%;border-collapse:collapse;">
                         <tr style="border-bottom:1px solid #eee;">
-                            <td style="padding:14px 20px;font-size:0.92rem;">💸 Prix pour l'expéditeur</td>
-                            <td style="padding:14px 20px;text-align:right;font-weight:bold;color:#FF7A00;font-size:1.1rem;">10,20 €/kg</td>
+                            <td style="padding:14px 20px;font-size:0.92rem;">💼 Prix par kg</td>
+                            <td style="padding:14px 20px;text-align:right;font-weight:bold;color:#2e7d32;font-size:1.05rem;">
+                                Libre
+                            </td>
                         </tr>
                         <tr style="border-bottom:1px solid #eee;background:#fafafa;">
-                            <td style="padding:14px 20px;font-size:0.92rem;">💼 Gain pour le voyageur</td>
-                            <td style="padding:14px 20px;text-align:right;font-weight:bold;color:#2e7d32;font-size:1.1rem;">10,00 €/kg</td>
+                            <td style="padding:14px 20px;font-size:0.92rem;">🏢 Commission KERALINK</td>
+                            <td style="padding:14px 20px;text-align:right;font-weight:bold;color:#FF7A00;font-size:1.1rem;">
+                                2,99 € fixe
+                            </td>
                         </tr>
                         <tr style="border-bottom:1px solid #eee;">
-                            <td style="padding:14px 20px;font-size:0.92rem;">🏢 Commission KERALINK</td>
-                            <td style="padding:14px 20px;text-align:right;font-weight:bold;color:#1E3A8A;">0,20 €/kg</td>
+                            <td style="padding:14px 20px;font-size:0.92rem;">💸 Total payé par l'expéditeur</td>
+                            <td style="padding:14px 20px;text-align:right;font-weight:bold;color:#0A1F44;">
+                                (Poids × Prix/kg) + 2,99 €
+                            </td>
                         </tr>
                         <tr style="background:#fff3e0;">
                             <td style="padding:14px 20px;font-size:0.92rem;">↩️ Remboursement (si annulation)</td>
-                            <td style="padding:14px 20px;text-align:right;font-weight:bold;color:#e65100;">10,00 €/kg</td>
+                            <td style="padding:14px 20px;text-align:right;font-weight:bold;color:#e65100;">
+                                Prix versé au voyageur (sans les 2,99 €)
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -1804,29 +1727,31 @@ function ouvrirTarifs() {
                 <h3 style="color:#0A1F44;margin-bottom:14px;">📦 Exemples concrets</h3>
                 <div style="display:grid;gap:12px;margin-bottom:20px;">
                     ${[
-                        { kg: 5, label: 'Petit colis (5 kg)' },
-                        { kg: 10, label: 'Colis moyen (10 kg)' },
-                        { kg: 23, label: 'Grande valise (23 kg)' },
+                        { kg: 5,  prix: 8,  label: 'Petit colis (5 kg à 8 €/kg)' },
+                        { kg: 10, prix: 6,  label: 'Colis moyen (10 kg à 6 €/kg)' },
+                        { kg: 23, prix: 5,  label: 'Grande valise (23 kg à 5 €/kg)' },
                     ].map(ex => `
                         <div style="background:#f5f5f5;border-radius:10px;padding:14px 18px;
                                     display:flex;justify-content:space-between;align-items:center;">
                             <div>
                                 <strong>${ex.label}</strong>
                                 <div style="font-size:0.82rem;color:#888;margin-top:2px;">
-                                    Voyageur : <strong style="color:#2e7d32;">${(ex.kg * 10).toFixed(2)} €</strong>
-                                    &nbsp;|&nbsp; Commission : ${(ex.kg * 0.2).toFixed(2)} €
+                                    Voyageur reçoit : <strong style="color:#2e7d32;">${(ex.kg * ex.prix).toFixed(2)} €</strong>
+                                    &nbsp;|&nbsp; Commission KERALINK : <strong>2,99 €</strong>
                                 </div>
                             </div>
-                            <div style="font-size:1.2rem;font-weight:bold;color:#FF7A00;">
-                                ${(ex.kg * 10.2).toFixed(2)} €
+                            <div style="font-size:1.15rem;font-weight:bold;color:#FF7A00;">
+                                ${((ex.kg * ex.prix) + 2.99).toFixed(2)} €
                             </div>
                         </div>
                     `).join('')}
                 </div>
 
                 <div style="background:#e8f5e9;border-radius:10px;padding:14px;border-left:4px solid #2e7d32;font-size:0.88rem;color:#555;">
-                    ✅ <strong>Aucun frais caché.</strong> La commission de 0,20€/kg est la seule retenue de la plateforme.
-                    En cas de remboursement, seule la commission est non remboursable.
+                    ✅ <strong>Aucun frais caché.</strong><br>
+                    • Le voyageur et l’expéditeur fixent librement le prix au kg.<br>
+                    • KERALINK prélève uniquement une commission fixe de <strong>2,99 €</strong> par transaction.<br>
+                    • En cas de remboursement, l’expéditeur récupère le montant versé au voyageur (les 2,99 € restent non remboursables).
                 </div>
             </div>
         </div>

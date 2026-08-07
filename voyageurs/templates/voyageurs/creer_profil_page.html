@@ -1,10 +1,11 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Créer mon profil - KERALINK</title>
+    <title>{% trans "Créer mon profil - KERALINK" %}</title>
     <link rel="stylesheet" href="{% static 'voyageurs/css/style.css' %}">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
@@ -92,66 +93,65 @@
 
 <nav class="pay-navbar">
     <img src="{% static 'voyageurs/images/logo3.png' %}">
-    <div style="color:#a0cfff;font-size:0.85rem;">✅ Paiement confirmé</div>
+    <div style="color:#a0cfff;font-size:0.85rem;">✅ {% trans "Paiement confirmé" %}</div>
 </nav>
 
 <div class="container">
     <div class="form-card">
         <div class="card-header">
-            <h2>👤 Créez votre profil</h2>
-            <p>Votre paiement est sécurisé. Créez votre compte pour suivre votre colis.</p>
-            <div class="success-badge">🔒 Paiement enregistré avec succès</div>
+            <h2>👤 {% trans "Créez votre profil" %}</h2>
+            <p>{% trans "Votre paiement est sécurisé. Créez votre compte pour suivre votre colis." %}</p>
+            <div class="success-badge">🔒 {% trans "Paiement enregistré avec succès" %}</div>
         </div>
 
         <div class="card-body">
             <div class="info-box">
-                ✅ Votre demande d'expédition a bien été enregistrée et votre paiement est sécurisé.
-                Créez votre profil pour accéder à votre espace et suivre l'état de votre colis.
+                ✅ {% trans "Votre demande d'expédition a bien été enregistrée et votre paiement est sécurisé. Créez votre profil pour accéder à votre espace et suivre l'état de votre colis." %}
             </div>
 
             <div class="type-choice">
                 <div class="choice-btn selected" id="btn-expediteur" onclick="choisirType('expediteur')">
-                    📦 Expéditeur
+                    📦 {% trans "Expéditeur" %}
                 </div>
                 <div class="choice-btn" id="btn-voyageur" onclick="choisirType('voyageur')">
-                    🧳 Voyageur
+                    🧳 {% trans "Voyageur" %}
                 </div>
             </div>
             <input type="hidden" id="type_profil" value="{{ type_profil }}">
 
             <div class="form-group">
-                <label>Nom complet *</label>
+                <label>{% trans "Nom complet" %} *</label>
                 <input type="text" id="nom_complet" value="{{ nom_complet }}" required>
             </div>
 
             <div class="form-group">
-                <label>Nom d'utilisateur *</label>
-                <input type="text" id="username" placeholder="ex: jean_dupont" required>
+                <label>{% trans "Nom d'utilisateur" %} *</label>
+                <input type="text" id="username" placeholder="{% trans 'ex: jean_dupont' %}" required>
             </div>
 
             <div class="form-group">
-                <label>Email *</label>
-                <input type="email" id="email" placeholder="votre@email.com" required>
+                <label>{% trans "Email" %} *</label>
+                <input type="email" id="email" placeholder="{% trans 'votre@email.com' %}" required>
             </div>
 
             <div class="form-group">
-                <label>Téléphone *</label>
+                <label>{% trans "Téléphone" %} *</label>
                 <input type="tel" id="telephone" placeholder="+33 6 12 34 56 78" required>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Mot de passe *</label>
+                    <label>{% trans "Mot de passe" %} *</label>
                     <input type="password" id="password" placeholder="••••••••" required>
                 </div>
                 <div class="form-group">
-                    <label>Confirmer *</label>
+                    <label>{% trans "Confirmer" %} *</label>
                     <input type="password" id="password2" placeholder="••••••••" required>
                 </div>
             </div>
 
             <button class="btn-inscrire" onclick="inscrire()">
-                ✅ Créer mon profil et accéder à mon espace
+                ✅ {% trans "Créer mon profil et accéder à mon espace" %}
             </button>
         </div>
     </div>

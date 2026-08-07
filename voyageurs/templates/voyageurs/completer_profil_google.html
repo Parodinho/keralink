@@ -1,10 +1,11 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compléter mon profil - KERALINK</title>
+    <title>{% trans "Compléter mon profil - KERALINK" %}</title>
     <link rel="stylesheet" href="{% static 'voyageurs/css/style.css' %}">
     <style>
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
@@ -76,68 +77,68 @@
 
 <nav class="navbar">
     <div class="brand">KERA<span>LINK</span></div>
-    <div style="color:#a0cfff;font-size:0.85rem;">✅ Connecté avec Google</div>
+    <div style="color:#a0cfff;font-size:0.85rem;">✅ {% trans "Connecté avec Google" %}</div>
 </nav>
 
 <div class="container">
     <div class="form-card">
         <div class="card-header">
-            <h2>👤 Complétez votre profil KERALINK</h2>
-            <p style="font-size:0.85rem;opacity:0.8;">Quelques informations supplémentaires pour démarrer</p>
+            <h2>👤 {% trans "Complétez votre profil KERALINK" %}</h2>
+            <p style="font-size:0.85rem;opacity:0.8;">{% trans "Quelques informations supplémentaires pour démarrer" %}</p>
             <div class="google-badge">
                 <div class="google-icon">G</div>
-                Connecté via Google — {{ google_name }}
+                {% trans "Connecté via Google" %} — {{ google_name }}
             </div>
         </div>
 
         <div class="card-body">
             <div class="info-box">
-                ✅ Votre compte Google a été vérifié. Choisissez votre rôle et complétez votre profil.
+                ✅ {% trans "Votre compte Google a été vérifié. Choisissez votre rôle et complétez votre profil." %}
             </div>
 
             <div class="type-choice">
                 <div class="choice-btn selected" id="btn-expediteur" onclick="choisirType('expediteur')">
-                    📦 Expéditeur
+                    📦 {% trans "Expéditeur" %}
                 </div>
                 <div class="choice-btn" id="btn-voyageur" onclick="choisirType('voyageur')">
-                    🧳 Voyageur
+                    🧳 {% trans "Voyageur" %}
                 </div>
             </div>
             <input type="hidden" id="type_profil" value="expediteur">
 
             <div class="form-group">
-                <label>Nom complet *</label>
+                <label>{% trans "Nom complet" %} *</label>
                 <input type="text" id="nom_complet" value="{{ google_name }}" required>
             </div>
 
             <div class="form-group">
-                <label>Nom d'utilisateur *</label>
-                <input type="text" id="username" placeholder="ex: jean_dupont" required>
+                <label>{% trans "Nom d'utilisateur" %} *</label>
+                <input type="text" id="username" placeholder="{% trans 'ex: jean_dupont' %}" required>
             </div>
 
             <div class="form-group">
-                <label>Email</label>
+                <label>{% trans "Email" %}</label>
                 <input type="email" id="email" value="{{ google_email }}" readonly>
             </div>
 
             <div class="form-group">
-                <label>Téléphone *</label>
+                <label>{% trans "Téléphone" %} *</label>
                 <input type="tel" id="telephone" placeholder="+33 6 12 34 56 78" required>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Mot de passe *</label>
+                    <label>{% trans "Mot de passe" %} *</label>
                     <input type="password" id="password" placeholder="••••••••" required>
                 </div>
                 <div class="form-group">
-                    <label>Confirmer *</label>
+                    <label>{% trans "Confirmer" %} *</label>
                     <input type="password" id="password2" placeholder="••••••••" required>
                 </div>
             </div>
 
             <button class="btn-creer" onclick="creerProfil()">
-                ✅ Créer mon profil KERALINK
+                ✅ {% trans "Créer mon profil KERALINK" %}
             </button>
         </div>
     </div>

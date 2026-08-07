@@ -32,6 +32,7 @@ urlpatterns = [
     path('creer-matching-apres-login/', views.creer_matching_apres_login, name='creer_matching_apres_login'),
     path('accepter-demande/', views.accepter_demande, name='accepter_demande'),
     path('refuser-demande/', views.refuser_demande, name='refuser_demande'),
+    path('changer-langue/', views.changer_langue, name='changer_langue'),
     path('get-solde/', views.get_solde_temps_reel, name='get_solde'),
     path('generer-facture-remboursement/<int:transaction_id>/', views.generer_facture_remboursement, name='generer_facture_remboursement'),
     path('nb-visiteurs/', views.nb_visiteurs, name='nb_visiteurs'),

@@ -1,5 +1,7 @@
 from django.db import models
 
+COMMISSION_KERALINK = 2.99  # ✅ Commission fixe KERALINK par transaction
+
 
 class Voyageur(models.Model):
     nom               = models.CharField(max_length=100)
@@ -14,6 +16,8 @@ class Voyageur(models.Model):
     date_arrivee      = models.DateField()
     heure_arrivee     = models.TimeField()
     poids_disponible  = models.FloatField(default=0)
+    # ✅ NOUVEAU : prix par kg fixé par le voyageur
+    prix_par_kg       = models.FloatField(default=10.0)
     TYPE_KG_CHOICES   = [
         ('entier', 'Kg en entier (tout ou rien)'),
         ('detail', 'Kg en détail (fractionnable)')
@@ -41,8 +45,12 @@ class Expediteur(models.Model):
     pays_destination  = models.CharField(max_length=100)
     ville_destination = models.CharField(max_length=100)
     poids_colis       = models.FloatField()
+    # ✅ prix_par_kg = prix négocié avec le voyageur (fixé par l'expéditeur ou hérité du voyageur)
+    prix_par_kg       = models.FloatField(default=10.0)
+    # prix_total = poids × prix_par_kg (sans commission)
     prix_total        = models.FloatField()
-    commission        = models.FloatField(default=0)
+    # commission = 2.99€ fixe KERALINK
+    commission        = models.FloatField(default=2.99)
     guest_id          = models.CharField(max_length=100, null=True, blank=True, db_index=True)
     is_matched        = models.BooleanField(default=False)
     is_created_via_matching = models.BooleanField(default=False)
@@ -58,6 +66,11 @@ class Expediteur(models.Model):
     date_demande      = models.DateTimeField(auto_now_add=True)
     livraison_confirmee_expediteur = models.BooleanField(default=False)
     date_confirmation_expediteur   = models.DateTimeField(null=True, blank=True)
+
+    @property
+    def montant_total(self):
+        """Prix total avec commission KERALINK."""
+        return round(self.prix_total + self.commission, 2)
 
     def __str__(self):
         return f"{self.prenom} {self.nom} - {self.poids_colis}kg"
@@ -99,9 +112,9 @@ class Transaction(models.Model):
     expediteur         = models.ForeignKey(Expediteur, on_delete=models.CASCADE)
     voyageur           = models.ForeignKey(Voyageur,   on_delete=models.CASCADE,
                                            null=True, blank=True)
-    montant            = models.FloatField()
-    montant_voyageur   = models.FloatField(default=0)
-    montant_commission = models.FloatField(default=0)
+    montant            = models.FloatField()   # total payé (prix_total + 2.99)
+    montant_voyageur   = models.FloatField(default=0)   # gains voyageur = prix_total
+    montant_commission = models.FloatField(default=2.99) # commission fixe KERALINK
     mode_paiement      = models.CharField(max_length=20, choices=[
         ('carte', 'Carte bancaire'), ('paypal', 'PayPal'),
         ('orange', 'Orange Money'),  ('wave', 'Wave')
@@ -160,10 +173,9 @@ class MessageSupport(models.Model):
 
 
 class Portefeuille(models.Model):
-    # ✅ unique=True OK ici : un seul portefeuille par voyageur
-    guest_id         = models.CharField(max_length=100, unique=True)
-    nom_complet      = models.CharField(max_length=200, default='')
-    solde            = models.FloatField(default=0)
+    guest_id = models.CharField(max_length=100, unique=True)
+    nom_complet = models.CharField(max_length=200, default='')
+    solde = models.FloatField(default=0)
     date_mise_a_jour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -202,10 +214,7 @@ class Profil(models.Model):
     username      = models.CharField(max_length=100, unique=True)
     email         = models.EmailField()
     telephone     = models.CharField(max_length=20)
-    password      = models.CharField(max_length=100)
-    # ✅ unique=True UNIQUEMENT sur Profil — garanti car on génère
-    # toujours un uuid4 frais dans creer_profil()
-    # Les anciennes données doivent d'abord être nettoyées (voir procédure)
+    password = models.CharField(max_length=100)
     guest_id      = models.CharField(max_length=100, unique=True)
     date_creation = models.DateTimeField(auto_now_add=True)
 

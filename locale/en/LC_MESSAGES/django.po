@@ -1,0 +1,482 @@
+# KERALINK — Traductions anglaises complètes
+# Language: English
+# Generated for KERALINK platform
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KERALINK 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# ===== NAVIGATION =====
+msgid "Toutes"
+msgstr "All"
+
+msgid "Accueil"
+msgstr "Home"
+
+msgid "Comment ça marche"
+msgstr "How it works"
+
+msgid "Tarifs"
+msgstr "Pricing"
+
+msgid "Mon espace"
+msgstr "My space"
+
+msgid "Compte & Profil"
+msgstr "Account & Profile"
+
+msgid "Retour"
+msgstr "Back"
+
+# ===== HERO =====
+msgid "Lien sûr entre vos bagages et vos colis"
+msgstr "Safe link between your luggage and your parcels"
+
+msgid "Trouvez un voyageur pour transporter vos colis partout dans le monde — prix libres + 2,99€ de frais KERALINK"
+msgstr "Find a traveler to transport your parcels anywhere in the world — free pricing + €2.99 KERALINK fee"
+
+# ===== SECTIONS =====
+msgid "Voyageurs disponibles"
+msgstr "Available travelers"
+
+msgid "Expéditeurs disponibles"
+msgstr "Available senders"
+
+msgid "Aucun voyageur disponible"
+msgstr "No traveler available"
+
+msgid "Aucun expéditeur disponible"
+msgstr "No sender available"
+
+# ===== BOUTONS =====
+msgid "Sélectionner"
+msgstr "Select"
+
+msgid "Complet"
+msgstr "Full"
+
+msgid "Publier ma demande"
+msgstr "Post my request"
+
+msgid "Publier mon trajet"
+msgstr "Post my journey"
+
+msgid "Confirmer et payer"
+msgstr "Confirm and pay"
+
+msgid "Annuler"
+msgstr "Cancel"
+
+# ===== FORMULAIRE EXPÉDITEUR =====
+msgid "Expédier un colis"
+msgstr "Send a parcel"
+
+msgid "Nom"
+msgstr "Last name"
+
+msgid "Prénom"
+msgstr "First name"
+
+msgid "Téléphone"
+msgstr "Phone"
+
+msgid "Pays"
+msgstr "Country"
+
+msgid "Ville"
+msgstr "City"
+
+msgid "Pays de destination"
+msgstr "Destination country"
+
+msgid "Ville de destination"
+msgstr "Destination city"
+
+msgid "Poids du colis (kg)"
+msgstr "Parcel weight (kg)"
+
+msgid "Votre prix proposé par kg (€)"
+msgstr "Your proposed price per kg (€)"
+
+msgid "Ce montant sera versé au voyageur. +2,99€ frais KERALINK s'ajoutent au moment du paiement."
+msgstr "This amount will be paid to the traveler. +€2.99 KERALINK fee is added at payment."
+
+msgid "Total à payer (frais KERALINK 2,99€ inclus) :"
+msgstr "Total to pay (€2.99 KERALINK fee included):"
+
+msgid "Choisissez votre moyen de paiement"
+msgstr "Choose your payment method"
+
+# ===== FORMULAIRE VOYAGEUR =====
+msgid "Proposer un transport"
+msgstr "Offer transport"
+
+msgid "Pays de départ"
+msgstr "Departure country"
+
+msgid "Ville de départ"
+msgstr "Departure city"
+
+msgid "Date de départ"
+msgstr "Departure date"
+
+msgid "Heure de départ"
+msgstr "Departure time"
+
+msgid "Date d'arrivée"
+msgstr "Arrival date"
+
+msgid "Heure d'arrivée"
+msgstr "Arrival time"
+
+msgid "Poids disponible (kg)"
+msgstr "Available weight (kg)"
+
+msgid "Votre prix par kg (€)"
+msgstr "Your price per kg (€)"
+
+msgid "C'est le montant que vous recevrez par kg transporté. L'expéditeur paie 2,99€ de frais KERALINK en plus."
+msgstr "This is the amount you will receive per kg transported. The sender pays an additional €2.99 KERALINK fee."
+
+msgid "Type de kg disponible"
+msgstr "Available kg type"
+
+msgid "Kg en entier (tout ou rien)"
+msgstr "Full kg (all or nothing)"
+
+msgid "Kg en détail (fractionnable)"
+msgstr "Partial kg (fractional)"
+
+msgid "Vous recevrez (si tous les kg pris) :"
+msgstr "You will receive (if all kg taken):"
+
+# ===== PROFIL =====
+msgid "Créer votre profil"
+msgstr "Create your profile"
+
+msgid "ÊTES-VOUS ?"
+msgstr "WHO ARE YOU?"
+
+msgid "Voyageur"
+msgstr "Traveler"
+
+msgid "Expéditeur"
+msgstr "Sender"
+
+msgid "Nom complet"
+msgstr "Full name"
+
+msgid "Nom d'utilisateur"
+msgstr "Username"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Mot de passe"
+msgstr "Password"
+
+msgid "Confirmer"
+msgstr "Confirm"
+
+msgid "S'inscrire"
+msgstr "Sign up"
+
+msgid "Se connecter"
+msgstr "Log in"
+
+msgid "Continuer avec Google"
+msgstr "Continue with Google"
+
+msgid "ou s'inscrire manuellement"
+msgstr "or sign up manually"
+
+msgid "Pas encore de compte ?"
+msgstr "No account yet?"
+
+# ===== CONNEXION =====
+msgid "Connexion"
+msgstr "Login"
+
+msgid "Nom d'utilisateur ou Email"
+msgstr "Username or Email"
+
+# ===== ESPACE CONNECTÉ =====
+msgid "Tableau de bord"
+msgstr "Dashboard"
+
+msgid "Mes Matchings"
+msgstr "My Matchings"
+
+msgid "Demandes reçues"
+msgstr "Received requests"
+
+msgid "Messagerie"
+msgstr "Messaging"
+
+msgid "Support"
+msgstr "Support"
+
+msgid "Portefeuille"
+msgstr "Wallet"
+
+msgid "Remboursement"
+msgstr "Refund"
+
+msgid "Vue d'ensemble"
+msgstr "Overview"
+
+msgid "Matchings"
+msgstr "Matchings"
+
+msgid "En attente"
+msgstr "Pending"
+
+msgid "Confirmés"
+msgstr "Confirmed"
+
+msgid "Livrés"
+msgstr "Delivered"
+
+msgid "Gains"
+msgstr "Earnings"
+
+msgid "Bienvenue"
+msgstr "Welcome"
+
+msgid "Suivez vos demandes d'expédition et vos matchings depuis votre espace."
+msgstr "Track your shipping requests and matchings from your space."
+
+msgid "Gérez vos trajets et les demandes d'expédition reçues."
+msgstr "Manage your journeys and received shipping requests."
+
+# ===== LIVRAISON =====
+msgid "Confirmer la livraison"
+msgstr "Confirm delivery"
+
+msgid "Prendre une photo de confirmation"
+msgstr "Take a confirmation photo"
+
+msgid "Confirmer le colis livré au destinataire"
+msgstr "Confirm parcel delivered to recipient"
+
+msgid "Photo capturée — prête à envoyer"
+msgstr "Photo captured — ready to send"
+
+msgid "Photo de livraison"
+msgstr "Delivery photo"
+
+msgid "Cadrez le colis ou la remise au destinataire"
+msgstr "Frame the parcel or handover to recipient"
+
+msgid "Appuyez pour capturer"
+msgstr "Press to capture"
+
+# ===== CHAT =====
+msgid "Discuter avec nous"
+msgstr "Chat with us"
+
+msgid "Notre équipe répond généralement dans les 24h."
+msgstr "Our team usually responds within 24 hours."
+
+msgid "Tapez un message..."
+msgstr "Type a message..."
+
+msgid "Cliquez pour discuter"
+msgstr "Click to chat"
+
+msgid "Le chat est disponible après paiement et acceptation."
+msgstr "Chat is available after payment and acceptance."
+
+msgid "Acceptez une demande pour démarrer le chat."
+msgstr "Accept a request to start chatting."
+
+# ===== PAIEMENT =====
+msgid "Paiement Sécurisé"
+msgstr "Secure Payment"
+
+msgid "Paiement 100% sécurisé"
+msgstr "100% secure payment"
+
+msgid "Votre argent est sécurisé jusqu'à livraison du colis"
+msgstr "Your money is secured until parcel delivery"
+
+msgid "Payer par carte"
+msgstr "Pay by card"
+
+msgid "Numéro de carte"
+msgstr "Card number"
+
+msgid "Nom sur la carte"
+msgstr "Name on card"
+
+msgid "Date d'expiration"
+msgstr "Expiry date"
+
+msgid "Paiement réussi !"
+msgstr "Payment successful!"
+
+msgid "Votre paiement a été traité avec succès."
+msgstr "Your payment has been processed successfully."
+
+msgid "Télécharger ma facture de paiement"
+msgstr "Download my payment receipt"
+
+msgid "Accéder à mon espace"
+msgstr "Access my space"
+
+msgid "Créer mon profil pour suivre mon colis"
+msgstr "Create my profile to track my parcel"
+
+# ===== MATCHING =====
+msgid "En attente d'acceptation par le voyageur."
+msgstr "Waiting for traveler acceptance."
+
+msgid "Votre demande a été refusée par le voyageur."
+msgstr "Your request was refused by the traveler."
+
+msgid "Le chat sera disponible après confirmation du paiement."
+msgstr "Chat will be available after payment confirmation."
+
+msgid "Colis livré. En attente de confirmation de l'expéditeur."
+msgstr "Parcel delivered. Waiting for sender confirmation."
+
+msgid "Accepter"
+msgstr "Accept"
+
+msgid "Refuser"
+msgstr "Refuse"
+
+msgid "Aucun matching pour le moment."
+msgstr "No matching yet."
+
+msgid "Aucune demande reçue."
+msgstr "No requests received."
+
+# ===== REMBOURSEMENT =====
+msgid "Demande de remboursement"
+msgstr "Refund request"
+
+msgid "Conditions de remboursement"
+msgstr "Refund conditions"
+
+msgid "Montant payé"
+msgstr "Amount paid"
+
+msgid "Montant remboursable"
+msgstr "Refundable amount"
+
+msgid "Commission non remboursable"
+msgstr "Non-refundable fee"
+
+msgid "Motif (optionnel)"
+msgstr "Reason (optional)"
+
+msgid "Demander le remboursement"
+msgstr "Request refund"
+
+msgid "Aucun remboursement disponible."
+msgstr "No refund available."
+
+# ===== PORTEFEUILLE =====
+msgid "Mon Portefeuille"
+msgstr "My Wallet"
+
+msgid "Solde disponible"
+msgstr "Available balance"
+
+msgid "Gains débloqués par la plateforme"
+msgstr "Earnings unlocked by the platform"
+
+msgid "Demander un retrait"
+msgstr "Request withdrawal"
+
+msgid "Montant (€)"
+msgstr "Amount (€)"
+
+msgid "Mode de retrait"
+msgstr "Withdrawal method"
+
+msgid "Coordonnées de retrait"
+msgstr "Withdrawal details"
+
+msgid "Valider le retrait"
+msgstr "Confirm withdrawal"
+
+# ===== SUPPORT =====
+msgid "Discuter avec l'équipe KERALINK"
+msgstr "Chat with KERALINK team"
+
+msgid "Posez votre première question !"
+msgstr "Ask your first question!"
+
+# ===== FOOTER =====
+msgid "Transport de colis simple et sécurisé"
+msgstr "Simple and secure parcel transport"
+
+msgid "KERALINK connecte expéditeurs et voyageurs pour transporter vos colis partout dans le monde en toute sécurité."
+msgstr "KERALINK connects senders and travelers to transport your parcels anywhere in the world safely."
+
+msgid "Nos services"
+msgstr "Our services"
+
+msgid "Aide & Info"
+msgstr "Help & Info"
+
+msgid "Sécurité & Paiement"
+msgstr "Security & Payment"
+
+msgid "Fonds bloqués en séquestre"
+msgstr "Funds held in escrow"
+
+msgid "Photo de livraison obligatoire"
+msgstr "Mandatory delivery photo"
+
+msgid "Tous droits réservés."
+msgstr "All rights reserved."
+
+msgid "Retour en haut de page"
+msgstr "Back to top"
+
+# ===== CGU =====
+msgid "Conditions Générales d'Utilisation"
+msgstr "Terms of Use"
+
+msgid "J'ai lu et j'accepte les conditions"
+msgstr "I have read and accept the terms"
+
+msgid "Ils nous font confiance"
+msgstr "They trust us"
+
+msgid "visiteurs sur KERALINK"
+msgstr "visitors on KERALINK"
+
+msgid "Rejoignez la communauté"
+msgstr "Join the community"
+
+msgid "Rejoindre KERALINK →"
+msgstr "Join KERALINK →"
+
+# ===== ERREURS =====
+msgid "Veuillez remplir tous les champs obligatoires."
+msgstr "Please fill in all required fields."
+
+msgid "Indiquez un poids valide."
+msgstr "Please enter a valid weight."
+
+msgid "Indiquez votre prix par kg."
+msgstr "Please enter your price per kg."
+
+msgid "Choisissez un moyen de paiement."
+msgstr "Please choose a payment method."
+
+msgid "Identifiants incorrects"
+msgstr "Incorrect credentials"
+
+msgid "Nom utilisateur déjà utilisé"
+msgstr "Username already taken"

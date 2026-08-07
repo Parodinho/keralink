@@ -1,0 +1,290 @@
+# KERALINK — Traductions françaises
+# Language: fr
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KERALINK 1.0\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Toutes"
+msgstr "Toutes"
+
+msgid "Accueil"
+msgstr "Accueil"
+
+msgid "Comment ça marche"
+msgstr "Comment ça marche"
+
+msgid "Tarifs"
+msgstr "Tarifs"
+
+msgid "Mon espace"
+msgstr "Mon espace"
+
+msgid "Compte & Profil"
+msgstr "Compte & Profil"
+
+msgid "Lien sûr entre vos bagages et vos colis"
+msgstr "Lien sûr entre vos bagages et vos colis"
+
+msgid "Trouvez un voyageur pour transporter vos colis partout dans le monde — prix libres + 2,99€ de frais KERALINK"
+msgstr "Trouvez un voyageur pour transporter vos colis partout dans le monde — prix libres + 2,99€ de frais KERALINK"
+
+msgid "Voyageurs disponibles"
+msgstr "Voyageurs disponibles"
+
+msgid "Expéditeurs disponibles"
+msgstr "Expéditeurs disponibles"
+
+msgid "Aucun voyageur disponible"
+msgstr "Aucun voyageur disponible"
+
+msgid "Aucun expéditeur disponible"
+msgstr "Aucun expéditeur disponible"
+
+msgid "Sélectionner"
+msgstr "Sélectionner"
+
+msgid "Complet"
+msgstr "Complet"
+
+msgid "Publier ma demande"
+msgstr "Publier ma demande"
+
+msgid "Publier mon trajet"
+msgstr "Publier mon trajet"
+
+msgid "Confirmer et payer"
+msgstr "Confirmer et payer"
+
+msgid "Annuler"
+msgstr "Annuler"
+
+msgid "Expédier un colis"
+msgstr "Expédier un colis"
+
+msgid "Nom"
+msgstr "Nom"
+
+msgid "Prénom"
+msgstr "Prénom"
+
+msgid "Téléphone"
+msgstr "Téléphone"
+
+msgid "Pays"
+msgstr "Pays"
+
+msgid "Ville"
+msgstr "Ville"
+
+msgid "Pays de destination"
+msgstr "Pays de destination"
+
+msgid "Ville de destination"
+msgstr "Ville de destination"
+
+msgid "Poids du colis (kg)"
+msgstr "Poids du colis (kg)"
+
+msgid "Votre prix proposé par kg (€)"
+msgstr "Votre prix proposé par kg (€)"
+
+msgid "Total à payer (frais KERALINK 2,99€ inclus) :"
+msgstr "Total à payer (frais KERALINK 2,99€ inclus) :"
+
+msgid "Choisissez votre moyen de paiement"
+msgstr "Choisissez votre moyen de paiement"
+
+msgid "Proposer un transport"
+msgstr "Proposer un transport"
+
+msgid "Pays de départ"
+msgstr "Pays de départ"
+
+msgid "Ville de départ"
+msgstr "Ville de départ"
+
+msgid "Date de départ"
+msgstr "Date de départ"
+
+msgid "Heure de départ"
+msgstr "Heure de départ"
+
+msgid "Date d'arrivée"
+msgstr "Date d'arrivée"
+
+msgid "Heure d'arrivée"
+msgstr "Heure d'arrivée"
+
+msgid "Poids disponible (kg)"
+msgstr "Poids disponible (kg)"
+
+msgid "Votre prix par kg (€)"
+msgstr "Votre prix par kg (€)"
+
+msgid "Kg en entier (tout ou rien)"
+msgstr "Kg en entier (tout ou rien)"
+
+msgid "Kg en détail (fractionnable)"
+msgstr "Kg en détail (fractionnable)"
+
+msgid "Vous recevrez (si tous les kg pris) :"
+msgstr "Vous recevrez (si tous les kg pris) :"
+
+msgid "Créer votre profil"
+msgstr "Créer votre profil"
+
+msgid "ÊTES-VOUS ?"
+msgstr "ÊTES-VOUS ?"
+
+msgid "Voyageur"
+msgstr "Voyageur"
+
+msgid "Expéditeur"
+msgstr "Expéditeur"
+
+msgid "Nom complet"
+msgstr "Nom complet"
+
+msgid "Nom d'utilisateur"
+msgstr "Nom d'utilisateur"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Mot de passe"
+msgstr "Mot de passe"
+
+msgid "Confirmer"
+msgstr "Confirmer"
+
+msgid "S'inscrire"
+msgstr "S'inscrire"
+
+msgid "Se connecter"
+msgstr "Se connecter"
+
+msgid "Continuer avec Google"
+msgstr "Continuer avec Google"
+
+msgid "Pas encore de compte ?"
+msgstr "Pas encore de compte ?"
+
+msgid "Connexion"
+msgstr "Connexion"
+
+msgid "Tableau de bord"
+msgstr "Tableau de bord"
+
+msgid "Mes Matchings"
+msgstr "Mes Matchings"
+
+msgid "Demandes reçues"
+msgstr "Demandes reçues"
+
+msgid "Messagerie"
+msgstr "Messagerie"
+
+msgid "Support"
+msgstr "Support"
+
+msgid "Portefeuille"
+msgstr "Portefeuille"
+
+msgid "Remboursement"
+msgstr "Remboursement"
+
+msgid "Vue d'ensemble"
+msgstr "Vue d'ensemble"
+
+msgid "Matchings"
+msgstr "Matchings"
+
+msgid "En attente"
+msgstr "En attente"
+
+msgid "Confirmés"
+msgstr "Confirmés"
+
+msgid "Livrés"
+msgstr "Livrés"
+
+msgid "Bienvenue"
+msgstr "Bienvenue"
+
+msgid "Confirmer la livraison"
+msgstr "Confirmer la livraison"
+
+msgid "Prendre une photo de confirmation"
+msgstr "Prendre une photo de confirmation"
+
+msgid "Confirmer le colis livré au destinataire"
+msgstr "Confirmer le colis livré au destinataire"
+
+msgid "Photo de livraison"
+msgstr "Photo de livraison"
+
+msgid "Paiement Sécurisé"
+msgstr "Paiement Sécurisé"
+
+msgid "Paiement réussi !"
+msgstr "Paiement réussi !"
+
+msgid "Télécharger ma facture de paiement"
+msgstr "Télécharger ma facture de paiement"
+
+msgid "Mon Portefeuille"
+msgstr "Mon Portefeuille"
+
+msgid "Solde disponible"
+msgstr "Solde disponible"
+
+msgid "Demander un retrait"
+msgstr "Demander un retrait"
+
+msgid "Demande de remboursement"
+msgstr "Demande de remboursement"
+
+msgid "Conditions Générales d'Utilisation"
+msgstr "Conditions Générales d'Utilisation"
+
+msgid "Ils nous font confiance"
+msgstr "Ils nous font confiance"
+
+msgid "visiteurs sur KERALINK"
+msgstr "visiteurs sur KERALINK"
+
+msgid "Rejoignez la communauté"
+msgstr "Rejoignez la communauté"
+
+msgid "Nos services"
+msgstr "Nos services"
+
+msgid "Aide & Info"
+msgstr "Aide & Info"
+
+msgid "Sécurité & Paiement"
+msgstr "Sécurité & Paiement"
+
+msgid "Tous droits réservés."
+msgstr "Tous droits réservés."
+
+msgid "Retour en haut de page"
+msgstr "Retour en haut de page"
+
+msgid "Accepter"
+msgstr "Accepter"
+
+msgid "Refuser"
+msgstr "Refuser"
+
+msgid "Aucun matching pour le moment."
+msgstr "Aucun matching pour le moment."
+
+msgid "Aucune demande reçue."
+msgstr "Aucune demande reçue."

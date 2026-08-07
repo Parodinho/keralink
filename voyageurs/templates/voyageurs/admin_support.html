@@ -1,9 +1,10 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Support — {{ nom_utilisateur }}</title>
+    <title>{% trans "Support" %} — {{ nom_utilisateur }}</title>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
         body { background:#f0f2f5; }
@@ -70,14 +71,14 @@
 <body>
 
 <div class="header">
-    <h2>💬 Conversation avec {{ nom_utilisateur }}</h2>
-    <a href="/admin/voyageurs/messagesupport/" class="back">← Retour à la liste</a>
+    <h2>💬 {% trans "Conversation avec" %} {{ nom_utilisateur }}</h2>
+    <a href="/admin/voyageurs/messagesupport/" class="back">← {% trans "Retour à la liste" %}</a>
 </div>
 
 <div class="chat-wrap">
     <div class="chat-box">
         <div class="chat-topbar">
-            👤 {{ nom_utilisateur }} — Support KERALINK
+            👤 {{ nom_utilisateur }} — {% trans "Support KERALINK" %}
         </div>
         <div class="info-bar">
             guest_id : {{ guest_id }}
@@ -86,18 +87,18 @@
             {% for m in messages %}
             <div class="bubble {% if m.sender == 'admin' %}bubble-admin{% else %}bubble-user{% endif %}">
                 <div class="bubble-sender">
-                    {% if m.sender == 'admin' %}👨‍💼 Admin{% else %}👤 {{ m.nom_complet }}{% endif %}
+                    {% if m.sender == 'admin' %}👨‍💼 {% trans "Admin" %}{% else %}👤 {{ m.nom_complet }}{% endif %}
                 </div>
                 {{ m.contenu }}
                 <div class="bubble-time">{{ m.date|date:"d/m H:i" }}</div>
             </div>
             {% empty %}
-            <p style="color:#aaa;text-align:center;margin-top:40px;">Aucun message</p>
+            <p style="color:#aaa;text-align:center;margin-top:40px;">{% trans "Aucun message" %}</p>
             {% endfor %}
         </div>
         <form method="POST" class="reply-bar">
             {% csrf_token %}
-            <textarea name="contenu" placeholder="Votre réponse..." required
+            <textarea name="contenu" placeholder="{% trans 'Votre réponse...' %}" required
                       onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();this.form.submit();}"></textarea>
             <button type="submit" class="btn-send">➤</button>
         </form>
