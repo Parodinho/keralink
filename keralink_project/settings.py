@@ -79,9 +79,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'nongniparolien@gmail.com'     
-EMAIL_HOST_PASSWORD = 'ztxu ylvp wryt dyez'
-DEFAULT_FROM_EMAIL = 'KERALINK <nongniparolien@gmail.com>'
+EMAIL_HOST_USER = 'contact.keralink26@gmail.com'     
+EMAIL_HOST_PASSWORD = 'hfup vabz gkyq nvgk'
+DEFAULT_FROM_EMAIL = 'KERALINK <contact.keralink26@gmail.com>'
 
 # ===== CELERY =====
 #CELERY_BROKER_URL = 'redis://localhost:6379/0'
