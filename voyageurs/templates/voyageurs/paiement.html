@@ -1,7 +1,8 @@
 {% load static %}
 {% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -384,8 +385,9 @@ function envoyerPaiement(mode) {
                 reference: data.reference,
                 nom: 'Client KERALINK',
                 montant: parseFloat(MONTANT),
-                montant_voyageur: parseFloat(MONTANT) - (parseFloat(MONTANT) * 0.2 / 10.2),
-                montant_commission: parseFloat(MONTANT) * 0.2 / 10.2,
+                montant_voyageur: parseFloat(MONTANT) - 2.99,
+                montant_commission: 2.99,
+                prix_par_kg: 0,
                 mode_paiement: mode,
                 trajet: 'Trajet KERALINK',
                 poids: '—',
@@ -533,12 +535,12 @@ function telechargerFacture() {
             <tbody>
                 <tr>
                     <td>💼 Transport de colis par voyageur</td>
-                    <td style="color:#666;font-size:0.85rem;">${factureData.poids} kg × 10,00 €/kg</td>
+                    <td style="color:#666;font-size:0.85rem;">${factureData.poids} kg × ${parseFloat(factureData.prix_par_kg || 0).toFixed(2)} €/kg</td>
                     <td style="color:#2e7d32;">${parseFloat(factureData.montant_voyageur).toFixed(2)} €</td>
                 </tr>
                 <tr>
                     <td>🏢 Commission KERALINK</td>
-                    <td style="color:#666;font-size:0.85rem;">${factureData.poids} kg × 0,20 €/kg</td>
+                    <td style="color:#666;font-size:0.85rem;">${factureData.poids} kg Frais fixes KERALINK</td>
                     <td style="color:#e65100;">${parseFloat(factureData.montant_commission).toFixed(2)} €</td>
                 </tr>
                 <tr>

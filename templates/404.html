@@ -1,0 +1,96 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Page introuvable - KERALINK" %}</title>
+    <link rel="icon" href="{% static 'voyageurs/images/logo3.png' %}">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body {
+            background: #f0f2f5; min-height: 100vh;
+            display: flex; flex-direction: column;
+        }
+
+        .nav-error {
+            background: linear-gradient(90deg, #0A1F44, #1E3A8A);
+            padding: 0 2rem; height: 60px;
+            display: flex; align-items: center;
+        }
+        .nav-error img { height: 34px; }
+
+        .wrap {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 24px;
+        }
+
+        .card {
+            background: white; border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+            max-width: 480px; width: 100%;
+            text-align: center; overflow: hidden;
+        }
+        .card-header {
+            background: linear-gradient(120deg, #0A1F44, #1E3A8A);
+            padding: 32px 24px; color: white;
+        }
+        .code {
+            font-size: 4rem; font-weight: 900;
+            letter-spacing: 4px; color: #FF7A00;
+            line-height: 1;
+        }
+        .card-header p {
+            margin-top: 8px; font-size: 0.95rem; opacity: 0.85;
+        }
+        .card-body { padding: 28px; }
+        .card-body h2 {
+            font-size: 1.15rem; color: #0A1F44; margin-bottom: 10px;
+        }
+        .card-body p {
+            font-size: 0.9rem; color: #666; margin-bottom: 24px; line-height: 1.5;
+        }
+        .btn-retour {
+            display: inline-block;
+            background: linear-gradient(90deg, #FF7A00, #e66900);
+            color: white; text-decoration: none;
+            padding: 12px 32px; border-radius: 10px;
+            font-weight: bold; font-size: 0.95rem;
+            transition: 0.2s;
+        }
+        .btn-retour:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .footer-error {
+            text-align: center; padding: 16px; font-size: 0.78rem; color: #999;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav-error">
+    <img src="{% static 'voyageurs/images/logo3.png' %}" alt="KERALINK">
+</nav>
+
+<div class="wrap">
+    <div class="card">
+        <div class="card-header">
+            <div class="code">404</div>
+            <p>{% trans "Oups, cette page n'existe pas" %}</p>
+        </div>
+        <div class="card-body">
+            <h2>📦 {% trans "Page introuvable" %}</h2>
+            <p>
+                {% trans "Le lien que vous avez suivi est peut-être incorrect, ou la page a été déplacée. Pas d'inquiétude, votre colis (et votre compte) n'ont rien perdu au passage." %}
+            </p>
+            <a href="/" class="btn-retour">← {% trans "Retour à l'accueil" %}</a>
+        </div>
+    </div>
+</div>
+
+<div class="footer-error">
+    © {% now "Y" %} KERALINK — {% trans "Transport de colis simple et sécurisé" %}
+</div>
+
+</body>
+</html>

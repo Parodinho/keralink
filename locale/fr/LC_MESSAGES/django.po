@@ -4,287 +4,1417 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KERALINK 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-20 03:44+0200\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "Toutes"
-msgstr "Toutes"
+#: .\keralink_project\settings.py:185
+#: .\voyageurs\templates\voyageurs\home.html:82
+msgid "Français"
+msgstr ""
 
-msgid "Accueil"
-msgstr "Accueil"
+#: .\keralink_project\settings.py:186
+#: .\voyageurs\templates\voyageurs\home.html:87
+msgid "English"
+msgstr ""
 
-msgid "Comment ça marche"
-msgstr "Comment ça marche"
-
-msgid "Tarifs"
-msgstr "Tarifs"
-
-msgid "Mon espace"
-msgstr "Mon espace"
-
-msgid "Compte & Profil"
-msgstr "Compte & Profil"
-
-msgid "Lien sûr entre vos bagages et vos colis"
-msgstr "Lien sûr entre vos bagages et vos colis"
-
-msgid "Trouvez un voyageur pour transporter vos colis partout dans le monde — prix libres + 2,99€ de frais KERALINK"
-msgstr "Trouvez un voyageur pour transporter vos colis partout dans le monde — prix libres + 2,99€ de frais KERALINK"
-
-msgid "Voyageurs disponibles"
-msgstr "Voyageurs disponibles"
-
-msgid "Expéditeurs disponibles"
-msgstr "Expéditeurs disponibles"
-
-msgid "Aucun voyageur disponible"
-msgstr "Aucun voyageur disponible"
-
-msgid "Aucun expéditeur disponible"
-msgstr "Aucun expéditeur disponible"
-
-msgid "Sélectionner"
-msgstr "Sélectionner"
-
-msgid "Complet"
-msgstr "Complet"
-
-msgid "Publier ma demande"
-msgstr "Publier ma demande"
-
-msgid "Publier mon trajet"
-msgstr "Publier mon trajet"
-
-msgid "Confirmer et payer"
-msgstr "Confirmer et payer"
-
-msgid "Annuler"
-msgstr "Annuler"
-
-msgid "Expédier un colis"
-msgstr "Expédier un colis"
-
-msgid "Nom"
-msgstr "Nom"
-
-msgid "Prénom"
-msgstr "Prénom"
-
-msgid "Téléphone"
-msgstr "Téléphone"
-
-msgid "Pays"
-msgstr "Pays"
-
-msgid "Ville"
-msgstr "Ville"
-
-msgid "Pays de destination"
-msgstr "Pays de destination"
-
-msgid "Ville de destination"
-msgstr "Ville de destination"
-
-msgid "Poids du colis (kg)"
-msgstr "Poids du colis (kg)"
-
-msgid "Votre prix proposé par kg (€)"
-msgstr "Votre prix proposé par kg (€)"
-
-msgid "Total à payer (frais KERALINK 2,99€ inclus) :"
-msgstr "Total à payer (frais KERALINK 2,99€ inclus) :"
-
-msgid "Choisissez votre moyen de paiement"
-msgstr "Choisissez votre moyen de paiement"
-
-msgid "Proposer un transport"
-msgstr "Proposer un transport"
-
-msgid "Pays de départ"
-msgstr "Pays de départ"
-
-msgid "Ville de départ"
-msgstr "Ville de départ"
-
-msgid "Date de départ"
-msgstr "Date de départ"
-
-msgid "Heure de départ"
-msgstr "Heure de départ"
-
-msgid "Date d'arrivée"
-msgstr "Date d'arrivée"
-
-msgid "Heure d'arrivée"
-msgstr "Heure d'arrivée"
-
-msgid "Poids disponible (kg)"
-msgstr "Poids disponible (kg)"
-
-msgid "Votre prix par kg (€)"
-msgstr "Votre prix par kg (€)"
-
-msgid "Kg en entier (tout ou rien)"
-msgstr "Kg en entier (tout ou rien)"
-
-msgid "Kg en détail (fractionnable)"
-msgstr "Kg en détail (fractionnable)"
-
-msgid "Vous recevrez (si tous les kg pris) :"
-msgstr "Vous recevrez (si tous les kg pris) :"
-
-msgid "Créer votre profil"
-msgstr "Créer votre profil"
-
-msgid "ÊTES-VOUS ?"
-msgstr "ÊTES-VOUS ?"
-
-msgid "Voyageur"
-msgstr "Voyageur"
-
-msgid "Expéditeur"
-msgstr "Expéditeur"
-
-msgid "Nom complet"
-msgstr "Nom complet"
-
-msgid "Nom d'utilisateur"
-msgstr "Nom d'utilisateur"
-
-msgid "Email"
-msgstr "Email"
-
-msgid "Mot de passe"
-msgstr "Mot de passe"
-
-msgid "Confirmer"
-msgstr "Confirmer"
-
-msgid "S'inscrire"
-msgstr "S'inscrire"
-
-msgid "Se connecter"
-msgstr "Se connecter"
-
-msgid "Continuer avec Google"
-msgstr "Continuer avec Google"
-
-msgid "Pas encore de compte ?"
-msgstr "Pas encore de compte ?"
-
-msgid "Connexion"
-msgstr "Connexion"
-
-msgid "Tableau de bord"
-msgstr "Tableau de bord"
-
-msgid "Mes Matchings"
-msgstr "Mes Matchings"
-
-msgid "Demandes reçues"
-msgstr "Demandes reçues"
-
-msgid "Messagerie"
-msgstr "Messagerie"
-
+#: .\voyageurs\templates\voyageurs\admin_support.html:7
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:335
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:393
 msgid "Support"
 msgstr "Support"
 
+#: .\voyageurs\templates\voyageurs\admin_support.html:74
+msgid "Conversation avec"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\admin_support.html:75
+msgid "Retour à la liste"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\admin_support.html:81
+#, fuzzy
+#| msgid "Support"
+msgid "Support KERALINK"
+msgstr "Support"
+
+#: .\voyageurs\templates\voyageurs\admin_support.html:90
+msgid "Admin"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\admin_support.html:96
+msgid "Aucun message"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\admin_support.html:101
+msgid "Votre réponse..."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:8
+msgid "Compléter mon profil - KERALINK"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:80
+#, fuzzy
+#| msgid "Continuer avec Google"
+msgid "Connecté avec Google"
+msgstr "Continuer avec Google"
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:86
+#, fuzzy
+#| msgid "Créer votre profil"
+msgid "Complétez votre profil KERALINK"
+msgstr "Créer votre profil"
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:87
+msgid "Quelques informations supplémentaires pour démarrer"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:90
+#, fuzzy
+#| msgid "Continuer avec Google"
+msgid "Connecté via Google"
+msgstr "Continuer avec Google"
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:96
+msgid ""
+"Votre compte Google a été vérifié. Choisissez votre rôle et complétez votre "
+"profil."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:101
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:114
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:370
+msgid "Expéditeur"
+msgstr "Expéditeur"
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:104
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:117
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:370
+#: .\voyageurs\templates\voyageurs\historique.html:77
+msgid "Voyageur"
+msgstr "Voyageur"
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:110
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:123
+msgid "Nom complet"
+msgstr "Nom complet"
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:115
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:128
+#: .\voyageurs\templates\voyageurs\home.html:409
+#: .\voyageurs\templates\voyageurs\home.html:597
+msgid "Nom d'utilisateur"
+msgstr "Nom d'utilisateur"
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:116
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:129
+msgid "ex: jean_dupont"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:120
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:133
+#: .\voyageurs\templates\voyageurs\home.html:413
+#: .\voyageurs\templates\voyageurs\home.html:601
+msgid "Email"
+msgstr "Email"
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:125
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:138
+#: .\voyageurs\templates\voyageurs\home.html:469
+#: .\voyageurs\templates\voyageurs\home.html:656
+msgid "Téléphone"
+msgstr "Téléphone"
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:131
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:144
+#: .\voyageurs\templates\voyageurs\home.html:418
+#: .\voyageurs\templates\voyageurs\home.html:438
+#: .\voyageurs\templates\voyageurs\home.html:606
+#: .\voyageurs\templates\voyageurs\home.html:625
+#: .\voyageurs\templates\voyageurs\home.html:817
+#: .\voyageurs\templates\voyageurs\login.html:23
+msgid "Mot de passe"
+msgstr "Mot de passe"
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:135
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:148
+#: .\voyageurs\templates\voyageurs\home.html:422
+#: .\voyageurs\templates\voyageurs\home.html:610
+msgid "Confirmer"
+msgstr "Confirmer"
+
+#: .\voyageurs\templates\voyageurs\completer_profil_google.html:141
+#, fuzzy
+#| msgid "Créer votre profil"
+msgid "Créer mon profil KERALINK"
+msgstr "Créer votre profil"
+
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:8
+#, fuzzy
+#| msgid "Créer votre profil"
+msgid "Créer mon profil - KERALINK"
+msgstr "Créer votre profil"
+
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:96
+#, fuzzy
+#| msgid "Paiement Sécurisé"
+msgid "Paiement confirmé"
+msgstr "Paiement Sécurisé"
+
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:102
+#, fuzzy
+#| msgid "Créer votre profil"
+msgid "Créez votre profil"
+msgstr "Créer votre profil"
+
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:103
+msgid ""
+"Votre paiement est sécurisé. Créez votre compte pour suivre votre colis."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:104
+msgid "Paiement enregistré avec succès"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:109
+msgid ""
+"Votre demande d'expédition a bien été enregistrée et votre paiement est "
+"sécurisé. Créez votre profil pour accéder à votre espace et suivre l'état de "
+"votre colis."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:134
+#: .\voyageurs\templates\voyageurs\paiement.html:235
+msgid "votre@email.com"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\creer_profil_page.html:154
+msgid "Créer mon profil et accéder à mon espace"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:9
+msgid "Espace Connecté - KERALINK"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:273
+msgid "Rechercher..."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:283
+msgid "Connecté en tant que"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:292
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:894
+msgid "Retour"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:293
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:307
+#: .\voyageurs\templates\voyageurs\home.html:179
+msgid "Accueil"
+msgstr "Accueil"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:314
+#: .\voyageurs\templates\voyageurs\historique.html:53
+#: .\voyageurs\templates\voyageurs\home.html:129
+#: .\voyageurs\templates\voyageurs\home.html:224
+#: .\voyageurs\templates\voyageurs\home.html:947
+msgid "Mon espace"
+msgstr "Mon espace"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:321
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:380
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:713
+msgid "Mes Matchings"
+msgstr "Mes Matchings"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:328
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:390
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:856
+msgid "Messagerie"
+msgstr "Messagerie"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:343
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:400
 msgid "Portefeuille"
 msgstr "Portefeuille"
 
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:352
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:408
 msgid "Remboursement"
 msgstr "Remboursement"
 
-msgid "Vue d'ensemble"
-msgstr "Vue d'ensemble"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:377
+msgid "Tableau de bord"
+msgstr "Tableau de bord"
 
-msgid "Matchings"
-msgstr "Matchings"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:385
+msgid "Demandes reçues"
+msgstr "Demandes reçues"
 
-msgid "En attente"
-msgstr "En attente"
-
-msgid "Confirmés"
-msgstr "Confirmés"
-
-msgid "Livrés"
-msgstr "Livrés"
-
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:423
 msgid "Bienvenue"
 msgstr "Bienvenue"
 
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:426
+msgid "Suivez vos demandes d'expédition et vos matchings depuis votre espace."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:428
+msgid "Gérez vos trajets, demandes reçues et gains depuis votre espace."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:442
+#, fuzzy
+#| msgid "Publier mon trajet"
+msgid "Publier un trajet"
+msgstr "Publier mon trajet"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:442
+#, fuzzy
+#| msgid "Publier ma demande"
+msgid "Publier une demande"
+msgstr "Publier ma demande"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:449
+msgid "Vue d'ensemble"
+msgstr "Vue d'ensemble"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:454
+msgid "Publications"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:458
+msgid "Matchings"
+msgstr "Matchings"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:463
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:725
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:751
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:800
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:842
+msgid "En attente"
+msgstr "En attente"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:467
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:486
+msgid "Livrés"
+msgstr "Livrés"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:475
+msgid "Gains"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:482
+msgid "Confirmés"
+msgstr "Confirmés"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:502
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1174
 msgid "Confirmer la livraison"
 msgstr "Confirmer la livraison"
 
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:532
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1201
+msgid "Photo capturée — prête à envoyer"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:543
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1212
 msgid "Prendre une photo de confirmation"
 msgstr "Prendre une photo de confirmation"
 
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:551
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1218
 msgid "Confirmer le colis livré au destinataire"
 msgstr "Confirmer le colis livré au destinataire"
 
-msgid "Photo de livraison"
-msgstr "Photo de livraison"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:571
+msgid "Gain débloqué"
+msgstr ""
 
-msgid "Paiement Sécurisé"
-msgstr "Paiement Sécurisé"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:587
+#, fuzzy
+#| msgid "Confirmés"
+msgid "Confirmé"
+msgstr "Confirmés"
 
-msgid "Paiement réussi !"
-msgstr "Paiement réussi !"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:613
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1781
+msgid "Retrait effectué"
+msgstr ""
 
-msgid "Télécharger ma facture de paiement"
-msgstr "Télécharger ma facture de paiement"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:631
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1771
+msgid "Traité avec succès"
+msgstr ""
 
-msgid "Mon Portefeuille"
-msgstr "Mon Portefeuille"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:634
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1773
+msgid "En cours de traitement"
+msgstr ""
 
-msgid "Solde disponible"
-msgstr "Solde disponible"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:637
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1774
+msgid "Refusé — solde recrédité"
+msgstr ""
 
-msgid "Demander un retrait"
-msgstr "Demander un retrait"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:662
+#, fuzzy
+#| msgid "Voyageur"
+msgid "Espace Voyageur"
+msgstr "Voyageur"
 
-msgid "Demande de remboursement"
-msgstr "Demande de remboursement"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:674
+msgid "Votre colis a été livré — Confirmez la réception"
+msgstr ""
 
-msgid "Conditions Générales d'Utilisation"
-msgstr "Conditions Générales d'Utilisation"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:676
+#, fuzzy
+#| msgid "Voyageur"
+msgid "Le voyageur"
+msgstr "Voyageur"
 
-msgid "Ils nous font confiance"
-msgstr "Ils nous font confiance"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:691
+msgid "Important"
+msgstr ""
 
-msgid "visiteurs sur KERALINK"
-msgstr "visiteurs sur KERALINK"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:691
+msgid "Si vous ne confirmez pas dans les"
+msgstr ""
 
-msgid "Rejoignez la communauté"
-msgstr "Rejoignez la communauté"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:695
+msgid "Confirmer la bonne réception de mon colis"
+msgstr ""
 
-msgid "Nos services"
-msgstr "Nos services"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:702
+#, fuzzy
+#| msgid "Expéditeur"
+msgid "Espace Expéditeur"
+msgstr "Expéditeur"
 
-msgid "Aide & Info"
-msgstr "Aide & Info"
-
-msgid "Sécurité & Paiement"
-msgstr "Sécurité & Paiement"
-
-msgid "Tous droits réservés."
-msgstr "Tous droits réservés."
-
-msgid "Retour en haut de page"
-msgstr "Retour en haut de page"
-
-msgid "Accepter"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:726
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:801
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1102
+#, fuzzy
+#| msgid "Accepter"
+msgid "Accepté"
 msgstr "Accepter"
 
-msgid "Refuser"
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:727
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:802
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1110
+#, fuzzy
+#| msgid "Refuser"
+msgid "Refusé"
 msgstr "Refuser"
 
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:728
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:803
+#, fuzzy
+#| msgid "Livrés"
+msgid "Livré"
+msgstr "Livrés"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:780
 msgid "Aucun matching pour le moment."
 msgstr "Aucun matching pour le moment."
 
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:788
+#, fuzzy
+#| msgid "Demandes reçues"
+msgid "Demandes d'expédition reçues"
+msgstr "Demandes reçues"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:812
+msgid ""
+"J'accepte de transporter ce colis et confirme avoir vérifié son contenu."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:816
+msgid "Je confirme ma disponibilité pour ce trajet."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:848
 msgid "Aucune demande reçue."
 msgstr "Aucune demande reçue."
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:871
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1479
+msgid "Cliquez pour discuter"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:899
+msgid "Tapez un message..."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:918
+msgid "Discuter avec nous"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:933
+msgid "Aucun message. Posez votre première question !"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:938
+msgid "Votre message..."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:952
+msgid "Mon Portefeuille"
+msgstr "Mon Portefeuille"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:956
+msgid "Solde disponible"
+msgstr "Solde disponible"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:960
+msgid "Gains débloqués par la plateforme"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:964
+msgid "Demander un retrait"
+msgstr "Demander un retrait"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:966
+msgid "Montant (€)"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:967
+msgid "Ex: 50"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:971
+#, fuzzy
+#| msgid "Demander un retrait"
+msgid "Mode de retrait"
+msgstr "Demander un retrait"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:980
+msgid "Numéro / Email de réception"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:982
+msgid "Ex: +33 6 12 34 56 78 ou email@paypal.com"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1005
+msgid "Demande de remboursement"
+msgstr "Demande de remboursement"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1009
+#, fuzzy
+#| msgid "Demande de remboursement"
+msgid "Conditions de remboursement"
+msgstr "Demande de remboursement"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1010
+msgid "selon le prix de kg"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1017
+#, fuzzy
+#| msgid "Paiement Sécurisé"
+msgid "Paiement bloqué"
+msgstr "Paiement Sécurisé"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1019
+msgid "Montant payé"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1028
+msgid "Motif (optionnel)"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1032
+#, fuzzy
+#| msgid "Aucun voyageur disponible"
+msgid "Ex: Aucun voyageur disponible..."
+msgstr "Aucun voyageur disponible"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1036
+#, fuzzy
+#| msgid "Demande de remboursement"
+msgid "Demander le remboursement"
+msgstr "Demande de remboursement"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1043
+#, fuzzy
+#| msgid "Aucun voyageur disponible"
+msgid "Aucun remboursement disponible."
+msgstr "Aucun voyageur disponible"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1319
+msgid "Activation de la caméra..."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1439
+msgid "Livraison confirmée avec photo"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1622
+#, fuzzy
+#| msgid "Photo de livraison"
+msgid "Photo de confirmation de livraison"
+msgstr "Photo de livraison"
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1706
+msgid "Demande envoyée avec succès !"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\espace_connecte.html:1710
+#, fuzzy
+#| msgid "Télécharger ma facture de paiement"
+msgid "Télécharger la Facture"
+msgstr "Télécharger ma facture de paiement"
+
+#: .\voyageurs\templates\voyageurs\historique.html:9
+#, fuzzy
+#| msgid "visiteurs sur KERALINK"
+msgid "Historique - KERALINK"
+msgstr "visiteurs sur KERALINK"
+
+#: .\voyageurs\templates\voyageurs\historique.html:52
+msgid "Historique des transactions"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\historique.html:66
+msgid "Bloqué"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\historique.html:67
+msgid "Versé"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\historique.html:68
+#, fuzzy
+#| msgid "Remboursement"
+msgid "Remboursé"
+msgstr "Remboursement"
+
+#: .\voyageurs\templates\voyageurs\historique.html:69
+#, fuzzy
+#| msgid "Remboursement"
+msgid "Remboursement demandé"
+msgstr "Remboursement"
+
+#: .\voyageurs\templates\voyageurs\historique.html:78
+msgid "Commission"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\historique.html:85
+#, fuzzy
+#| msgid "Aucun matching pour le moment."
+msgid "Aucune transaction pour le moment."
+msgstr "Aucun matching pour le moment."
+
+#: .\voyageurs\templates\voyageurs\home.html:9
+msgid "KERALINK - Transport de colis simple et sécurisé"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:42
+msgid "Toutes catégories"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:43
+#, fuzzy
+#| msgid "Voyageur"
+msgid "Voyageurs"
+msgstr "Voyageur"
+
+#: .\voyageurs\templates\voyageurs\home.html:44
+#, fuzzy
+#| msgid "Expéditeur"
+msgid "Expéditeurs"
+msgstr "Expéditeur"
+
+#: .\voyageurs\templates\voyageurs\home.html:45
+msgid "Europe"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:46
+msgid "Afrique"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:47
+msgid "Amérique"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:48
+msgid "Asie"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:52
+msgid "Rechercher un trajet, une ville, un pays..."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:109
+msgid "Euro"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:110
+msgid "Dollar américain"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:111
+msgid "Livre Sterling"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:112
+msgid "Franc CFA"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:113
+msgid "Yen japonais"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:114
+msgid "Dollar canadien"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:115
+msgid "Franc suisse"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:116
+msgid "Dirham marocain"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:117
+msgid "Dinar algérien"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:118
+msgid "Dinar tunisien"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:128
+#, fuzzy
+#| msgid "Remboursement"
+msgid "Retours et"
+msgstr "Remboursement"
+
+#: .\voyageurs\templates\voyageurs\home.html:146
+msgid "Toutes"
+msgstr "Toutes"
+
+#: .\voyageurs\templates\voyageurs\home.html:157
+#: .\voyageurs\templates\voyageurs\home.html:242
+#: .\voyageurs\templates\voyageurs\home.html:948
+msgid "Voyageurs disponibles"
+msgstr "Voyageurs disponibles"
+
+#: .\voyageurs\templates\voyageurs\home.html:163
+#: .\voyageurs\templates\voyageurs\home.html:319
+#: .\voyageurs\templates\voyageurs\home.html:949
+msgid "Expéditeurs disponibles"
+msgstr "Expéditeurs disponibles"
+
+#: .\voyageurs\templates\voyageurs\home.html:187
+#: .\voyageurs\templates\voyageurs\home.html:794
+#, fuzzy
+#| msgid "Expéditeur"
+msgid "Expédier"
+msgstr "Expéditeur"
+
+#: .\voyageurs\templates\voyageurs\home.html:195
+#: .\voyageurs\templates\voyageurs\home.html:798
+#, fuzzy
+#| msgid "Voyageur"
+msgid "Voyager"
+msgstr "Voyageur"
+
+#: .\voyageurs\templates\voyageurs\home.html:203
+#: .\voyageurs\templates\voyageurs\home.html:809
+msgid "Connexion"
+msgstr "Connexion"
+
+#: .\voyageurs\templates\voyageurs\home.html:210
+#: .\voyageurs\templates\voyageurs\home.html:960
+msgid "Comment ça marche"
+msgstr "Comment ça marche"
+
+#: .\voyageurs\templates\voyageurs\home.html:217
+msgid "Tarifs"
+msgstr "Tarifs"
+
+#: .\voyageurs\templates\voyageurs\home.html:236
+msgid "Lien sûr entre vos bagages et vos colis"
+msgstr "Lien sûr entre vos bagages et vos colis"
+
+#: .\voyageurs\templates\voyageurs\home.html:237
+#, fuzzy
+#| msgid ""
+#| "Trouvez un voyageur pour transporter vos colis partout dans le monde — "
+#| "prix libres + 2,99€ de frais KERALINK"
+msgid ""
+"Trouvez un voyageur pour transporter vos colis partout dans le monde — prix "
+"libres"
+msgstr ""
+"Trouvez un voyageur pour transporter vos colis partout dans le monde — prix "
+"libres + 2,99€ de frais KERALINK"
+
+#: .\voyageurs\templates\voyageurs\home.html:256
+msgid "COMPLET"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:267
+#, fuzzy
+#| msgid "Date de départ"
+msgid "Départ"
+msgstr "Date de départ"
+
+#: .\voyageurs\templates\voyageurs\home.html:268
+#, fuzzy
+#| msgid "Date d'arrivée"
+msgid "Arrivée"
+msgstr "Date d'arrivée"
+
+#: .\voyageurs\templates\voyageurs\home.html:271
+msgid "Poids"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:278
+msgid "En détail"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:278
+msgid "En entier"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:290
+#, fuzzy
+#| msgid "Solde disponible"
+msgid "disponibles"
+msgstr "Solde disponible"
+
+#: .\voyageurs\templates\voyageurs\home.html:301
+#: .\voyageurs\templates\voyageurs\home.html:356
+msgid "Complet"
+msgstr "Complet"
+
+#: .\voyageurs\templates\voyageurs\home.html:306
+#: .\voyageurs\templates\voyageurs\home.html:361
+msgid "Sélectionner"
+msgstr "Sélectionner"
+
+#: .\voyageurs\templates\voyageurs\home.html:312
+msgid "Aucun voyageur disponible"
+msgstr "Aucun voyageur disponible"
+
+#: .\voyageurs\templates\voyageurs\home.html:340
+msgid "Colis"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:345
+msgid "à transporter"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:351
+msgid "pour vous (voyageur)"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:367
+msgid "Aucun expéditeur disponible"
+msgstr "Aucun expéditeur disponible"
+
+#: .\voyageurs\templates\voyageurs\home.html:379
+#: .\voyageurs\templates\voyageurs\home.html:451
+#: .\voyageurs\templates\voyageurs\home.html:945
+msgid "Expédier un colis"
+msgstr "Expédier un colis"
+
+#: .\voyageurs\templates\voyageurs\home.html:381
+msgid "Connectez-vous ou créez un compte pour publier votre demande"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:387
+#: .\voyageurs\templates\voyageurs\home.html:577
+msgid "S'inscrire"
+msgstr "S'inscrire"
+
+#: .\voyageurs\templates\voyageurs\home.html:391
+#: .\voyageurs\templates\voyageurs\home.html:442
+#: .\voyageurs\templates\voyageurs\home.html:581
+#: .\voyageurs\templates\voyageurs\home.html:629
+#: .\voyageurs\templates\voyageurs\home.html:789
+#: .\voyageurs\templates\voyageurs\home.html:821
+#: .\voyageurs\templates\voyageurs\login.html:27
+msgid "Se connecter"
+msgstr "Se connecter"
+
+#: .\voyageurs\templates\voyageurs\home.html:400
+#: .\voyageurs\templates\voyageurs\home.html:459
+#: .\voyageurs\templates\voyageurs\home.html:588
+#: .\voyageurs\templates\voyageurs\home.html:646
+msgid "Nom"
+msgstr "Nom"
+
+#: .\voyageurs\templates\voyageurs\home.html:404
+#: .\voyageurs\templates\voyageurs\home.html:463
+#: .\voyageurs\templates\voyageurs\home.html:592
+#: .\voyageurs\templates\voyageurs\home.html:650
+msgid "Prénom"
+msgstr "Prénom"
+
+#: .\voyageurs\templates\voyageurs\home.html:427
+#: .\voyageurs\templates\voyageurs\home.html:615
+msgid "Créer mon compte"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:434
+#: .\voyageurs\templates\voyageurs\home.html:621
+#: .\voyageurs\templates\voyageurs\home.html:812
+#: .\voyageurs\templates\voyageurs\login.html:18
+#, fuzzy
+#| msgid "Nom d'utilisateur"
+msgid "Nom d'utilisateur ou Email"
+msgstr "Nom d'utilisateur"
+
+#: .\voyageurs\templates\voyageurs\home.html:460
+#: .\voyageurs\templates\voyageurs\home.html:647
+msgid "Votre nom"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:464
+#: .\voyageurs\templates\voyageurs\home.html:651
+#, fuzzy
+#| msgid "Prénom"
+msgid "Votre prénom"
+msgstr "Prénom"
+
+#: .\voyageurs\templates\voyageurs\home.html:475
+msgid "Pays"
+msgstr "Pays"
+
+#: .\voyageurs\templates\voyageurs\home.html:476
+#: .\voyageurs\templates\voyageurs\home.html:663
+msgid "France"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:479
+msgid "Ville"
+msgstr "Ville"
+
+#: .\voyageurs\templates\voyageurs\home.html:480
+#: .\voyageurs\templates\voyageurs\home.html:667
+msgid "Paris"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:486
+#: .\voyageurs\templates\voyageurs\home.html:673
+msgid "Pays de destination"
+msgstr "Pays de destination"
+
+#: .\voyageurs\templates\voyageurs\home.html:487
+#: .\voyageurs\templates\voyageurs\home.html:674
+msgid "Cameroun"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:490
+#: .\voyageurs\templates\voyageurs\home.html:677
+msgid "Ville de destination"
+msgstr "Ville de destination"
+
+#: .\voyageurs\templates\voyageurs\home.html:491
+#: .\voyageurs\templates\voyageurs\home.html:678
+msgid "Douala"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:496
+msgid "Poids du colis (kg)"
+msgstr "Poids du colis (kg)"
+
+#: .\voyageurs\templates\voyageurs\home.html:498
+#: .\voyageurs\templates\voyageurs\home.html:721
+msgid "Ex: 5"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:503
+msgid "Votre prix proposé par kg (€)"
+msgstr "Votre prix proposé par kg (€)"
+
+#: .\voyageurs\templates\voyageurs\home.html:508
+msgid "Ex: 8"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:513
+msgid ""
+"Ce montant sera versé au voyageur. +2,99€ de frais KERALINK s'ajoutent "
+"automatiquement."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:518
+msgid "Total à payer"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:525
+msgid ""
+"J'accepte et j'affirme que mon colis ne contient aucun produit illégal..."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:530
+#: .\voyageurs\templates\voyageurs\home.html:757
+#, fuzzy
+#| msgid "Conditions Générales d'Utilisation"
+msgid "J'accepte toutes les conditions générales d'utilisation..."
+msgstr "Conditions Générales d'Utilisation"
+
+#: .\voyageurs\templates\voyageurs\home.html:535
+msgid "Choisissez votre moyen de paiement"
+msgstr "Choisissez votre moyen de paiement"
+
+#: .\voyageurs\templates\voyageurs\home.html:538
+msgid "Carte Bancaire"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:545
+msgid "Publier ma demande"
+msgstr "Publier ma demande"
+
+#: .\voyageurs\templates\voyageurs\home.html:555
+#: .\voyageurs\templates\voyageurs\home.html:772
+#: .\voyageurs\templates\voyageurs\home.html:858
+msgid "Annuler"
+msgstr "Annuler"
+
+#: .\voyageurs\templates\voyageurs\home.html:569
+#: .\voyageurs\templates\voyageurs\home.html:638
+msgid "Proposer un transport"
+msgstr "Proposer un transport"
+
+#: .\voyageurs\templates\voyageurs\home.html:571
+msgid "Connectez-vous ou créez un compte pour publier votre trajet"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:662
+msgid "Pays de départ"
+msgstr "Pays de départ"
+
+#: .\voyageurs\templates\voyageurs\home.html:666
+msgid "Ville de départ"
+msgstr "Ville de départ"
+
+#: .\voyageurs\templates\voyageurs\home.html:684
+msgid "Date de départ"
+msgstr "Date de départ"
+
+#: .\voyageurs\templates\voyageurs\home.html:688
+msgid "Heure de départ"
+msgstr "Heure de départ"
+
+#: .\voyageurs\templates\voyageurs\home.html:695
+msgid "Date d'arrivée"
+msgstr "Date d'arrivée"
+
+#: .\voyageurs\templates\voyageurs\home.html:699
+msgid "Heure d'arrivée"
+msgstr "Heure d'arrivée"
+
+#: .\voyageurs\templates\voyageurs\home.html:709
+msgid "Poids disponible (kg)"
+msgstr "Poids disponible (kg)"
+
+#: .\voyageurs\templates\voyageurs\home.html:711
+msgid "Ex: 23"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:716
+msgid "Votre prix par kg (€)"
+msgstr "Votre prix par kg (€)"
+
+#: .\voyageurs\templates\voyageurs\home.html:726
+msgid "C'est le montant que vous recevrez par kg transporté."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:731
+#, fuzzy
+#| msgid "Solde disponible"
+msgid "Type de kg disponible"
+msgstr "Solde disponible"
+
+#: .\voyageurs\templates\voyageurs\home.html:735
+msgid "Kg en entier (tout ou rien)"
+msgstr "Kg en entier (tout ou rien)"
+
+#: .\voyageurs\templates\voyageurs\home.html:739
+msgid "Kg en détail (fractionnable)"
+msgstr "Kg en détail (fractionnable)"
+
+#: .\voyageurs\templates\voyageurs\home.html:745
+#, fuzzy
+#| msgid "Vous recevrez (si tous les kg pris) :"
+msgid "Vous recevrez (si tous les kg pris)"
+msgstr "Vous recevrez (si tous les kg pris) :"
+
+#: .\voyageurs\templates\voyageurs\home.html:752
+msgid "J'accepte et j'affirme avoir vérifié le contenu du/des colis..."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:762
+#: .\voyageurs\templates\voyageurs\home.html:892
+msgid "Publier mon trajet"
+msgstr "Publier mon trajet"
+
+#: .\voyageurs\templates\voyageurs\home.html:783
+msgid "Connexion / Inscription"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:785
+msgid ""
+"Utilisez les pages Expédier ou Voyager pour créer un compte, ou connectez-"
+"vous ici."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:813
+#: .\voyageurs\templates\voyageurs\login.html:19
+msgid "Username ou email"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:824
+msgid "Pas encore de compte ?"
+msgstr "Pas encore de compte ?"
+
+#: .\voyageurs\templates\voyageurs\home.html:825
+#, fuzzy
+#| msgid "S'inscrire"
+msgid "S'inscrire (Expédier)"
+msgstr "S'inscrire"
+
+#: .\voyageurs\templates\voyageurs\home.html:827
+#, fuzzy
+#| msgid "S'inscrire"
+msgid "S'inscrire (Voyager)"
+msgstr "S'inscrire"
+
+#: .\voyageurs\templates\voyageurs\home.html:837
+msgid "Confirmer votre demande d'expédition"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:841
+msgid "Veuillez confirmer les informations suivantes :"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:849
+msgid ""
+"J'accepte et j'affirme que mon colis ne contient aucun produit illégal ou "
+"dangereux"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:853
+msgid "J'accepte toutes les conditions générales de KERALINK"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:860
+msgid "Confirmer et payer"
+msgstr "Confirmer et payer"
+
+#: .\voyageurs\templates\voyageurs\home.html:870
+#, fuzzy
+#| msgid "Confirmer la livraison"
+msgid "Confirmer la publication de votre trajet"
+msgstr "Confirmer la livraison"
+
+#: .\voyageurs\templates\voyageurs\home.html:882
+msgid ""
+"J'accepte de vérifier les colis avant le départ et de les transporter en "
+"toute sécurité"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:907
+msgid "Retour en haut de page"
+msgstr "Retour en haut de page"
+
+#: .\voyageurs\templates\voyageurs\home.html:920
+msgid "partout dans le monde en toute sécurité."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:942
+msgid "Nos services"
+msgstr "Nos services"
+
+#: .\voyageurs\templates\voyageurs\home.html:946
+#, fuzzy
+#| msgid "Proposer un transport"
+msgid "Proposer un trajet"
+msgstr "Proposer un transport"
+
+#: .\voyageurs\templates\voyageurs\home.html:957
+msgid "Aide & Info"
+msgstr "Aide & Info"
+
+#: .\voyageurs\templates\voyageurs\home.html:961
+msgid "Tarifs & Commissions"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:962
+#, fuzzy
+#| msgid "Se connecter"
+msgid "Nous contacter"
+msgstr "Se connecter"
+
+#: .\voyageurs\templates\voyageurs\home.html:963
+#, fuzzy
+#| msgid "Conditions Générales d'Utilisation"
+msgid "Conditions générales"
+msgstr "Conditions Générales d'Utilisation"
+
+#: .\voyageurs\templates\voyageurs\home.html:967
+msgid "Sécurité & Paiement"
+msgstr "Sécurité & Paiement"
+
+#: .\voyageurs\templates\voyageurs\home.html:975
+#: .\voyageurs\templates\voyageurs\paiement.html:165
+#, fuzzy, python-format
+#| msgid "Paiement Sécurisé"
+msgid "Paiement 100%% sécurisé"
+msgstr "Paiement Sécurisé"
+
+#: .\voyageurs\templates\voyageurs\home.html:978
+msgid "Fonds bloqués en séquestre"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:981
+#, fuzzy
+#| msgid "Photo de livraison"
+msgid "Photo de livraison obligatoire"
+msgstr "Photo de livraison"
+
+#: .\voyageurs\templates\voyageurs\home.html:984
+#: .\voyageurs\templates\voyageurs\paiement.html:180
+msgid "Carte"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:997
+msgid "Transport de colis entre particuliers. Tous droits réservés."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1026
+msgid "Conditions Générales d'Utilisation"
+msgstr "Conditions Générales d'Utilisation"
+
+#: .\voyageurs\templates\voyageurs\home.html:1029
+msgid "Plateforme de transport de colis entre particuliers"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1045
+msgid "Date de mise à jour"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1047
+msgid "Version"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1055
+msgid "Article 1 — Présentation de KERALINK"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1069
+msgid "Article 2 — Acceptation des conditions"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1082
+msgid "Article 3 — Inscription et comptes utilisateurs"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1100
+msgid "Article 4 — Tarification et commissions"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1120
+msgid "Article 5 — Système de paiement sécurisé (Escrow)"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1138
+msgid "Article 6 — Obligations de l'expéditeur"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1162
+msgid "Article 7 — Obligations du voyageur"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1180
+msgid "Article 8 — Politique de remboursement"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1196
+msgid "Article 9 — Responsabilités et limitations"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1214
+msgid "Article 10 — Protection des données personnelles"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1231
+msgid "Article 11 — Portefeuille et retraits"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1250
+msgid "Article 12 — Comportements interdits"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1269
+msgid "Article 13 — Droit applicable et juridiction"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1300
+msgid "J'ai lu et j'accepte les conditions"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1346
+msgid "Écrire..."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\home.html:1347
+msgid "Envoyer"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\login.html:9
+#, fuzzy
+#| msgid "Connexion"
+msgid "Connexion - KERALINK"
+msgstr "Connexion"
+
+#: .\voyageurs\templates\voyageurs\login.html:15
+msgid "Connexion à votre compte"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:9
+#, fuzzy
+#| msgid "Paiement Sécurisé"
+msgid "Paiement Sécurisé - KERALINK"
+msgstr "Paiement Sécurisé"
+
+#: .\voyageurs\templates\voyageurs\paiement.html:172
+#, fuzzy
+#| msgid "Paiement Sécurisé"
+msgid "Paiement sécurisé"
+msgstr "Paiement Sécurisé"
+
+#: .\voyageurs\templates\voyageurs\paiement.html:173
+msgid "TTC"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:174
+msgid "Votre argent est sécurisé jusqu'à livraison du colis"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:196
+msgid "TITULAIRE"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:197
+msgid "VOTRE NOM"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:200
+msgid "EXPIRE"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:206
+msgid "Numéro de carte"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:211
+msgid "Nom sur la carte"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:217
+#, fuzzy
+#| msgid "Date de départ"
+msgid "Date d'expiration"
+msgstr "Date de départ"
+
+#: .\voyageurs\templates\voyageurs\paiement.html:226
+#: .\voyageurs\templates\voyageurs\paiement.html:245
+msgid "Payer"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:226
+msgid "par carte"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:234
+msgid "Email PayPal"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:238
+#, fuzzy
+#| msgid "Mot de passe"
+msgid "Mot de passe PayPal"
+msgstr "Mot de passe"
+
+#: .\voyageurs\templates\voyageurs\paiement.html:242
+msgid "Vous serez redirigé vers PayPal pour confirmer le paiement sécurisé."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:245
+msgid "via PayPal"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:252
+msgid "Certifié PCI DSS"
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:259
+msgid "Paiement réussi !"
+msgstr "Paiement réussi !"
+
+#: .\voyageurs\templates\voyageurs\paiement.html:260
+msgid "Votre paiement a été traité avec succès."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:263
+#, fuzzy
+#| msgid "Paiement Sécurisé"
+msgid "Votre argent est sécurisé"
+msgstr "Paiement Sécurisé"
+
+#: .\voyageurs\templates\voyageurs\paiement.html:264
+msgid ""
+"Votre paiement est bloqué sur la plateforme KERALINK et sera versé au "
+"voyageur uniquement après confirmation de la livraison de votre colis à "
+"destination."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:269
+msgid "Télécharger ma facture de paiement"
+msgstr "Télécharger ma facture de paiement"
+
+#: .\voyageurs\templates\voyageurs\paiement.html:273
+msgid "Traitement..."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:282
+msgid "Traitement en cours..."
+msgstr ""
+
+#: .\voyageurs\templates\voyageurs\paiement.html:283
+#, fuzzy
+#| msgid "Connexion"
+msgid "Connexion sécurisée"
+msgstr "Connexion"
+
+#~ msgid "Compte & Profil"
+#~ msgstr "Compte & Profil"
+
+#~ msgid "Total à payer (frais KERALINK 2,99€ inclus) :"
+#~ msgstr "Total à payer (frais KERALINK 2,99€ inclus) :"
+
+#~ msgid "ÊTES-VOUS ?"
+#~ msgstr "ÊTES-VOUS ?"
+
+#~ msgid "Ils nous font confiance"
+#~ msgstr "Ils nous font confiance"
+
+#~ msgid "Rejoignez la communauté"
+#~ msgstr "Rejoignez la communauté"
+
+#~ msgid "Tous droits réservés."
+#~ msgstr "Tous droits réservés."

@@ -1,7 +1,8 @@
 {% load static %}
 {% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,7 +48,7 @@
                 <option>🌍 {% trans "Asie" %}</option>
             </select>
             <input type="text" id="search-input"
-                   data-i18n-placeholder="recherche_placeholder"
+                  
                    placeholder="{% trans 'Rechercher un trajet, une ville, un pays...' %}"
                    style="flex:1;padding:10px 14px;border:none;font-size:0.95rem;
                           outline:none;background:white;color:#333;">
@@ -67,8 +68,8 @@
                            transition:border-color 0.2s;"
                     onmouseover="this.style.borderColor='#FF7A00'"
                     onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'">
-                <span id="lang-flag">🇫🇷</span>
-                <span id="lang-label">FR</span>
+                <span id="lang-flag">{% if LANGUAGE_CODE == 'en' %}🇬🇧{% else %}🇫🇷{% endif %}</span>
+                <span id="lang-label">{% if LANGUAGE_CODE == 'en' %}EN{% else %}FR{% endif %}</span>
                 <span style="font-size:0.65rem;opacity:0.7;">▾</span>
             </button>
             <div id="lang-menu" style="display:none;position:absolute;top:calc(100% + 8px);right:0;
@@ -142,7 +143,7 @@
                            display:flex;align-items:center;gap:6px;white-space:nowrap;
                            border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
                     onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
-                ☰ <span data-i18n="menu_toutes">{% trans "Toutes" %}</span>
+                ☰ <span>{% trans "Toutes" %}</span>
 
             </button>
             <div id="menu-dropdown" class="menu-dropdown"
@@ -153,13 +154,13 @@
                    style="display:flex;align-items:center;gap:10px;padding:11px 18px;
                           color:#333;cursor:pointer;font-size:0.9rem;text-decoration:none;"
                    onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='none'">
-                    🧳 <span data-i18n="voyageurs_dispo">{% trans "Voyageurs disponibles" %}</span>
+                    🧳 <span>{% trans "Voyageurs disponibles" %}</span>
                 </a>
                 <a onclick="scrollToSection('expediteurs-section')"
                    style="display:flex;align-items:center;gap:10px;padding:11px 18px;
                           color:#333;cursor:pointer;font-size:0.9rem;text-decoration:none;"
                    onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='none'">
-                    📦 <span data-i18n="expediteurs_dispo">{% trans "Expéditeurs disponibles" %}</span>
+                    📦 <span>{% trans "Expéditeurs disponibles" %}</span>
                 </a>
             </div>
         </div>
@@ -170,7 +171,7 @@
         <!-- Liens de navigation secondaires -->
         <nav class="nav-links" style="display:flex;align-items:center;gap:0;overflow-x:auto;scrollbar-width:none;">
             <a onclick="showPage(event,'home')"
-               data-i18n="nav_accueil"
+              
                style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
                       font-size:0.88rem;white-space:nowrap;cursor:pointer;text-decoration:none;
                       border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
@@ -178,7 +179,7 @@
                 {% trans "Accueil" %}
             </a>
             <a onclick="showPage(event,'expediteur')"
-               data-i18n="nav_expedier"
+              
                style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
                       font-size:0.88rem;white-space:nowrap;cursor:pointer;text-decoration:none;
                       border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
@@ -186,20 +187,20 @@
                 📦 {% trans "Expédier" %}
             </a>
             <a onclick="showPage(event,'voyageur')"
-               data-i18n="nav_voyager"
+              
                style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
                       font-size:0.88rem;white-space:nowrap;cursor:pointer;text-decoration:none;
                       border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
                onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
                 🧳 {% trans "Voyager" %}
             </a>
-            <a onclick="showPage(event,'profil')"
-               data-i18n="nav_profil"
+                        <a href="/login/"
+              
                style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
                       font-size:0.88rem;white-space:nowrap;cursor:pointer;text-decoration:none;
                       border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
                onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
-                👤 {% trans "Profil" %}
+                🔑 {% trans "Connexion" %}
             </a>
             <a onclick="ouvrirCommentCaMarche()"
                style="color:#FF7A00;font-weight:600;padding:0 14px;height:40px;display:flex;align-items:center;
@@ -238,7 +239,7 @@
 
 <!-- ===== VOYAGEURS DISPONIBLES ===== -->
 <div class="travelers-list" id="voyageurs-section">
-    <h2><span data-i18n="section_voyageurs">🛄 {% trans "Voyageurs disponibles" %}</span></h2>
+    <h2><span>🛄 {% trans "Voyageurs disponibles" %}</span></h2>
     <div id="voyageurs-liste">
         {% for voyageur in voyageurs %}
         <div class="traveler-card"
@@ -286,7 +287,7 @@
                           {% endif %}>
                         {% if voyageur.statut == 'complet' or voyageur.is_matched %}0{% else %}{{ voyageur.poids_disponible }}{% endif %} kg
                     </span>
-                    <span class="weight-label" data-i18n="kg_disponibles">{% trans "disponibles" %}</span>
+                    <span class="weight-label">{% trans "disponibles" %}</span>
                 </div>
                 <div class="price-info">
                     <div class="price" style="color:#FF7A00;font-weight:bold;">
@@ -302,20 +303,20 @@
                 {% else %}
                 <button class="select-btn"
                         onclick="selectionnerVoyageur('{{ voyageur.id }}')">
-                    <span data-i18n="btn_selectionner">{% trans "Sélectionner" %}</span>
+                    <span>{% trans "Sélectionner" %}</span>
                 </button>
                 {% endif %}
             </div>
         </div>
         {% empty %}
-        <p data-i18n="aucun_voyageur">{% trans "Aucun voyageur disponible" %}</p>
+        <p>{% trans "Aucun voyageur disponible" %}</p>
         {% endfor %}
     </div>
 </div>
 
 <!-- ===== EXPÉDITEURS DISPONIBLES ===== -->
 <div class="travelers-list" id="expediteurs-section" style="margin-top:2rem;">
-    <h2><span data-i18n="section_expediteurs">📦 {% trans "Expéditeurs disponibles" %}</span></h2>
+    <h2><span>📦 {% trans "Expéditeurs disponibles" %}</span></h2>
 
     {% for exp in expediteurs %}
     <div class="traveler-card"
@@ -341,7 +342,7 @@
         <div class="traveler-details">
             <div>
                 <span class="weight-available">{{ exp.poids_colis }} kg</span>
-                <span class="weight-label" data-i18n="a_transporter">{% trans "à transporter" %}</span>
+                <span class="weight-label">{% trans "à transporter" %}</span>
             </div>
             <div class="price-info">
                 <div class="price" style="color:#2e7d32;font-weight:bold;">
@@ -357,13 +358,13 @@
             {% else %}
             <button class="select-btn"
                     onclick="selectionnerExpediteur('{{ exp.id }}')">
-                <span data-i18n="btn_selectionner">{% trans "Sélectionner" %}</span>
+                <span>{% trans "Sélectionner" %}</span>
             </button>
             {% endif %}
         </div>
     </div>
     {% empty %}
-    <p data-i18n="aucun_expediteur">{% trans "Aucun expéditeur disponible" %}</p>
+    <p>{% trans "Aucun expéditeur disponible" %}</p>
     {% endfor %}
 </div>
     </div>
@@ -372,7 +373,93 @@
 <!-- Page Expéditeur -->
 <div id="expediteur-page" class="page">
     <div class="container">
-        <div class="form-card">
+
+        <!-- ===== AUTH (visible si NON connecté) ===== -->
+        <div id="exp-auth-zone" class="form-card" style="{% if est_connecte %}display:none;{% endif %}">
+            <h3><span class="icon">📦</span> {% trans "Expédier un colis" %}</h3>
+            <p style="text-align:center;color:#666;margin-bottom:20px;">
+                {% trans "Connectez-vous ou créez un compte pour publier votre demande" %}
+            </p>
+
+            <div style="display:flex;gap:12px;margin-bottom:20px;">
+                <button type="button" class="submit-btn" style="flex:1;"
+                        onclick="afficherFormInscription('expediteur')">
+                    {% trans "S'inscrire" %}
+                </button>
+                <button type="button" class="submit-btn" style="flex:1;background:#3498db;"
+                        onclick="afficherFormConnexion('expediteur')">
+                    {% trans "Se connecter" %}
+                </button>
+            </div>
+            <div style="text-align:center;color:#aaa;font-size:0.78rem;margin:-10px 0 16px;">
+                — {% trans "ou" %} —
+            </div>
+            <a href="/continuer-avec-google/expediteur/" style="text-decoration:none;">
+                <button type="button" style="width:100%;display:flex;align-items:center;justify-content:center;
+                        gap:10px;padding:12px;border:1.5px solid #e0e0e0;border-radius:10px;
+                        background:white;color:#444;font-size:0.9rem;font-weight:600;cursor:pointer;
+                        margin-bottom:16px;transition:0.2s;" onmouseover="this.style.background='#f5f5f5'"
+                        onmouseout="this.style.background='white'">
+                    <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84c-.21 1.13-.85 2.09-1.8 2.73v2.27h2.92c1.7-1.57 2.68-3.88 2.68-6.64z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.27c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.71H.96v2.33C2.44 15.98 5.48 18 9 18z"/><path fill="#FBBC05" d="M3.97 10.7A5.4 5.4 0 013.68 9c0-.59.1-1.17.29-1.7V4.97H.96A9 9 0 000 9c0 1.45.35 2.83.96 4.03l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.51.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.97l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z"/></svg>
+                    {% trans "Continuer avec Google" %}
+                </button>
+            </a>
+            
+
+            <!-- Formulaire inscription -->
+            <div id="exp-inscrire-form" style="display:none;">
+                <input type="hidden" id="exp-auth-type" value="expediteur">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>{% trans "Nom" %} *</label>
+                        <input type="text" id="exp-reg-nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label>{% trans "Prénom" %} *</label>
+                        <input type="text" id="exp-reg-prenom" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Nom d'utilisateur" %} *</label>
+                    <input type="text" id="exp-reg-username" required>
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Email" %} *</label>
+                    <input type="email" id="exp-reg-email" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>{% trans "Mot de passe" %} *</label>
+                        <input type="password" id="exp-reg-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>{% trans "Confirmer" %} *</label>
+                        <input type="password" id="exp-reg-password2" required>
+                    </div>
+                </div>
+                <button type="button" class="submit-btn" onclick="soumettreInscription('expediteur')">
+                    ✅ {% trans "Créer mon compte" %}
+                </button>
+            </div>
+
+            <!-- Formulaire connexion -->
+            <div id="exp-login-form" style="display:none;">
+                <div class="form-group">
+                    <label>{% trans "Nom d'utilisateur ou Email" %}</label>
+                    <input type="text" id="exp-login-user" required>
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Mot de passe" %}</label>
+                    <input type="password" id="exp-login-pass" required>
+                </div>
+                <button type="button" class="submit-btn" onclick="soumettreConnexion('expediteur')">
+                    🔑 {% trans "Se connecter" %}
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== FORMULAIRE PUBLICATION (visible si connecté) ===== -->
+        <div id="exp-form-zone" class="form-card" style="{% if not est_connecte %}display:none;{% endif %}">
             <h3>
                 <span class="icon">📦</span>
                 {% trans "Expédier un colis" %}
@@ -423,7 +510,7 @@
                     <label>{% trans "Poids du colis (kg)" %} *</label>
                     <input type="number" id="exp-poids" name="poids" min="0.1" step="0.1" 
                            placeholder="{% trans 'Ex: 5' %}" required 
-                           oninput="calculerPrixExpediteur()">
+                           oninput="validerPoidsExpediteur(); calculerPrixExpediteur();">
                 </div>
                 
                 <div class="form-group">
@@ -466,10 +553,22 @@
                     </div>
                     <input type="hidden" id="selected-payment" name="mode_paiement" required>
                 </div>
-                
-                <button type="submit" class="submit-btn" id="exp-submit">
-                    {% trans "Publier ma demande" %}
-                </button>
+
+                <div style="display:flex;gap:12px;margin-top:8px;">
+                    <button type="submit" class="submit-btn" id="exp-submit" style="flex:1;">
+                        {% trans "Publier ma demande" %}
+                    </button>
+                    <button type="button" id="exp-annuler-btn"
+                            onclick="annulerFormulaire('expediteur')"
+                            style="flex:0 0 auto;padding:12px 20px;border:2px solid #c62828;
+                                   background:white;color:#c62828;border-radius:8px;
+                                   font-weight:700;cursor:pointer;font-size:0.95rem;
+                                   transition:all 0.2s;display:none;"
+                            onmouseover="this.style.background='#ffebee'"
+                            onmouseout="this.style.background='white'">
+                        ✕ {% trans "Annuler" %}
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -478,7 +577,90 @@
 <!-- Page Voyageur -->
 <div id="voyageur-page" class="page">
     <div class="container">
-        <div class="form-card">
+
+        <!-- ===== AUTH (visible si NON connecté) ===== -->
+        <div id="voy-auth-zone" class="form-card" style="{% if est_connecte %}display:none;{% endif %}">
+            <h3><span class="icon">🧳</span> {% trans "Proposer un transport" %}</h3>
+            <p style="text-align:center;color:#666;margin-bottom:20px;">
+                {% trans "Connectez-vous ou créez un compte pour publier votre trajet" %}
+            </p>
+
+            <div style="display:flex;gap:12px;margin-bottom:20px;">
+                <button type="button" class="submit-btn" style="flex:1;"
+                        onclick="afficherFormInscription('voyageur')">
+                    {% trans "S'inscrire" %}
+                </button>
+                <button type="button" class="submit-btn" style="flex:1;background:#3498db;"
+                        onclick="afficherFormConnexion('voyageur')">
+                    {% trans "Se connecter" %}
+                </button>
+            </div>
+                 <div style="text-align:center;color:#aaa;font-size:0.78rem;margin:-10px 0 16px;">
+                — {% trans "ou" %} —
+            </div>
+            <a href="/continuer-avec-google/voyageur/" style="text-decoration:none;">
+                <button type="button" style="width:100%;display:flex;align-items:center;justify-content:center;
+                        gap:10px;padding:12px;border:1.5px solid #e0e0e0;border-radius:10px;
+                        background:white;color:#444;font-size:0.9rem;font-weight:600;cursor:pointer;
+                        margin-bottom:16px;transition:0.2s;" onmouseover="this.style.background='#f5f5f5'"
+                        onmouseout="this.style.background='white'">
+                    <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84c-.21 1.13-.85 2.09-1.8 2.73v2.27h2.92c1.7-1.57 2.68-3.88 2.68-6.64z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.27c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.71H.96v2.33C2.44 15.98 5.48 18 9 18z"/><path fill="#FBBC05" d="M3.97 10.7A5.4 5.4 0 013.68 9c0-.59.1-1.17.29-1.7V4.97H.96A9 9 0 000 9c0 1.45.35 2.83.96 4.03l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.51.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.97l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z"/></svg>
+                    {% trans "Continuer avec Google" %}
+                </button>
+            </a>
+           
+
+            <div id="voy-inscrire-form" style="display:none;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>{% trans "Nom" %} *</label>
+                        <input type="text" id="voy-reg-nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label>{% trans "Prénom" %} *</label>
+                        <input type="text" id="voy-reg-prenom" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Nom d'utilisateur" %} *</label>
+                    <input type="text" id="voy-reg-username" required>
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Email" %} *</label>
+                    <input type="email" id="voy-reg-email" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>{% trans "Mot de passe" %} *</label>
+                        <input type="password" id="voy-reg-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>{% trans "Confirmer" %} *</label>
+                        <input type="password" id="voy-reg-password2" required>
+                    </div>
+                </div>
+                <button type="button" class="submit-btn" onclick="soumettreInscription('voyageur')">
+                    ✅ {% trans "Créer mon compte" %}
+                </button>
+            </div>
+
+            <div id="voy-login-form" style="display:none;">
+                <div class="form-group">
+                    <label>{% trans "Nom d'utilisateur ou Email" %}</label>
+                    <input type="text" id="voy-login-user" required>
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Mot de passe" %}</label>
+                    <input type="password" id="voy-login-pass" required>
+                </div>
+                <button type="button" class="submit-btn" onclick="soumettreConnexion('voyageur')">
+                    🔑 {% trans "Se connecter" %}
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== FORMULAIRE PUBLICATION ===== -->
+        <div id="voy-form-zone" class="form-card" style="{% if not est_connecte %}display:none;{% endif %}">
             <h3>
                 <span class="icon">🧳</span>
                 {% trans "Proposer un transport" %}
@@ -516,11 +698,11 @@
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Pays de destination *</label>
+                        <label>{% trans "Pays de destination" %} *</label>
                         <input type="text" id="voy-pays-destination" name="pays_destination" placeholder="{% trans 'Cameroun' %}" required>
                     </div>
                     <div class="form-group">
-                        <label>Ville de destination *</label>
+                        <label>{% trans "Ville de destination" %} *</label>
                         <input type="text" id="voy-ville-destination" name="ville_destination" placeholder="{% trans 'Douala' %}" required>
                     </div>
                 </div>
@@ -546,6 +728,10 @@
                         <input type="time" id="voy-heure-arrivee" name="heure_arrivee" required>
                     </div>
                 </div>
+
+                <div id="voy-erreur-chrono" style="display:none;color:#d32f2f;background:#fdecea;
+                            border:1px solid #f5c6cb;border-radius:6px;padding:8px 12px;
+                            font-size:0.85rem;margin:-8px 0 12px;"></div>
                 
                 <div class="form-group">
                     <label>{% trans "Poids disponible (kg)" %} *</label>
@@ -588,7 +774,6 @@
                     <span id="voy-gain" style="color:#2e7d32;">0.00 €</span>
                 </div>
                 
-                
                 <div class="checkbox-group">
                     <div class="checkbox-item">
                         <input type="checkbox" id="voy-check1" required>
@@ -604,127 +789,53 @@
                 <button type="submit" class="submit-btn" id="voy-submit" disabled>
                     {% trans "Publier mon trajet" %}
                 </button>
+                <button type="button" id="voy-annuler-btn"
+                        onclick="annulerFormulaire('voyageur')"
+                        style="width:100%;margin-top:8px;padding:12px 20px;
+                               border:2px solid #c62828;background:white;
+                               color:#c62828;border-radius:8px;font-weight:700;
+                               cursor:pointer;font-size:0.95rem;transition:all 0.2s;display:none;"
+                        onmouseover="this.style.background='#ffebee'"
+                        onmouseout="this.style.background='white'">
+                    ✕ {% trans "Annuler" %}
+                </button>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Page Profil -->
+<!-- Page Profil SUPPRIMÉE — l'inscription se fait sur Expédier / Voyager -->
 <div id="profil-page" class="page">
-
-<!-- DANS #profil-page — REMPLACE le div Google existant -->
-<div class="container">
-    <div class="form-card">
-        <h3>👤 {% trans "Créer votre profil" %}</h3>
-
-        <!-- ✅ Bouton Google bien placé dans la card -->
-        <div style="margin-bottom:24px;">
-            <a href="/accounts/google/login/?next=/google-callback/"
-               style="display:flex;align-items:center;justify-content:center;gap:12px;
-                      width:100%;padding:15px;border-radius:12px;
-                      background:white;border:2px solid #e0e0e0;
-                      color:#333;font-weight:700;font-size:1rem;
-                      text-decoration:none;transition:all 0.25s;
-                      box-shadow:0 2px 8px rgba(0,0,0,0.08);"
-               onmouseover="this.style.borderColor='#4285F4';this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(66,133,244,0.25)'"
-               onmouseout="this.style.borderColor='#e0e0e0';this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'">
-                <svg width="22" height="22" viewBox="0 0 48 48">
-                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-                </svg>
-                {% trans "Continuer avec Google" %}
+    <div class="container">
+        <div class="form-card" style="text-align:center;padding:40px;">
+            <h3>🔑 {% trans "Connexion / Inscription" %}</h3>
+            <p style="color:#666;margin:16px 0;">
+                {% trans "Utilisez les pages Expédier ou Voyager pour créer un compte, ou connectez-vous ici." %}
+            </p>
+            <a href="/login/" class="submit-btn"
+               style="display:inline-block;text-decoration:none;padding:12px 28px;margin:6px;">
+                {% trans "Se connecter" %}
             </a>
-            <div style="display:flex;align-items:center;gap:14px;margin:18px 0;">
-                <div style="flex:1;height:1px;background:#e0e0e0;"></div>
-                <span style="color:#999;font-size:0.9rem;font-weight:500;">{% trans "ou s'inscrire manuellement" %}</span>
-                <div style="flex:1;height:1px;background:#e0e0e0;"></div>
-            </div>
-        </div>
-            <h4>{% trans "ÊTES-VOUS ?" %}</h4>
-            <div class="choice-box">
-                <div onclick="choisirType('voyageur')" class="choice-btn">🧳 {% trans "Voyageur" %}</div>
-                <div onclick="choisirType('expediteur')" class="choice-btn">📦 {% trans "Expéditeur" %}</div>
-            </div>
-            <input type="hidden" id="type_profil">
-
-            <div class="form-group">
-                <label>{% trans "Nom complet" %} *</label>
-                <input type="text" id="nom_complet" required>
-            </div>
-
-            <div class="form-group">
-                <label>{% trans "Nom d'utilisateur" %} *</label>
-                <input type="text" id="username" required>
-            </div>
-
-            <div class="form-group">
-                <label>{% trans "Email" %} *</label>
-                <input type="email" id="email" required>
-            </div>
-
-            <div class="form-group">
-                <label>{% trans "Téléphone" %} *</label>
-                <input type="tel" id="telephone" required>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>{% trans "Mot de passe" %} *</label>
-                    <input type="password" id="password" required>
-                </div>
-                <div class="form-group">
-                    <label>{% trans "Confirmer" %} *</label>
-                    <input type="password" id="profil-password2" required>
-                </div>
-            </div>
-
-            <div style="display:flex; gap:10px; margin-top:20px;">
-                <button type="button" class="submit-btn" onclick="inscrireProfil()" style="flex:1;">
-                    {% trans "S'inscrire" %}
+            <div style="margin-top:16px;">
+                <button type="button" class="submit-btn" style="background:#FF7A00;"
+                        onclick="showPage(null, 'expediteur')">
+                    📦 {% trans "Expédier" %}
                 </button>
-                <button type="button" class="submit-btn" onclick="showLoginForm()" style="flex:1; background:#3498db;">
-                    {% trans "Se connecter" %}
+                <button type="button" class="submit-btn" style="background:#1E3A8A;margin-left:8px;"
+                        onclick="showPage(null, 'voyageur')">
+                    🧳 {% trans "Voyager" %}
                 </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- NOUVELLE PAGE DE CONNEXION INTÉGRÉE -->
+<!-- Page Connexion intégrée (simplifiée) -->
 <div id="login-page" class="page">
-
     <div class="container">
         <div class="form-card">
             <h3>🔑 {% trans "Connexion" %}</h3>
 
-             <!-- ✅ Bouton Google bien placé dans la card -->
-        <div style="margin-bottom:24px;">
-            <a href="/accounts/google/login/?next=/google-callback/"
-               style="display:flex;align-items:center;justify-content:center;gap:12px;
-                      width:100%;padding:15px;border-radius:12px;
-                      background:white;border:2px solid #e0e0e0;
-                      color:#333;font-weight:700;font-size:1rem;
-                      text-decoration:none;transition:all 0.25s;
-                      box-shadow:0 2px 8px rgba(0,0,0,0.08);"
-               onmouseover="this.style.borderColor='#4285F4';this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(66,133,244,0.25)'"
-               onmouseout="this.style.borderColor='#e0e0e0';this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'">
-                <svg width="22" height="22" viewBox="0 0 48 48">
-                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-                </svg>
-                {% trans "Continuer avec Google" %}
-            </a>
-            <div style="display:flex;align-items:center;gap:14px;margin:18px 0;">
-                <div style="flex:1;height:1px;background:#e0e0e0;"></div>
-                <span style="color:#999;font-size:0.9rem;font-weight:500;">{% trans "ou s'inscrire manuellement" %}</span>
-                <div style="flex:1;height:1px;background:#e0e0e0;"></div>
-            </div>
-        </div>
-            
             <div class="form-group">
                 <label>{% trans "Nom d'utilisateur ou Email" %}</label>
                 <input type="text" id="login-identifiant" placeholder="{% trans 'Username ou email' %}" required>
@@ -737,18 +848,15 @@
 
             <button onclick="performLogin()" class="submit-btn">{% trans "Se connecter" %}</button>
 
-            <p style="text-align:center; margin-top:20px;">
-                {% trans "Pas encore de compte ?" %} 
-                <a onclick="showPage(null, 'profil')" style="color:var(--orange); cursor:pointer;">{% trans "S'inscrire" %}</a>
+            <p style="text-align:center; margin-top:20px; color:#666;">
+                {% trans "Pas encore de compte ?" %}<br>
+                <a onclick="showPage(null, 'expediteur')" style="color:#FF7A00; cursor:pointer;">{% trans "S'inscrire (Expédier)" %}</a>
+                &nbsp;·&nbsp;
+                <a onclick="showPage(null, 'voyageur')" style="color:#1E3A8A; cursor:pointer;">{% trans "S'inscrire (Voyager)" %}</a>
             </p>
         </div>
     </div>
 </div>
-
-
-
-            
-
 
     <!-- Modal de confirmation expéditeur -->
     <div id="expediteur-modal" class="modal">
@@ -816,108 +924,6 @@
 
     <body data-expediteur-id="{{ expediteur.id|default:'' }}"
       data-voyageur-id="{{ voyageur.id|default:'' }}">
-
-<!-- ================================================================ -->
-<!-- REMPLACEZ tout le bloc "Compteur de visiteurs" actuel            -->
-<!-- ET collez ce bloc JUSTE AVANT <footer ...>                       -->
-<!-- ================================================================ -->
-
-<!-- ✅ Compteur visiteurs — carré compact avant le footer -->
-<div style="display:flex;justify-content:center;padding:40px 16px 0;
-            background:#f0f2f5;">
-    <div style="background:linear-gradient(135deg,#0A1F44 0%,#1E3A8A 100%);
-                border-radius:16px;padding:28px 40px;text-align:center;
-                box-shadow:0 8px 32px rgba(10,31,68,0.25);
-                min-width:260px;max-width:320px;width:100%;">
-
-        <!-- Titre -->
-        <div style="font-size:0.75rem;color:rgba(255,255,255,0.55);
-                    letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;
-                    font-weight:600;">
-            {% trans "Ils nous font confiance" %}
-        </div>
-
-        <!-- Nombre avec points animés -->
-        <div style="display:flex;align-items:center;justify-content:center;gap:14px;
-                    margin-bottom:10px;">
-            <div style="width:9px;height:9px;background:#FF7A00;border-radius:50%;
-                        animation:pulse 1.5s infinite;flex-shrink:0;"></div>
-            <div id="nb-visiteurs-display"
-                 style="font-size:3rem;font-weight:900;color:white;
-                        line-height:1;letter-spacing:3px;">
-                {{ total_visiteurs|default:0 }}
-            </div>
-            <div style="width:9px;height:9px;background:#FF7A00;border-radius:50%;
-                        animation:pulse 1.5s infinite 0.6s;flex-shrink:0;"></div>
-        </div>
-
-        <!-- Label -->
-        <div style="font-size:0.95rem;color:rgba(255,255,255,0.9);
-                    font-weight:600;margin-bottom:6px;">
-            {% trans "visiteurs sur KERALINK" %}
-        </div>
-
-        <!-- Sous-texte -->
-        <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);
-                    margin-bottom:18px;">
-            {% trans "Rejoignez la communauté" %}
-        </div>
-
-        <!-- Séparateur -->
-        <div style="width:40px;height:2px;background:#FF7A00;
-                    margin:0 auto 16px;border-radius:2px;"></div>
-
-        <!-- Bouton CTA -->
-        <button onclick="document.getElementById('modal-login') ?
-                         document.getElementById('modal-login').style.display='flex' :
-                         window.location.href='/login/'"
-                style="background:linear-gradient(90deg,#FF7A00,#e66900);
-                       color:white;border:none;padding:10px 24px;
-                       border-radius:8px;font-size:0.85rem;font-weight:700;
-                       cursor:pointer;width:100%;transition:opacity 0.2s;"
-                onmouseover="this.style.opacity='0.9'"
-                onmouseout="this.style.opacity='1'">
-            {% trans "Rejoindre KERALINK →" %}
-        </button>
-    </div>
-</div>
-
-<style>
-@keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50%       { transform: scale(1.5); opacity: 0.5; }
-}
-</style>
-
-<script>
-function rafraichirCompteurVisiteurs() {
-    fetch('/nb-visiteurs/')
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'ok') {
-                const el = document.getElementById('nb-visiteurs-display');
-                if (!el) return;
-                const ancien  = parseInt(el.textContent) || 0;
-                const nouveau = data.total;
-                if (nouveau !== ancien) {
-                    el.style.transition = 'transform 0.3s, color 0.3s';
-                    el.style.transform  = 'scale(1.18)';
-                    el.style.color      = '#FF7A00';
-                    el.textContent      = nouveau;
-                    setTimeout(() => {
-                        el.style.transform = 'scale(1)';
-                        el.style.color     = 'white';
-                    }, 350);
-                }
-            }
-        })
-        .catch(() => {});
-}
-setInterval(rafraichirCompteurVisiteurs, 30000);
-</script>
-
-<footer style="all:unset;display:block;margin-top:0;">
-
 
 <footer style="all:unset;display:block;margin-top:60px;">
 
@@ -1325,48 +1331,42 @@ setInterval(rafraichirCompteurVisiteurs, 30000);
     </div>
 </div>
 
-    <script>
-    const GUEST_ID = "{{ guest_id }}";
+<script>
+    const EST_CONNECTE = {{ est_connecte|yesno:"true,false" }};
 
-    // ===== CONDITIONS GÉNÉRALES =====
-function ouvrirCGU() {
-    const modal = document.getElementById('modal-cgu');
-    if (modal) {
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Bloquer le scroll en arrière-plan
+    function ouvrirCGU() {
+        const modal = document.getElementById('modal-cgu');
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
     }
-}
 
-function fermerCGU() {
-    const modal = document.getElementById('modal-cgu');
-    if (modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
+    function fermerCGU() {
+        const modal = document.getElementById('modal-cgu');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
     }
-}
 
-// Fermer en cliquant sur le fond
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof initialiserIndicatifs === 'function') initialiserIndicatifs();
+    if (typeof initialiserPaysVille === 'function') initialiserPaysVille();
+ 
     const modalCgu = document.getElementById('modal-cgu');
     if (modalCgu) {
-        modalCgu.addEventListener('click', (e) => {
+        modalCgu.addEventListener('click', function(e) {
             if (e.target === modalCgu) fermerCGU();
         });
     }
-});
-
-    </script>
-    
-    <script src="{% static 'voyageurs/js/script.js' %}"></script>
-
-    <script>
-// Initialisation des fonctionnalités sur toutes les pages
-document.addEventListener('DOMContentLoaded', function() {
-    initialiserIndicatifs();
-    initialiserPaysVille();
-    _appliquerTraductions();   // si tu utilises la traduction
+ 
+    // ℹ️ L'ouverture directe d'Expédier / Voyager (?open=...) est désormais
+    // gérée de façon centralisée et déterministe dans script.js, dans le
+    // DOMContentLoaded principal — plus besoin de la dupliquer ici.
 });
 </script>
+<script src="{% static 'voyageurs/js/script.js' %}"></script>
 
     <div id="chat-box" class="chat-box">
     <div id="messages"></div>

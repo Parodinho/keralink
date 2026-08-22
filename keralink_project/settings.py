@@ -24,10 +24,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-#s#ftw#dzyz32cru8)ijwjdljh@d)9^*5-1seami&a(_d-h@44'
 
+# ✅ DEBUG piloté par variable d'environnement : reste à True en local (comme
+# avant, rien ne change pour tes tests sur ton PC), mais passe à False dès
+# que tu déploies — voir plus bas comment le régler sur PythonAnywhere.
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+# ✅ En local (DEBUG=True), tout est autorisé comme avant. En production
+# (DEBUG=False), seuls les domaines listés ici peuvent servir le site —
+# remplace 'tonpseudo' par ton vrai nom de compte PythonAnywhere.
+if DEBUG:
+    ALLOWED_HOSTS = []
+else:
+    ALLOWED_HOSTS = ['keralink.pythonanywhere.com']
 
 
 # Application definition
@@ -214,3 +223,35 @@ TEMPLATES[0]['DIRS'] = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# ================================================================
+# ✅ SÉCURITÉ PRODUCTION (Phase 1 de l'audit) — actif uniquement quand
+# DEBUG=False. En local (DEBUG=True), ce bloc ne fait rien : tes tests
+# sur ton PC en http://127.0.0.1:8000 continuent de fonctionner normalement.
+# ================================================================
+if not DEBUG:
+    # Redirige automatiquement tout http:// vers https://
+    SECURE_SSL_REDIRECT = True
+
+    # PythonAnywhere fait tourner ton site derrière un proxy qui termine le
+    # HTTPS avant de te transmettre la requête en interne — sans cette ligne,
+    # Django croit à tort que la requête est en http et boucle la redirection.
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+    # Cookies transmis uniquement en HTTPS, jamais en clair
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    # Le cookie de session est illisible par du JavaScript (protection contre
+    # le vol de session même en cas de faille XSS)
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+
+    # HSTS : dit au navigateur de refuser tout http:// pendant 1 an, même si
+    # l'utilisateur tape l'adresse sans https. On n'active PAS le preload
+    # (SECURE_HSTS_PRELOAD) : ce réglage s'applique à pythonanywhere.com tout
+    # entier, qui appartient à un tiers — il n'aura de sens qu'avec ton
+    # propre nom de domaine.
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True

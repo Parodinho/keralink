@@ -1,7 +1,8 @@
 {% load static %}
 {% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -263,7 +264,7 @@
                 padding:0 16px;display:flex;align-items:center;gap:12px;
                 min-height:64px;position:sticky;top:0;z-index:1000;
                 box-shadow:0 2px 12px rgba(0,0,0,0.35);">
-        <a href="/" style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;text-decoration:none;">
+        <a href="/deconnexion/" style="flex-shrink:0;cursor:pointer;display:flex;align-items:center;text-decoration:none;">
             <img src="{% static 'voyageurs/images/logo3.png' %}"
                  style="height:42px;display:block;filter:brightness(1.1);">
         </a>
@@ -284,7 +285,7 @@
                 {{ nom_complet }} — {{ type_profil|upper }} ▾
             </span>
         </div>
-        <a href="/" style="flex-shrink:0;display:flex;flex-direction:column;text-decoration:none;
+        <a href="/deconnexion/" style="flex-shrink:0;display:flex;flex-direction:column;text-decoration:none;
                   padding:4px 8px;border-radius:8px;border:1.5px solid transparent;transition:border-color 0.2s;"
            onmouseover="this.style.borderColor='#FF7A00'"
            onmouseout="this.style.borderColor='transparent'">
@@ -299,7 +300,7 @@
 
     <div style="background:#0d1e3d;padding:0 16px;display:flex;align-items:center;
                 gap:0;overflow-x:auto;scrollbar-width:none;min-height:40px;">
-        <a href="/" style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
+        <a href="/deconnexion/" style="color:white;padding:0 14px;height:40px;display:flex;align-items:center;
                   font-size:0.88rem;white-space:nowrap;cursor:pointer;text-decoration:none;
                   border:1.5px solid transparent;border-radius:4px;transition:border-color 0.15s;"
            onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='transparent'">
@@ -416,6 +417,7 @@
     <!-- ===== MAIN CONTENT ===== -->
     <main class="main-content">
 
+        <!-- ===== BANNIÈRE + BOUTON PUBLIER ===== -->
         <div class="welcome-banner">
             <div class="welcome-text">
                 <h2>{% trans "Bienvenue" %}, {{ nom_complet }} 👋</h2>
@@ -423,11 +425,23 @@
                     {% if type_profil == 'expediteur' %}
                         {% trans "Suivez vos demandes d'expédition et vos matchings depuis votre espace." %}
                     {% else %}
-                        {% trans "Gérez vos trajets et les demandes d'expédition reçues." %}
+                        {% trans "Gérez vos trajets, demandes reçues et gains depuis votre espace." %}
                     {% endif %}
                 </p>
             </div>
-            <div class="welcome-icon">{% if type_profil == 'expediteur' %}📦{% else %}🧳{% endif %}</div>
+
+            <!-- ✅ BOUTON UNIQUE — ouvre le formulaire du type connecté -->
+            <div style="position:relative;flex-shrink:0;">
+                <button type="button" id="btn-publier-annonce"
+                        onclick="publierDepuisEspace()"
+                        style="background:linear-gradient(90deg,#FF7A00,#e66900);
+                               color:white;border:none;padding:12px 20px;
+                               border-radius:10px;font-weight:bold;font-size:0.95rem;
+                               cursor:pointer;display:flex;align-items:center;gap:8px;
+                               box-shadow:0 4px 12px rgba(255,122,0,0.35);">
+                    ➕ {% if type_profil == 'voyageur' %}{% trans "Publier un trajet" %}{% else %}{% trans "Publier une demande" %}{% endif %}
+                </button>
+            </div>
         </div>
 
         <!-- ===== DASHBOARD ===== -->
@@ -435,6 +449,10 @@
             <div class="panel-header"><span>📊</span><h3>{% trans "Vue d'ensemble" %}</h3></div>
             <div class="panel-body">
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;">
+                    <div style="background:#ede7f6;border-radius:10px;padding:16px;text-align:center;">
+                        <div style="font-size:1.8rem;font-weight:bold;color:#5e35b1;">{{ nb_publications }}</div>
+                        <div style="font-size:0.8rem;color:#666;">📢 {% trans "Publications" %}</div>
+                    </div>
                     <div style="background:#f0f2f5;border-radius:10px;padding:16px;text-align:center;">
                         <div style="font-size:1.8rem;font-weight:bold;color:#0A1F44;">{{ matchings|length }}</div>
                         <div style="font-size:0.8rem;color:#666;">{% trans "Matchings" %}</div>
@@ -738,6 +756,24 @@
                         </div>
                         {% endif %}
                     {% endif %}
+
+                    {# ✅ Bouton chat VOYAGEUR — visible si accepté ET paiement effectué #}
+                    {% if type_profil == 'voyageur' %}
+                        {% if m.statut == 'accepte' or m.statut == 'livre' %}
+                            {% if m.expediteur.paiement_effectue %}
+                            <div class="matching-actions" style="margin-top:8px;">
+                                <button class="btn btn-chat"
+                                        onclick="ouvrirChat('{{ m.id }}', '{{ m.expediteur.prenom }} {{ m.expediteur.nom }}')">
+                                    💬 Discuter avec {{ m.expediteur.prenom }}
+                                </button>
+                            </div>
+                            {% else %}
+                            <div style="margin-top:10px;background:#fff8e1;padding:10px;border-radius:8px;font-size:0.85rem;color:#f57f17;">
+                                ⏳ En attente du paiement de l'expéditeur.
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
                 </div>
                 {% endfor %}
                 {% else %}
@@ -758,7 +794,7 @@
                         <div>
                             <strong style="color:#0A1F44;">{{ m.expediteur.prenom }} {{ m.expediteur.nom }}</strong>
                             <div style="font-size:0.82rem;color:#666;">📍 {{ m.expediteur.ville }} → {{ m.expediteur.ville_destination }}</div>
-                            <div style="font-size:0.82rem;color:#666;">📦 {{ m.expediteur.poids_colis }} kg — {{ m.expediteur.poids_colis|floatformat:0 }} × 10€</div>
+                            <div style="font-size:0.82rem;color:#666;">📦 {{ m.expediteur.poids_colis }} kg — {{ m.expediteur.prix_par_kg }} €/kg</div>
                         </div>
                         <span class="status-badge status-{{ m.statut }}" id="statut-badge-{{ m.id }}">
                             {% if m.statut == 'en_attente' %}⏳ {% trans "En attente" %}
@@ -1909,6 +1945,32 @@ function mettreAJourBadgeChat() {
     });
 }
 
+function publierDepuisEspace() {
+    const type = '{{ type_profil }}';
+    // Stocker le type dans sessionStorage pour home.html
+    sessionStorage.setItem('open_form', type);
+    sessionStorage.setItem('from_espace', '1');
+    // Rediriger vers home avec le paramètre open
+    window.location.href = '/?open=' + encodeURIComponent(type);
+}
+
+// ===== MENU PUBLIER UNE ANNONCE =====
+function toggleMenuPublier() {
+    const menu = document.getElementById('menu-publier');
+    if (!menu) return;
+    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+}
+
+// Fermer le menu si clic dehors
+document.addEventListener('click', function(e) {
+    const menu = document.getElementById('menu-publier');
+    const btn  = document.getElementById('btn-publier-annonce');
+    if (!menu || !btn) return;
+    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.style.display = 'none';
+    }
+});
+
 // ===== UTILITAIRES =====
 function escapeHtml(text) {
     const d = document.createElement('div');
@@ -1939,6 +2001,16 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(verifierNouveauxMessages, 5000);
     // Vérifier le solde toutes les secondes (voyageur)
     setInterval(verifierMiseAJourSolde, 1000);
+
+    // ✅ Sauvegarder le profil dans localStorage pour home.html
+    // Permet à showPage() de détecter la connexion et afficher le bon formulaire
+    const profilData = {
+        profil_id:   '{{ profil_id }}',
+        type_profil: '{{ type_profil }}',
+        nom_complet: '{{ nom_complet }}',
+        telephone:   '{{ telephone|default:"" }}'
+    };
+    localStorage.setItem('profil_connecte', JSON.stringify(profilData));
 });
 </script>
 

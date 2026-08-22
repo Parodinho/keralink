@@ -97,14 +97,14 @@
             </div>
 
             <div class="type-choice">
-                <div class="choice-btn selected" id="btn-expediteur" onclick="choisirType('expediteur')">
+                <div class="choice-btn" id="btn-expediteur" onclick="choisirType('expediteur')">
                     📦 {% trans "Expéditeur" %}
                 </div>
                 <div class="choice-btn" id="btn-voyageur" onclick="choisirType('voyageur')">
                     🧳 {% trans "Voyageur" %}
                 </div>
             </div>
-            <input type="hidden" id="type_profil" value="expediteur">
+            <input type="hidden" id="type_profil" value="{{ type_defaut|default:'expediteur' }}">
 
             <div class="form-group">
                 <label>{% trans "Nom complet" %} *</label>
@@ -153,6 +153,11 @@ function choisirType(type) {
     document.getElementById('btn-voyageur').classList.toggle('selected', type === 'voyageur');
 }
 
+// ✅ Pré-sélectionne le type demandé au clic sur "Continuer avec Google"
+document.addEventListener('DOMContentLoaded', function () {
+    choisirType(document.getElementById('type_profil').value);
+});
+
 function creerProfil() {
     const nom = document.getElementById('nom_complet').value.trim();
     const username = document.getElementById('username').value.trim();
@@ -179,11 +184,11 @@ function creerProfil() {
     formData.append('type_profil', type);
     formData.append('nom_complet', nom);
     formData.append('username', username);
-    formData.append('email', email);
     formData.append('telephone', tel);
     formData.append('password', pwd);
+    formData.append('password2', pwd2);
 
-    fetch('/creer-profil/', {
+    fetch('/finaliser-profil-google/', {
         method: 'POST',
         headers: { 'X-CSRFToken': CSRF },
         body: formData
@@ -192,7 +197,9 @@ function creerProfil() {
     .then(data => {
         if (data.status === 'ok') {
             showNotif('✅ Profil créé ! Redirection...', '#2e7d32');
-            setTimeout(() => { window.location.href = '/espace-connecte/'; }, 1200);
+            // ✅ Même comportement que l'inscription classique : direction le
+            // formulaire Expédier/Voyager pré-rempli, pas le dashboard.
+            setTimeout(() => { window.location.href = data.redirect || '/'; }, 1200);
         } else {
             showNotif('❌ ' + (data.message || 'Erreur'), '#c62828');
         }

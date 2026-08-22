@@ -1,6 +1,6 @@
 from django.db import models
 
-COMMISSION_KERALINK = 2.99  # ✅ Commission fixe KERALINK par transaction
+COMMISSION_KERALINK = 2.99  # Commission fixe KERALINK par transaction
 
 
 class Voyageur(models.Model):
@@ -16,13 +16,13 @@ class Voyageur(models.Model):
     date_arrivee      = models.DateField()
     heure_arrivee     = models.TimeField()
     poids_disponible  = models.FloatField(default=0)
-    # ✅ NOUVEAU : prix par kg fixé par le voyageur
     prix_par_kg       = models.FloatField(default=10.0)
     TYPE_KG_CHOICES   = [
         ('entier', 'Kg en entier (tout ou rien)'),
         ('detail', 'Kg en détail (fractionnable)')
     ]
     type_kg           = models.CharField(max_length=10, choices=TYPE_KG_CHOICES, default='entier')
+    # ID permanent du compte (créé à l'inscription) — plus de guest anonyme
     guest_id          = models.CharField(max_length=100, null=True, blank=True, db_index=True)
     is_matched        = models.BooleanField(default=False)
     is_created_via_matching = models.BooleanField(default=False)
@@ -45,11 +45,8 @@ class Expediteur(models.Model):
     pays_destination  = models.CharField(max_length=100)
     ville_destination = models.CharField(max_length=100)
     poids_colis       = models.FloatField()
-    # ✅ prix_par_kg = prix négocié avec le voyageur (fixé par l'expéditeur ou hérité du voyageur)
     prix_par_kg       = models.FloatField(default=10.0)
-    # prix_total = poids × prix_par_kg (sans commission)
     prix_total        = models.FloatField()
-    # commission = 2.99€ fixe KERALINK
     commission        = models.FloatField(default=2.99)
     guest_id          = models.CharField(max_length=100, null=True, blank=True, db_index=True)
     is_matched        = models.BooleanField(default=False)
@@ -69,7 +66,6 @@ class Expediteur(models.Model):
 
     @property
     def montant_total(self):
-        """Prix total avec commission KERALINK."""
         return round(self.prix_total + self.commission, 2)
 
     def __str__(self):
@@ -110,11 +106,10 @@ class Demande(models.Model):
 
 class Transaction(models.Model):
     expediteur         = models.ForeignKey(Expediteur, on_delete=models.CASCADE)
-    voyageur           = models.ForeignKey(Voyageur,   on_delete=models.CASCADE,
-                                           null=True, blank=True)
-    montant            = models.FloatField()   # total payé (prix_total + 2.99)
-    montant_voyageur   = models.FloatField(default=0)   # gains voyageur = prix_total
-    montant_commission = models.FloatField(default=2.99) # commission fixe KERALINK
+    voyageur           = models.ForeignKey(Voyageur, on_delete=models.CASCADE, null=True, blank=True)
+    montant            = models.FloatField()
+    montant_voyageur   = models.FloatField(default=0)
+    montant_commission = models.FloatField(default=2.99)
     mode_paiement      = models.CharField(max_length=20, choices=[
         ('carte', 'Carte bancaire'), ('paypal', 'PayPal'),
         ('orange', 'Orange Money'),  ('wave', 'Wave')
@@ -173,9 +168,9 @@ class MessageSupport(models.Model):
 
 
 class Portefeuille(models.Model):
-    guest_id = models.CharField(max_length=100, unique=True)
-    nom_complet = models.CharField(max_length=200, default='')
-    solde = models.FloatField(default=0)
+    guest_id         = models.CharField(max_length=100, unique=True)
+    nom_complet      = models.CharField(max_length=200, default='')
+    solde            = models.FloatField(default=0)
     date_mise_a_jour = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -208,15 +203,24 @@ class Retrait(models.Model):
 
 
 class Profil(models.Model):
+    """
+    Compte utilisateur KERALINK.
+    guest_id = ID unique permanent créé UNIQUEMENT à l'inscription.
+    """
     TYPE_CHOICES  = [('voyageur', 'Voyageur'), ('expediteur', 'Expediteur')]
     type_profil   = models.CharField(max_length=20, choices=TYPE_CHOICES)
     nom_complet   = models.CharField(max_length=200)
     username      = models.CharField(max_length=100, unique=True)
     email         = models.EmailField()
-    telephone     = models.CharField(max_length=20)
-    password = models.CharField(max_length=100)
-    guest_id      = models.CharField(max_length=100, unique=True)
+    telephone     = models.CharField(max_length=20, blank=True, default='')
+    password      = models.CharField(max_length=100)
+    guest_id      = models.CharField(max_length=100, unique=True, db_index=True)
     date_creation = models.DateTimeField(auto_now_add=True)
+
+    # ✅ Vérification réelle de l'email par lien de confirmation (double opt-in)
+    email_verifie              = models.BooleanField(default=False)
+    token_verification_email   = models.CharField(max_length=64, null=True, blank=True, db_index=True)
+    date_envoi_verification    = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.nom_complet} ({self.type_profil})"

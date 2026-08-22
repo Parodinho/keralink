@@ -13,7 +13,6 @@ urlpatterns = [
     path('admin/voyageurs/retrait/<int:retrait_id>/traiter/', voyageurs_views.traiter_retrait_admin, name='traiter_retrait_admin'),
     path('admin/voyageurs/retrait/<int:retrait_id>/refuser/', voyageurs_views.refuser_retrait_admin, name='refuser_retrait_admin'),
     path('accounts/', include('allauth.urls')),   # ← NOUVEAU
-    path('google-callback/', voyageurs_views.google_callback, name='google_callback'),  # ← NOUVEAU
     path('i18n/', include('django.conf.urls.i18n')),
     path('', include('voyageurs.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

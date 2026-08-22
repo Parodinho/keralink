@@ -13,13 +13,166 @@ function getCookie(name) {
     return cookieValue;
 }
 
+// ================================================================
+// ✅ AUTH — Inscription / Connexion sur Expédier & Voyager
+// ================================================================
+
+function afficherFormInscription(type) {
+    const prefix = type === 'expediteur' ? 'exp' : 'voy';
+    const authZone = document.getElementById(prefix + '-auth-zone');
+    const formZone = document.getElementById(prefix + '-form-zone');
+    const inscrire = document.getElementById(prefix + '-inscrire-form');
+    const login = document.getElementById(prefix + '-login-form');
+
+    if (authZone) authZone.style.display = 'block';
+    if (formZone) formZone.style.display = 'none';
+    if (inscrire) inscrire.style.display = 'block';
+    if (login) login.style.display = 'none';
+}
+
+function afficherFormConnexion(type) {
+    const prefix = type === 'expediteur' ? 'exp' : 'voy';
+    const authZone = document.getElementById(prefix + '-auth-zone');
+    const formZone = document.getElementById(prefix + '-form-zone');
+    const inscrire = document.getElementById(prefix + '-inscrire-form');
+    const login = document.getElementById(prefix + '-login-form');
+
+    if (authZone) authZone.style.display = 'block';
+    if (formZone) formZone.style.display = 'none';
+    if (inscrire) inscrire.style.display = 'none';
+    if (login) login.style.display = 'block';
+}
+
+function afficherZoneFormulaire(type) {
+    const prefix = type === 'expediteur' ? 'exp' : 'voy';
+    const authZone = document.getElementById(prefix + '-auth-zone');
+    const formZone = document.getElementById(prefix + '-form-zone');
+    if (authZone) authZone.style.display = 'none';
+    if (formZone) formZone.style.display = 'block';
+    if (typeof preremplirDepuisProfil === 'function') preremplirDepuisProfil();
+}
+
+function soumettreInscription(type) {
+    const prefix = type === 'expediteur' ? 'exp' : 'voy';
+    const nom = document.getElementById(prefix + '-reg-nom')?.value.trim() || '';
+    const prenom = document.getElementById(prefix + '-reg-prenom')?.value.trim() || '';
+    const username = document.getElementById(prefix + '-reg-username')?.value.trim() || '';
+    const email = document.getElementById(prefix + '-reg-email')?.value.trim() || '';
+    const password = document.getElementById(prefix + '-reg-password')?.value || '';
+    const password2 = document.getElementById(prefix + '-reg-password2')?.value || '';
+
+    if (!nom || !prenom || !username || !email || !password) {
+        showAlert('⚠️ Veuillez remplir tous les champs', 'default');
+        return;
+    }
+    if (password !== password2) {
+        showAlert('❌ Les mots de passe ne correspondent pas', 'default');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('nom', nom);
+    formData.append('prenom', prenom);
+    formData.append('username', username);
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('password2', password2);
+    formData.append('type_profil', type);
+
+    fetch('/inscrire/', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-CSRFToken': getCookie('csrftoken') }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            // Compte créé → afficher le formulaire de publication (PAS le dashboard)
+            window.EST_CONNECTE = true;
+            localStorage.setItem('profil_connecte', JSON.stringify({
+                nom_complet: data.nom_complet,
+                type_profil: data.type_profil,
+                profil_id: data.profil_id,
+                guest_id: data.guest_id
+            }));
+            showAlert('✅ Compte créé ! Remplissez votre annonce.', 'success');
+            afficherZoneFormulaire(type);
+            activerModeMatching();
+            // Préremplir nom/prénom
+            const pNom = document.getElementById(prefix === 'exp' ? 'exp-nom' : 'voy-nom');
+            const pPrenom = document.getElementById(prefix === 'exp' ? 'exp-prenom' : 'voy-prenom');
+            if (pNom) pNom.value = nom;
+            if (pPrenom) pPrenom.value = prenom;
+        } else {
+            showAlert('❌ ' + (data.message || 'Erreur'), 'default');
+        }
+    })
+    .catch(() => showAlert('❌ Erreur de connexion', 'default'));
+}
+
+function soumettreConnexion(type) {
+    // type = 'expediteur' ou 'voyageur' selon la page
+    const prefix = type === 'expediteur' ? 'exp' : 'voy';
+    const username = document.getElementById(prefix + '-login-user')?.value.trim() || '';
+    const password = document.getElementById(prefix + '-login-pass')?.value || '';
+
+    if (!username || !password) {
+        showAlert('⚠️ Identifiant et mot de passe requis', 'default');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('type_profil', type); // ✅ séparation obligatoire
+
+    fetch('/login-profil/', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-CSRFToken': getCookie('csrftoken') }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            window.EST_CONNECTE = true;
+            localStorage.setItem('profil_connecte', JSON.stringify({
+                nom_complet: data.nom_complet,
+                type_profil: data.type_profil,
+                profil_id: data.profil_id,
+                guest_id: data.guest_id,
+                telephone: data.telephone || ''
+            }));
+            showAlert('✅ Connexion réussie !', 'success');
+            // ✅ Ne pas rediriger vers l'espace connecté : afficher directement
+            // le formulaire Expédier/Voyager (pré-rempli si matching en cours),
+            // exactement comme après une inscription.
+            afficherZoneFormulaire(type);
+            activerModeMatching();
+        } else {
+            showAlert('❌ ' + (data.message || 'Informations incorrectes'), 'default');
+        }
+    })
+    .catch(function() {
+        showAlert('❌ Erreur de connexion', 'default');
+    });
+}
+
 // ================= MATCHING STORAGE =================
 function selectionnerVoyageur(voyageurId) {
     localStorage.setItem('match_data', JSON.stringify({
         type: 'expediteur',
         voyageur_id: parseInt(voyageurId)
     }));
-    afficherModalConnexion('expediteur');
+    // Plus de page Profil → page Expédier + auth
+    showPage(null, 'expediteur');
+    setTimeout(() => {
+        if (typeof EST_CONNECTE !== 'undefined' && EST_CONNECTE) {
+            afficherZoneFormulaire('expediteur');
+            activerModeMatching();
+        } else {
+            afficherFormInscription('expediteur');
+        }
+    }, 200);
 }
 
 function selectionnerExpediteur(expediteurId) {
@@ -28,7 +181,15 @@ function selectionnerExpediteur(expediteurId) {
         expediteur_id: parseInt(expediteurId)
     }));
     localStorage.setItem('expediteur_a_preremplir', expediteurId);
-    afficherModalConnexion('voyageur');
+    showPage(null, 'voyageur');
+    setTimeout(() => {
+        if (typeof EST_CONNECTE !== 'undefined' && EST_CONNECTE) {
+            afficherZoneFormulaire('voyageur');
+            activerModeMatching();
+        } else {
+            afficherFormInscription('voyageur');
+        }
+    }, 200);
 }
 
 // ================= MODAL CONNEXION =================
@@ -60,7 +221,7 @@ function afficherModalConnexion(type) {
             <p style="color:#888;font-size:0.88rem;margin-bottom:26px;line-height:1.5;">
                 Connectez-vous ou créez votre compte pour continuer.
             </p>
-            <a href="/accounts/google/login/?next=/google-callback/"
+            <a href="/accounts/google/login/"
                style="display:flex;align-items:center;justify-content:center;gap:12px;
                       width:100%;padding:15px;border-radius:12px;background:white;
                       border:2.5px solid #e0e0e0;color:#333;font-weight:700;font-size:1rem;
@@ -223,13 +384,14 @@ function preremplirFormulaireExpediteur() {
     .then(res => res.json())
     .then(data => {
         if (data.status === 'ok') {
-            const champs = {
-                'exp-pays': data.pays_depart,
-                'exp-ville': data.ville_depart,
+            // ✅ Trajet — readonly
+            const champsTrajet = {
+                'exp-pays':      data.pays_depart,
+                'exp-ville':     data.ville_depart,
                 'exp-pays-dest': data.pays_destination,
-                'exp-ville-dest': data.ville_destination,
+                'exp-ville-dest':data.ville_destination,
             };
-            Object.entries(champs).forEach(([id, val]) => {
+            Object.entries(champsTrajet).forEach(([id, val]) => {
                 const el = document.getElementById(id);
                 if (el && val) {
                     el.value = val;
@@ -238,14 +400,41 @@ function preremplirFormulaireExpediteur() {
                     el.setAttribute('readonly', 'readonly');
                 }
             });
-            // Limiter le poids au maximum disponible
+
+            // ✅ Prix/kg — imposé par le voyageur, non modifiable
+            const prixEl = document.getElementById('exp-prix-kg');
+            if (prixEl && data.prix_par_kg) {
+                prixEl.value = data.prix_par_kg;
+                prixEl.style.background = '#fffde7';
+                prixEl.style.border = '2px solid #FF7A00';
+                prixEl.setAttribute('readonly', 'readonly');
+            }
+
+            // ✅ Poids — selon type_kg
             const poidsEl = document.getElementById('exp-poids');
             if (poidsEl) {
-                poidsEl.max = data.poids_disponible;
-                poidsEl.placeholder = `Max ${data.poids_disponible} kg disponibles`;
+                if (data.type_kg === 'entier') {
+                    // Entier → poids exact imposé, non modifiable
+                    poidsEl.value = data.poids_disponible;
+                    poidsEl.style.background = '#fffde7';
+                    poidsEl.style.borderColor = '#FF7A00';
+                    poidsEl.setAttribute('readonly', 'readonly');
+                    showAlert(`✅ Trajet pré-rempli ! Poids fixe : ${data.poids_disponible} kg (tout ou rien).`, 'success');
+                } else {
+                    // Détail → expéditeur choisit mais ne peut pas dépasser le max
+                    poidsEl.setAttribute('max', data.poids_disponible);
+                    poidsEl.placeholder = `Max ${data.poids_disponible} kg disponibles`;
+                    poidsEl.removeAttribute('readonly');
+                    showAlert(`✅ Trajet pré-rempli ! Saisissez votre poids (max ${data.poids_disponible} kg).`, 'success');
+                }
             }
+
+            // ✅ Afficher le bouton Annuler
+            const btnAnnuler = document.getElementById('exp-annuler-btn');
+            if (btnAnnuler) btnAnnuler.style.display = 'block';
+
+            calculerPrixExpediteur();
             verifierFormulaireExpediteur();
-            showAlert(`✅ Trajet pré-rempli ! Max ${data.poids_disponible} kg disponibles.`, "success");
         }
     })
     .catch(() => {});
@@ -260,27 +449,48 @@ function preremplirFormulaireVoyageur() {
     .then(res => res.json())
     .then(data => {
         if (data.status === 'ok') {
-            const champs = {
-                'voy-pays-depart': data.pays_depart,
-                'voy-ville-depart': data.ville_depart,
+            // ✅ Trajet — readonly
+            const champsTrajet = {
+                'voy-pays-depart':      data.pays_depart,
+                'voy-ville-depart':     data.ville_depart,
                 'voy-pays-destination': data.pays_destination,
-                'voy-ville-destination': data.ville_destination,
-                'voy-poids': data.poids
+                'voy-ville-destination':data.ville_destination,
             };
-            let rempli = false;
-            Object.entries(champs).forEach(([id, val]) => {
+            Object.entries(champsTrajet).forEach(([id, val]) => {
                 const el = document.getElementById(id);
                 if (el && val) {
                     el.value = val;
                     el.style.background = '#fffde7';
                     el.style.borderColor = '#FF7A00';
-                    rempli = true;
+                    el.setAttribute('readonly', 'readonly');
                 }
             });
-            if (rempli) {
-                verifierFormulaireVoyageur();
-                showAlert("✅ Formulaire pré-rempli depuis l'annonce de l'expéditeur", "success");
+
+            // ✅ Poids — imposé par l'expéditeur, non modifiable
+            const poidsEl = document.getElementById('voy-poids');
+            if (poidsEl && data.poids) {
+                poidsEl.value = data.poids;
+                poidsEl.style.background = '#fffde7';
+                poidsEl.style.borderColor = '#FF7A00';
+                poidsEl.setAttribute('readonly', 'readonly');
             }
+
+            // ✅ Prix/kg — imposé par l'expéditeur, non modifiable
+            const prixEl = document.getElementById('voy-prix-kg');
+            if (prixEl && data.prix_par_kg) {
+                prixEl.value = data.prix_par_kg;
+                prixEl.style.background = '#fffde7';
+                prixEl.style.border = '2px solid #FF7A00';
+                prixEl.setAttribute('readonly', 'readonly');
+            }
+
+            // ✅ Afficher le bouton Annuler
+            const btnAnnuler = document.getElementById('voy-annuler-btn');
+            if (btnAnnuler) btnAnnuler.style.display = 'block';
+
+            calculerGainVoyageur();
+            verifierFormulaireVoyageur();
+            showAlert(`✅ Formulaire pré-rempli depuis l'annonce de l'expéditeur — Prix : ${data.prix_par_kg || 0}€/kg, Poids : ${data.poids} kg.`, 'success');
         }
     })
     .catch(() => {});
@@ -324,7 +534,7 @@ function confirmerEnvoi() {
 
     formData.append('nom', document.getElementById('exp-nom').value);
     formData.append('prenom', document.getElementById('exp-prenom').value);
-    formData.append('telephone', document.getElementById('exp-telephone').value);
+    formData.append('telephone', getTelephoneComplet('exp-telephone'));
     formData.append('pays', document.getElementById('exp-pays').value);
     formData.append('ville', document.getElementById('exp-ville').value);
     formData.append('pays_destination', document.getElementById('exp-pays-dest').value);
@@ -373,12 +583,12 @@ function confirmerEnvoi() {
     .catch(() => showAlert("Erreur de connexion"));
 }
 
-// ================= CONFIRMER PUBLICATION VOYAGEUR (version mise à jour) =================
+// ================= CONFIRMER PUBLICATION VOYAGEUR =================
 function confirmerPublication() {
     const formData = new FormData();
     formData.append('nom', document.getElementById('voy-nom').value);
     formData.append('prenom', document.getElementById('voy-prenom').value);
-    formData.append('telephone', document.getElementById('voy-telephone').value);
+    formData.append('telephone', getTelephoneComplet('voy-telephone'));
     formData.append('pays_depart', document.getElementById('voy-pays-depart').value);
     formData.append('ville_depart', document.getElementById('voy-ville-depart').value);
     formData.append('pays_destination', document.getElementById('voy-pays-destination').value);
@@ -389,7 +599,9 @@ function confirmerPublication() {
     formData.append('heure_arrivee', document.getElementById('voy-heure-arrivee').value);
     formData.append('poids', document.getElementById('voy-poids').value);
     formData.append('prix_par_kg', document.getElementById('voy-prix-kg')?.value || 10);
-    formData.append('type_kg', document.querySelector('input[name="type_kg"]:checked').value);
+
+    const typeKgEl = document.querySelector('input[name="type_kg"]:checked');
+    formData.append('type_kg', typeKgEl ? typeKgEl.value : 'entier');
 
     const match = JSON.parse(localStorage.getItem('match_data') || '{}');
     if (match.type === 'voyageur' && match.expediteur_id) {
@@ -406,35 +618,38 @@ function confirmerPublication() {
     })
     .then(res => res.json())
     .then(data => {
+        // ✅ Pas connecté
+        if (data.need_auth) {
+            showAlert('⚠️ Connectez-vous pour publier', 'default');
+            return;
+        }
+
         if (data.status === 'ok') {
             closeModal('voyageur');
             localStorage.setItem('annonce_data', JSON.stringify({
                 type: 'voyageur',
                 id: data.voyageur_id
             }));
+            localStorage.removeItem('match_data');
             localStorage.removeItem('expediteur_a_preremplir');
 
-            if (match.type === 'voyageur') {
-                localStorage.removeItem('match_data');
-                showAlert("✅ Matching créé avec succès !", "success");
-                document.getElementById('voyageur-form').reset();
-                document.getElementById('voy-gain').textContent = '0.00 €';
-                setTimeout(() => { window.location.href = '/espace-connecte/'; }, 1200);
-            } else {
-                showAlert("🧳 Trajet publié ! Créez votre profil.", "success");
-                document.getElementById('voyageur-form').reset();
-                document.getElementById('voy-gain').textContent = '0.00 €';
-                setTimeout(() => {
-                    preremplirProfil(
-                        document.getElementById('voy-prenom').value + ' ' + document.getElementById('voy-nom').value,
-                        'voyageur'
-                    );
-                }, 1500);
-            }
+            const formVoy = document.getElementById('voyageur-form');
+            if (formVoy) formVoy.reset();
+
+            const gainEl = document.getElementById('voy-gain');
+            if (gainEl) gainEl.textContent = '0.00 €';
+
+            showAlert('✅ Trajet publié ! Redirection vers votre espace...', 'success');
+
+            // ✅ Après publication → tableau de bord
+            setTimeout(() => {
+                window.location.href = data.redirect || '/espace-connecte/';
+            }, 1000);
         } else {
-            showAlert("Erreur : " + (data.message || "Inconnue"));
+            showAlert('❌ ' + (data.message || 'Erreur'), 'default');
         }
-    });
+    })
+    .catch(() => showAlert('❌ Erreur de connexion', 'default'));
 }
 
 // ================= PRÉ-REMPLISSAGE PROFIL =================
@@ -839,19 +1054,81 @@ function showAlert(message, type = "default") {
 
 // ================= NAVIGATION =================
 function showPage(event, pageId) {
+    // Cacher toutes les pages
     document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+ 
+    // ✅ Afficher la page cible
     const target = document.getElementById(pageId + '-page');
-    if (target) target.classList.add('active');
+    if (target) {
+        target.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+ 
+    // Mettre à jour les liens actifs dans la nav
     document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
-    if (event) event.target.classList.add('active');
-    setTimeout(activerModeMatching, 150);
+    if (event && event.target) event.target.classList.add('active');
+ 
+    // Déclencher le mode matching si nécessaire
+    if (typeof activerModeMatching === 'function') {
+        setTimeout(activerModeMatching, 150);
+    }
+ 
+    // ✅ Si l'utilisateur est connecté et vient de l'espace connecté,
+    // pré-remplir son nom/email depuis le profil stocké
+    if (sessionStorage.getItem('from_espace') === '1') {
+        sessionStorage.removeItem('from_espace');
+        const profil = JSON.parse(localStorage.getItem('profil_connecte') || '{}');
+        if (profil && profil.nom_complet) {
+            const parts = profil.nom_complet.split(' ');
+            const prenom = parts[0] || '';
+            const nom = parts.slice(1).join(' ') || '';
+ 
+            if (pageId === 'expediteur') {
+                const nomEl = document.getElementById('exp-nom');
+                const prenomEl = document.getElementById('exp-prenom');
+                const telEl = document.getElementById('exp-telephone');
+                if (nomEl && !nomEl.value) nomEl.value = nom;
+                if (prenomEl && !prenomEl.value) prenomEl.value = prenom;
+                if (telEl && !telEl.value && profil.telephone) telEl.value = profil.telephone;
+            } else if (pageId === 'voyageur') {
+                const nomEl = document.getElementById('voy-nom');
+                const prenomEl = document.getElementById('voy-prenom');
+                const telEl = document.getElementById('voy-telephone');
+                if (nomEl && !nomEl.value) nomEl.value = nom;
+                if (prenomEl && !prenomEl.value) prenomEl.value = prenom;
+                if (telEl && !telEl.value && profil.telephone) telEl.value = profil.telephone;
+            }
+        }
+    }
 }
 
 function showLoginForm() { showPage(null, 'login'); }
 
 // ================= INITIALISATION =================
 document.addEventListener('DOMContentLoaded', function () {
-    showPage(null, 'home');
+    // ✅ CORRECTIF — Ouvrir directement Expédier / Voyager quand on revient
+    // de l'espace connecté (?open=expediteur|voyageur), au lieu de forcer
+    // systématiquement la page d'accueil. Gère aussi le sessionStorage en secours.
+    const paramsInit = new URLSearchParams(window.location.search);
+    const openFormInit = paramsInit.get('open') || sessionStorage.getItem('open_form');
+
+    if (openFormInit === 'expediteur' || openFormInit === 'voyageur') {
+        sessionStorage.removeItem('open_form');
+        sessionStorage.removeItem('from_espace');
+        if (window.history.replaceState) {
+            window.history.replaceState({}, '', window.location.pathname);
+        }
+        showPage(null, openFormInit);
+        // Utilisateur déjà connecté → on saute l'auth et on va direct au formulaire
+        if (typeof EST_CONNECTE !== 'undefined' && EST_CONNECTE) {
+            if (typeof afficherZoneFormulaire === 'function') afficherZoneFormulaire(openFormInit);
+        } else if (typeof afficherFormInscription === 'function') {
+            afficherFormInscription(openFormInit);
+        }
+    } else {
+        showPage(null, 'home');
+    }
+
     activerModeMatching();
 
     const formExp = document.getElementById('expediteur-form');
@@ -950,8 +1227,42 @@ function verifierFormulaireVoyageur() {
     const check1 = document.getElementById('voy-check1')?.checked;
     const check2 = document.getElementById('voy-check2')?.checked;
     const btn = document.getElementById('voy-submit');
-    if (btn) btn.disabled = !(valid && check1 && check2);
+
+    // ✅ Contrôle de chronologie : l'arrivée doit être après le départ
+    const chronoOk = verifierChronologieVoyageur();
+
+    if (btn) btn.disabled = !(valid && check1 && check2 && chronoOk);
     calculerGainVoyageur();
+}
+
+// ✅ Vérifie que la date/heure d'arrivée est bien postérieure à la date/heure de départ
+function verifierChronologieVoyageur() {
+    const dateDepart   = document.getElementById('voy-date-depart')?.value;
+    const heureDepart  = document.getElementById('voy-heure-depart')?.value;
+    const dateArrivee  = document.getElementById('voy-date-arrivee')?.value;
+    const heureArrivee = document.getElementById('voy-heure-arrivee')?.value;
+
+    const zoneErreur = document.getElementById('voy-erreur-chrono');
+
+    // Tant que les 4 champs ne sont pas remplis, on ne bloque pas encore (message masqué)
+    if (!dateDepart || !heureDepart || !dateArrivee || !heureArrivee) {
+        if (zoneErreur) zoneErreur.style.display = 'none';
+        return true;
+    }
+
+    const depart  = new Date(`${dateDepart}T${heureDepart}`);
+    const arrivee = new Date(`${dateArrivee}T${heureArrivee}`);
+
+    if (arrivee <= depart) {
+        if (zoneErreur) {
+            zoneErreur.textContent = "❌ La date/heure d'arrivée doit être postérieure à la date/heure de départ.";
+            zoneErreur.style.display = 'block';
+        }
+        return false;
+    }
+
+    if (zoneErreur) zoneErreur.style.display = 'none';
+    return true;
 }
 
 function ouvrirModalExpediteur() {
@@ -1091,21 +1402,12 @@ function setLangue(code) {
     .catch(() => {});
 }
 
-function _appliquerTraductions() {
-    const t = TRADUCTIONS[langueActuelle] || TRADUCTIONS.fr;
-
-    // Textes data-i18n
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (t[key]) el.textContent = t[key];
-    });
-
-    // Placeholders data-i18n-placeholder
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-        const key = el.getAttribute('data-i18n-placeholder');
-        if (t[key]) el.placeholder = t[key];
-    });
-}
+// ℹ️ L'ancien système de traduction par dictionnaire JS (TRADUCTIONS /
+// langueActuelle / _appliquerTraductions / data-i18n) a été retiré : ces
+// variables n'étaient jamais déclarées (d'où les erreurs "is not defined"
+// au chargement) et faisaient doublon avec les traductions Django ({% trans %})
+// déjà rendues côté serveur. La langue et les textes sont désormais gérés
+// entièrement par Django (gettext + {% trans %}), pas par du JS.
 
 function toggleLangMenu() {
     const m = document.getElementById('lang-menu');
@@ -1219,8 +1521,8 @@ document.addEventListener('click', (e) => {
 
 // ✅ Initialisation au chargement
 document.addEventListener('DOMContentLoaded', function () {
-    // Appliquer langue sauvegardée
-    setLangue(langueActuelle);
+    // ℹ️ Le bouton de langue est désormais affiché correctement dès le
+    // rendu serveur (Django i18n) — plus besoin de le resynchroniser en JS.
     // Appliquer monnaie sauvegardée
     setMonnaie(monnaieActuelle, symboleActuel, monnaieActuelle);
 });
@@ -1305,6 +1607,24 @@ const INDICATIFS_PAYS = [
     { code: '+61', pays: 'Australie', flag: '🇦🇺' },
     { code: '+64', pays: 'Nouvelle-Zélande', flag: '🇳🇿' },
 ];
+
+/**
+ * ✅ Reconstitue le numéro complet (indicatif + numéro saisi) pour un champ
+ * téléphone équipé du sélecteur d'indicatif (creerIndicatifTel). L'input ne
+ * contient que les chiffres locaux : l'indicatif est stocké séparément sur
+ * le bouton .indicatif-btn juste à côté (attribut data-code).
+ */
+function getTelephoneComplet(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return '';
+    const numero = input.value.trim();
+    if (!numero) return '';
+    if (numero.startsWith('+')) return numero; // déjà complet, ne rien dupliquer
+    const wrap = input.closest('.indicatif-wrap');
+    const btn = wrap ? wrap.querySelector('.indicatif-btn') : null;
+    const code = btn ? btn.getAttribute('data-code') : '';
+    return (code || '') + numero.replace(/^0+/, ''); // retire le 0 initial local si présent
+}
 
 /**
  * ✅ Crée un widget indicatif téléphonique et l'insère avant l'input
@@ -1859,6 +2179,7 @@ function ouvrirContact() {
     document.body.appendChild(modal);
 }
 
+
 function _envoyerContact() {
     const nom = document.getElementById('contact-nom')?.value.trim();
     const email = document.getElementById('contact-email')?.value.trim();
@@ -1899,3 +2220,141 @@ document.addEventListener('DOMContentLoaded', function() {
     // Liaisons pays → ville
     initialiserPaysVille();
 });
+
+// ================================================================
+// ✅ ANNULER LE FORMULAIRE — réinitialise tout + retour accueil
+// ================================================================
+function annulerFormulaire(type) {
+    // Nettoyer localStorage et sessionStorage
+    localStorage.removeItem('match_data');
+    localStorage.removeItem('expediteur_a_preremplir');
+    localStorage.removeItem('voyageur_prix_kg');
+    sessionStorage.removeItem('open_form');
+    sessionStorage.removeItem('from_espace');
+
+    if (type === 'expediteur') {
+        const form = document.getElementById('expediteur-form');
+        if (form) form.reset();
+
+        // Retirer readonly et styles sur tous les champs
+        ['exp-nom','exp-prenom','exp-telephone','exp-pays','exp-ville',
+         'exp-pays-dest','exp-ville-dest','exp-poids','exp-prix-kg'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.removeAttribute('readonly');
+                el.removeAttribute('max');
+                el.style.background = '';
+                el.style.borderColor = '';
+                el.style.borderWidth = '';
+            }
+        });
+        // Remettre la bordure orange sur prix-kg
+        const prixEl = document.getElementById('exp-prix-kg');
+        if (prixEl) prixEl.style.border = '2px solid #FF7A00';
+
+        // Remettre le texte du bouton submit
+        const btnSubmit = document.getElementById('exp-submit');
+        if (btnSubmit) btnSubmit.textContent = 'Publier ma demande';
+
+        // Cacher le bouton Annuler
+        const btnAnnuler = document.getElementById('exp-annuler-btn');
+        if (btnAnnuler) btnAnnuler.style.display = 'none';
+
+        // Décocher les cases
+        ['exp-check1','exp-check2'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.checked = false;
+        });
+
+        // Réinitialiser le total
+        const totalEl = document.getElementById('exp-total');
+        if (totalEl) totalEl.textContent = '0.00 €';
+
+        // Réinitialiser paiement
+        const payHidden = document.getElementById('selected-payment');
+        if (payHidden) payHidden.value = '';
+        document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
+
+    } else if (type === 'voyageur') {
+        const form = document.getElementById('voyageur-form');
+        if (form) form.reset();
+
+        // Retirer readonly et styles
+        ['voy-nom','voy-prenom','voy-telephone','voy-pays-depart','voy-ville-depart',
+         'voy-pays-destination','voy-ville-destination','voy-poids','voy-prix-kg'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.removeAttribute('readonly');
+                el.removeAttribute('max');
+                el.style.background = '';
+                el.style.borderColor = '';
+                el.style.borderWidth = '';
+            }
+        });
+        // Remettre la bordure verte sur prix-kg voyageur
+        const prixVoyEl = document.getElementById('voy-prix-kg');
+        if (prixVoyEl) prixVoyEl.style.border = '2px solid #2e7d32';
+
+        // Remettre le texte du bouton submit
+        const btnSubmit = document.getElementById('voy-submit');
+        if (btnSubmit) btnSubmit.textContent = 'Publier mon trajet';
+
+        // Cacher le bouton Annuler
+        const btnAnnuler = document.getElementById('voy-annuler-btn');
+        if (btnAnnuler) btnAnnuler.style.display = 'none';
+
+        // Décocher les cases
+        ['voy-check1','voy-check2'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.checked = false;
+        });
+
+        // Réinitialiser le gain
+        const gainEl = document.getElementById('voy-gain');
+        if (gainEl) gainEl.textContent = '0.00 €';
+
+        // Remettre type_kg à entier
+        const radioEntier = document.querySelector('input[name="type_kg"][value="entier"]');
+        if (radioEntier) radioEntier.checked = true;
+    }
+
+    // ✅ Réinitialiser les IDs de matching
+    if (typeof window !== 'undefined') {
+        window.voyageurSelectId = null;
+        window.expediteurSelectId = null;
+    }
+
+    // ✅ Déconnecter l'utilisateur : au prochain clic sur "Expédier" ou
+    // "Voyager" il devra repasser par l'inscription/connexion (auth).
+    localStorage.removeItem('profil_connecte');
+    if (typeof window !== 'undefined') window.EST_CONNECTE = false;
+    window.location.href = '/deconnexion/';
+}
+
+// ================================================================
+// ✅ VALIDATION POIDS EXPÉDITEUR (max = poids voyageur)
+// ================================================================
+function validerPoidsExpediteur() {
+    const poidsEl = document.getElementById('exp-poids');
+    if (!poidsEl) return;
+    const maxVal = parseFloat(poidsEl.getAttribute('max') || '0');
+    if (!maxVal) return; // Pas de max défini = pas de matching = libre
+    const valActuelle = parseFloat(poidsEl.value) || 0;
+    if (valActuelle > maxVal) {
+        // ✅ Remettre la valeur max et afficher un message
+        poidsEl.value = maxVal;
+        showAlert('⚠️ Veuillez respecter le nombre de kg maximum (' + maxVal + ' kg).', 'default');
+    }
+}
+
+// ================================================================
+// ✅ PUBLIER DEPUIS ESPACE CONNECTÉ
+// ================================================================
+function publierDepuisEspace() {
+    const profil = JSON.parse(localStorage.getItem('profil_connecte') || '{}');
+    const type = profil.type_profil || '';
+    if (!type) return;
+    sessionStorage.setItem('open_form', type);
+    sessionStorage.setItem('from_espace', '1');
+    window.location.href = '/?open=' + encodeURIComponent(type);
+}

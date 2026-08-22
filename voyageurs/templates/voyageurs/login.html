@@ -1,7 +1,8 @@
 {% load static %}
 {% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,10 +26,6 @@
 
             <button onclick="performLogin()" class="submit-btn">{% trans "Se connecter" %}</button>
 
-            <p style="text-align:center; margin-top:25px; color:#666;">
-                {% trans "Pas de compte ?" %}
-                <span onclick="showPage(null, 'profil')" style="color:var(--orange); cursor:pointer; text-decoration:underline;">{% trans "Créer un compte" %}</span>
-            </p>
         </div>
     </div>
 
